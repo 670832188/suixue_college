@@ -4,9 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/title_view"
-        layout="@layout/layout_base_title" />
+    <include layout="@layout/layout_base_title" />
 
     <FrameLayout
         android:id="@+id/fl_container"

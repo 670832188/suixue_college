@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.dev.kit.basemodule.view.CustomIndicator
+        android:id="@+id/CustomIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_large"
+        app:indicatorType="split"
+        app:normalPointColor="@color/color_common_white"
+        app:normalPointRadius="2.5dp"
+        app:pointInterval="15dp"
+        app:selectedPointColor="#11EEEE"
+        app:selectedPointRadius="3.5dp" />
+</RelativeLayout>

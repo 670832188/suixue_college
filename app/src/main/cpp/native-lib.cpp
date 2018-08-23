@@ -3,7 +3,7 @@
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_suixue_edu_college_TransferActivity_stringFromJNI(
+Java_com_suixue_edu_college_util_JniUtil_getPrivateKey(
         JNIEnv* env,
         jobject /* this */) {
     std::string hello = "Hello from C++";

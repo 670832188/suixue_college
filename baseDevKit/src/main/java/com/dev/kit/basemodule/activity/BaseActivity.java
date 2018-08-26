@@ -1,6 +1,7 @@
 package com.dev.kit.basemodule.activity;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -22,6 +23,7 @@ public class BaseActivity extends RxActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
     }
 

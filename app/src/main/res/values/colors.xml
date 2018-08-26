@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <color name="color_common_white">#FFFFFF</color>
+    <color name="color_common_text">#666666</color>
+    <color name="color_common_gray">#b5b5b5</color>
+</resources>

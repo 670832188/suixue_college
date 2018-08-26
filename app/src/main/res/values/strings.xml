@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">CollegeCareer</string>
+    <string name="app_name">大学校内</string>
+
+    <string-array name="guide_tip_array">
+        <item>探寻让你终身收益的知识，\n结交志同道合的伙伴</item>
+        <item>分享你的大学专业课程</item>
+        <item>可以发布任何内容：\n文字、GIF动图、音乐、随便什么</item>
+        <item>分享你的视野和格局，\n让世界共识多一些，分歧少一些</item>
+        <item>欢迎来到&#160;&#160;大学校内\n现在请按下按钮吧！</item>
+    </string-array>
+
 </resources>

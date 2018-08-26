@@ -4,4 +4,54 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
+    <style name="style_text_small">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/color_common_text</item>
+    </style>
+
+    <style name="style_text_normal">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/color_common_text</item>
+    </style>
+
+    <style name="style_text_large">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/color_common_text</item>
+    </style>
+
+    <style name="style_text_larger">
+        <item name="android:textSize">@dimen/text_size_larger</item>
+        <item name="android:textColor">@color/color_common_text</item>
+    </style>
+
+    <style name="style_text_super">
+        <item name="android:textSize">@dimen/text_size_super</item>
+        <item name="android:textColor">@color/color_common_text</item>
+    </style>
+
+    <style name="style_text_small_white">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/color_common_white</item>
+    </style>
+
+    <style name="style_text_normal_white">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/color_common_white</item>
+    </style>
+
+    <style name="style_text_large_white">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/color_common_white</item>
+    </style>
+
+    <style name="style_text_larger_white">
+        <item name="android:textSize">@dimen/text_size_larger</item>
+        <item name="android:textColor">@color/color_common_white</item>
+    </style>
+
+    <style name="style_text_super_white">
+        <item name="android:textSize">@dimen/text_size_super</item>
+        <item name="android:textColor">@color/color_common_white</item>
+    </style>
 </resources>

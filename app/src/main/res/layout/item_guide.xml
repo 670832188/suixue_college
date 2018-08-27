@@ -21,8 +21,40 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_guide_logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp" />
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="80dp"
+        android:gravity="center" />
 
-    
+
+    <TextView
+        android:id="@+id/tv_start_browse"
+        style="@style/style_text_large_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="@dimen/margin_larger"
+        android:layout_marginStart="@dimen/margin_larger"
+        android:background="@drawable/bg_start_browse_btn"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_normal"
+        android:paddingTop="@dimen/margin_normal"
+        android:text="@string/action_start_browse" />
+
+    <TextView
+        android:id="@+id/tv_login"
+        style="@style/style_text_large_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_start_browse"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_larger"
+        android:layout_marginStart="@dimen/margin_larger"
+        android:background="@drawable/bg_login_btn"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_normal"
+        android:paddingTop="@dimen/margin_normal"
+        android:text="@string/action_login" />
 
 </RelativeLayout>

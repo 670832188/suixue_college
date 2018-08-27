@@ -23,7 +23,7 @@
             android:padding="@dimen/margin_normal"
             android:text="重置"
             android:textColor="@color/color_common_white"
-            android:textSize="@dimen/text_size_16"
+            android:textSize="@dimen/text_size_large"
             android:visibility="gone" />
 
         <CheckBox
@@ -53,7 +53,7 @@
             android:padding="@dimen/margin_normal"
             android:text="完成"
             android:textColor="@color/color_common_white"
-            android:textSize="@dimen/text_size_16"
+            android:textSize="@dimen/text_size_large"
             android:visibility="gone" />
     </RelativeLayout>
 

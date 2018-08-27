@@ -9,4 +9,7 @@
         <item>欢迎来到&#160;&#160;大学校内\n现在请按下按钮吧！</item>
     </string-array>
 
+    <string name="action_start_browse">开始吧</string>
+    <string name="action_login">登录</string>
+
 </resources>

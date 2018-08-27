@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.CommonPagerAdapter;
+import com.dev.kit.basemodule.view.CustomIndicator;
 import com.suixue.edu.college.R;
 
 import java.util.Arrays;
@@ -46,5 +47,7 @@ public class SplashActivity extends BaseActivity {
                 return LayoutInflater.from(SplashActivity.this).inflate(R.layout.item_guide, container, false);
             }
         });
+        CustomIndicator indicator = findViewById(R.id.indicator);
+        indicator.bindViewPager(viewPager);
     }
 }

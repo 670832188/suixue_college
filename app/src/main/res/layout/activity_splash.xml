@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="#465C96">
+
+    <ImageView
+        android:id="@+id/iv_guide_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:src="@drawable/ic_guide_logo" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_guide"
@@ -10,16 +19,46 @@
         android:layout_height="match_parent" />
 
     <com.dev.kit.basemodule.view.CustomIndicator
-        android:id="@+id/CustomIndicator"
+        android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginBottom="240dp"
         app:indicatorType="split"
         app:normalPointColor="@color/color_common_white"
         app:normalPointRadius="2.5dp"
         app:pointInterval="15dp"
-        app:selectedPointColor="#11EEEE"
+        app:selectedPointColor="@color/color_common_white"
         app:selectedPointRadius="3.5dp" />
+
+    <Button
+        android:id="@+id/bt_start_browse"
+        style="@style/style_text_large_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="@dimen/margin_larger"
+        android:layout_marginStart="@dimen/margin_larger"
+        android:background="@drawable/bg_start_browse_btn"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_normal"
+        android:paddingTop="@dimen/margin_normal"
+        android:text="@string/action_start_browse" />
+
+    <Button
+        android:id="@+id/bt_login"
+        style="@style/style_text_large_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bt_start_browse"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_larger"
+        android:layout_marginStart="@dimen/margin_larger"
+        android:background="@drawable/bg_login_btn"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_normal"
+        android:paddingTop="@dimen/margin_normal"
+        android:text="@string/action_login" />
 </RelativeLayout>

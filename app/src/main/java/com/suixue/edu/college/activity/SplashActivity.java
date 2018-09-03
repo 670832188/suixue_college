@@ -21,7 +21,7 @@ import java.util.List;
  * Date:   18/8/23 23:26
  * Desc:
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,5 +49,20 @@ public class SplashActivity extends BaseActivity {
         });
         CustomIndicator indicator = findViewById(R.id.indicator);
         indicator.bindViewPager(viewPager);
+        setOnClickListener(R.id.bt_start_browse, this);
+        setOnClickListener(R.id.bt_login, this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_login: {
+                break;
+            }
+
+            case R.id.bt_start_browse: {
+                break;
+            }
+        }
     }
 }

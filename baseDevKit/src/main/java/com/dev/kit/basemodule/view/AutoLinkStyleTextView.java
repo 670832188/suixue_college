@@ -19,7 +19,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.dev.kit.basemodule.R;
-import com.dev.kit.basemodule.util.LogUtil;
 
 /**
  * Created by cuiyan on 2018/9/3.
@@ -79,7 +78,6 @@ public class AutoLinkStyleTextView extends AppCompatTextView {
 
                     @Override
                     public void updateDrawState(TextPaint ds) {
-                        super.updateDrawState(ds);
                         ds.setColor(defaultColor);
                         ds.setUnderlineText(hasUnderLine);
                     }

@@ -35,6 +35,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (!TextUtils.isEmpty(PreferenceUtil.getStringValue(Constants.DAY_OF_BIRTH, ""))) {
 
         }
+        tvProtocolTip.setHighlightColor(getResources().getColor(R.color.color_transparent));
     }
 
     @Override

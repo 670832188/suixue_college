@@ -24,7 +24,7 @@
             android:name=".activity.SplashActivity"
             android:theme="@style/BaseTheme.TranslucentStatusTheme" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.RegisterActivity"
             android:theme="@style/BaseTheme.TranslucentStatusTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.MainActivity" />

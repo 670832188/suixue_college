@@ -37,7 +37,7 @@ public class PreferenceUtil {
         return gson.fromJson(userInfoStr, UserInfo.class);
     }
 
-    public static synchronized void setUserInfo(UserInfo userInfo) {
+    public static synchronized void saveUserInfo(UserInfo userInfo) {
         if (userInfo == null) {
             setStringValue(Constants.USER_INFO, null);
         } else {

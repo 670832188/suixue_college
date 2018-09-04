@@ -1,40 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="30dp"
-    android:background="@color/color_main_bg"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <TextView
-        style="@style/style_text_large_white"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_tip"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/name_tip" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_name_desc"
-        style="@style/style_text_normal_ashen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:text="@string/name_desc" />
+        <TextView
+            style="@style/style_text_large_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name_tip" />
+
+        <TextView
+            android:id="@+id/tv_name_desc"
+            style="@style/style_text_normal_ashen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/name_desc" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_tip"
         android:layout_marginTop="40dp"
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/et_phone"
+            android:id="@+id/et_mobile"
             style="@style/style_text_normal_ashen"
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_edit_height"
             android:background="@null"
             android:gravity="bottom"
-            android:hint="@string/phone_number"
+            android:hint="@string/mobile_number"
             android:inputType="phone"
             android:paddingBottom="@dimen/margin_small"
             android:textColorHint="@color/color_common_ashen"
@@ -75,7 +84,7 @@
                 android:background="@color/color_common_ashen" />
 
             <TextView
-                android:id="@+id/tv_send_security_code"
+                android:id="@+id/tv_get_security_code"
                 style="@style/style_text_normal_ashen"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -109,4 +118,30 @@
             android:layout_height="wrap_content"
             android:src="@drawable/bg_common_et_bottom_line_unfocused" />
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/style_text_normal_ashen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/has_user_account_tip" />
+
+        <TextView
+            android:id="@+id/tv_login"
+            style="@style/style_text_normal_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingEnd="@dimen/margin_normal"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_small"
+            android:text="@string/action_login" />
+    </LinearLayout>
+</RelativeLayout>

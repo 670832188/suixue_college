@@ -10,6 +10,7 @@ public class UserInfo {
     private String userName;
     private String userId;
     private String mobile;
+    private String userAvatarUrl;
 
 
     public String getUserName() {
@@ -24,8 +25,11 @@ public class UserInfo {
         return mobile;
     }
 
+    public String getUserAvatarUrl() {
+        return userAvatarUrl;
+    }
 
-    // testCode
+// testCode
 
 
     public void setUserName(String userName) {
@@ -38,5 +42,9 @@ public class UserInfo {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public void setUserAvatarUrl(String userAvatarUrl) {
+        this.userAvatarUrl = userAvatarUrl;
     }
 }

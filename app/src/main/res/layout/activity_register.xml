@@ -22,6 +22,7 @@
 
         <TextView
             android:id="@+id/tv_right"
+            style="@style/style_text_normal_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -29,15 +30,16 @@
             android:paddingBottom="@dimen/margin_small"
             android:paddingEnd="@dimen/margin_large"
             android:paddingStart="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small" />
+            android:paddingTop="@dimen/margin_small"
+            android:text="@string/action_next_step" />
     </RelativeLayout>
 
     <include
-        android:id="@+id/ll_day_of_birth"
-        layout="@layout/layout_year_of_birth" />
+        android:id="@+id/ll_visitor_register"
+        layout="@layout/layout_visitor_register" />
 
     <include
-        android:id="@+id/rl_register"
-        layout="@layout/layout_register"
+        android:id="@+id/rl_user_register"
+        layout="@layout/layout_user_register"
         android:visibility="gone" />
 </LinearLayout>

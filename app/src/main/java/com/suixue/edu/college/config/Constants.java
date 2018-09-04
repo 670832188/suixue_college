@@ -13,11 +13,11 @@ public class Constants {
     ////////////////////////////////////////////////////////////////////////////////
 
     // 登录模式
-    public static final String LOGIN_MODE = "loginMode";
+    public static final String REGISTER_MODE = "registerMode";
     // 游客模式
-    public static final String LOGIN_MODE_VISITOR = "loginModeVisitor";
+    public static final String REGISTER_MODE_VISITOR = "registerModeVisitor";
     // 用户模式
-    public static final String LOGIN_MODE_USER = "loginModeUser";
+    public static final String REGISTER_MODE_USER = "registerModeRegister";
 
     /////////////////////////////////////////////////////////////////////////////////
 }

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">大学校内</string>
+    <string name="tip_net_request_failed">网络请求失败</string>
 
     <string-array name="guide_tip_array">
         <item>探寻让你终身收益的知识，\n结交志同道合的伙伴</item>
@@ -18,9 +19,16 @@
     </string-array>
     <string name="name_tip">我们该怎么称呼您？</string>
     <string name="name_desc">您需要一个用户名才能发帖、自定义您的"大学校内"博客，以及给他人发送消息</string>
-    <string name="phone_number">手机号码</string>
+    <string name="mobile_number">手机号码</string>
     <string name="security_code">验证码</string>
+    <string name="action_next_step">下一步</string>
     <string name="action_send_security_code">发送验证码</string>
     <string name="user_name">用户名</string>
+    <string name="has_user_account_tip">已经有账户了？</string>
+    <string name="tip_please_input_year_of_birth">请输入出生年份</string>
+    <string name="tip_please_input_mobile_number">请输入手机号</string>
+    <string name="tip_please_input_security_code">请输入验证码</string>
+    <string name="tip_please_input_user_name">请输入用户名</string>
+    <string name="time_count_down">%d&#160;s</string>
 
 </resources>

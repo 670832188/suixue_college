@@ -7,7 +7,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_super">
 
         <ImageView
             android:id="@+id/iv_left"
@@ -33,5 +34,10 @@
 
     <include
         android:id="@+id/ll_day_of_birth"
-        layout="@layout/layout_date_of_birth" />
+        layout="@layout/layout_year_of_birth" />
+
+    <include
+        android:id="@+id/rl_register"
+        layout="@layout/layout_register"
+        android:visibility="gone" />
 </LinearLayout>

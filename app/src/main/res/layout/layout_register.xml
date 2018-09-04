@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="30dp"
+    android:background="@color/color_main_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/style_text_large_white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_tip" />
+
+    <TextView
+        android:id="@+id/tv_name_desc"
+        style="@style/style_text_normal_ashen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/name_desc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_phone"
+            style="@style/style_text_normal_ashen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_edit_height"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/phone_number"
+            android:inputType="phone"
+            android:paddingBottom="@dimen/margin_small"
+            android:textColorHint="@color/color_common_ashen"
+            android:textCursorDrawable="@drawable/bg_common_et_cursor" />
+
+        <ImageView
+            android:id="@+id/divider_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bg_common_et_bottom_line_unfocused" />
+
+        <LinearLayout
+            android:id="@+id/ll_security_code"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_edit_height"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_security_code"
+                style="@style/style_text_normal_ashen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_weight="2.0"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="@string/security_code"
+                android:inputType="number"
+                android:paddingBottom="@dimen/margin_small"
+                android:textColorHint="@color/color_common_ashen"
+                android:textCursorDrawable="@drawable/bg_common_et_cursor" />
+
+            <View
+                android:layout_width="@dimen/common_divider_thickness"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:background="@color/color_common_ashen" />
+
+            <TextView
+                android:id="@+id/tv_send_security_code"
+                style="@style/style_text_normal_ashen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:paddingStart="@dimen/margin_normal"
+                android:text="@string/action_send_security_code" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/divider_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bg_common_et_bottom_line_unfocused" />
+
+        <EditText
+            android:id="@+id/et_user_name"
+            style="@style/style_text_normal_ashen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_edit_height"
+            android:background="@null"
+            android:gravity="bottom"
+            android:hint="@string/user_name"
+            android:paddingBottom="@dimen/margin_small"
+            android:textColorHint="@color/color_common_ashen"
+            android:textCursorDrawable="@drawable/bg_common_et_cursor" />
+
+        <ImageView
+            android:id="@+id/divider_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bg_common_et_bottom_line_unfocused" />
+    </LinearLayout>
+</LinearLayout>

@@ -13,6 +13,7 @@ import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.CommonPagerAdapter;
 import com.dev.kit.basemodule.view.CustomIndicator;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.config.Constants;
 
 import java.util.Arrays;
 import java.util.List;
@@ -58,12 +59,18 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login: {
-                startActivity(new Intent(this, LoginActivity.class));
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.putExtra(Constants.LOGIN_MODE, Constants.LOGIN_MODE_USER);
+                startActivity(intent);
                 finish();
                 break;
             }
 
             case R.id.bt_start_browse: {
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.putExtra(Constants.LOGIN_MODE, Constants.LOGIN_MODE_VISITOR);
+                startActivity(intent);
+                finish();
                 break;
             }
         }

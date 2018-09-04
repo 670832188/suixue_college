@@ -3,8 +3,9 @@
     <color name="color_common_white">#FFFFFF</color>
     <color name="color_common_text">#666666</color>
     <color name="color_common_gray">#b5b5b5</color>
+    <color name="color_common_ashen">#dfd2d2</color>
     <color name="color_transparent">#00000000</color>
     <color name="color_main_bg">#465C96</color>
-    <color name="color_et_bottom_unfocused">#b5b5b5</color>
+    <color name="color_et_bottom_unfocused">#dfd2d2</color>
     <color name="color_et_bottom_focused">#FFFFFF</color>
 </resources>

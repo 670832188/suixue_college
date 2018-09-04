@@ -49,4 +49,29 @@
         <item name="android:textSize">@dimen/text_size_super</item>
         <item name="android:textColor">@color/color_common_white</item>
     </style>
+
+    <style name="style_text_small_ashen">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/color_common_ashen</item>
+    </style>
+
+    <style name="style_text_normal_ashen">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/color_common_ashen</item>
+    </style>
+
+    <style name="style_text_large_ashen">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/color_common_ashen</item>
+    </style>
+
+    <style name="style_text_larger_ashen">
+        <item name="android:textSize">@dimen/text_size_larger</item>
+        <item name="android:textColor">@color/color_common_ashen</item>
+    </style>
+
+    <style name="style_text_super_ashen">
+        <item name="android:textSize">@dimen/text_size_super</item>
+        <item name="android:textColor">@color/color_common_ashen</item>
+    </style>
 </resources>

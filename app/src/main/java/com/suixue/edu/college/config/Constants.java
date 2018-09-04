@@ -8,4 +8,5 @@ package com.suixue.edu.college.config;
 public class Constants {
     public static final String IS_FIRST_IN = "isFirstIn";
     public static final String USER_INFO = "userInfo";
+    public static final String DAY_OF_BIRTH = "dayOfBirth";
 }

@@ -1,5 +1,6 @@
 package com.suixue.edu.college.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -57,6 +58,8 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login: {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 break;
             }
 

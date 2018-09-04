@@ -10,6 +10,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/iv_left"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
@@ -30,5 +31,7 @@
             android:paddingTop="@dimen/margin_small" />
     </RelativeLayout>
 
-    <include layout="@layout/layout_date_of_birth" />
+    <include
+        android:id="@+id/ll_day_of_birth"
+        layout="@layout/layout_date_of_birth" />
 </LinearLayout>

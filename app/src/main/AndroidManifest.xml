@@ -23,7 +23,11 @@
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/BaseTheme.TranslucentStatusTheme" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/BaseTheme.TranslucentStatusTheme" />
         <activity android:name=".activity.MainActivity" />
+
     </application>
 
 </manifest>

@@ -11,7 +11,10 @@
 
     <string name="action_start_browse">开始吧</string>
     <string name="action_login">登录</string>
-
-    
+    <string name="protocol_tip">马上就完成了。请请按&#160;下一步，表示您已阅读了解隐私策略并同意服务条款</string>
+    <string-array name="protocol_name_array">
+        <item>隐私策略</item>
+        <item>服务条款</item>
+    </string-array>
 
 </resources>

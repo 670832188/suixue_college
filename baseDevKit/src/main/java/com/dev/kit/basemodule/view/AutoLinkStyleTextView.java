@@ -19,6 +19,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.dev.kit.basemodule.R;
+import com.dev.kit.basemodule.util.LogUtil;
 
 /**
  * Created by cuiyan on 2018/9/3.
@@ -65,7 +66,7 @@ public class AutoLinkStyleTextView extends AppCompatTextView {
      * 部分文字链接的通过xml设置静态渲染
      */
     private void addStyle() {
-        if (!TextUtils.isEmpty(getText()) && !TextUtils.isEmpty(defaultTextValue) && defaultTextValue.contains(",")) {
+        if (!TextUtils.isEmpty(getText()) && !TextUtils.isEmpty(defaultTextValue) && defaultTextValue.contains(CLICK_SPAN_TEXT_SEPARATOR)) {
             String[] values = defaultTextValue.split(CLICK_SPAN_TEXT_SEPARATOR);
             SpannableString spannableString = new SpannableString(getText().toString().trim());
             for (int i = 0; i < values.length; i++) {

@@ -12,8 +12,8 @@
         <item name="colorPrimaryDark">@color/color_common_white</item>
         <item name="colorAccent">@color/color_common_white</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
-        <item name="android:statusBarColor">@color/color_common_white</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/color_main_status_bar</item>
+        <!--<item name="android:windowLightStatusBar">true</item>-->
     </style>
 
     <style name="BaseTheme.TranslucentStatusTheme">

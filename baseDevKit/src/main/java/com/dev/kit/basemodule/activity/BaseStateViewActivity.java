@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 
 public abstract class BaseStateViewActivity extends BaseActivity {
     private int contentState = STATE_INVALID;
+    private boolean showContent;
     private View lastContentView;
     private FrameLayout flContainer;
     // 网络请求状态视图
@@ -71,7 +72,9 @@ public abstract class BaseStateViewActivity extends BaseActivity {
         progressView.setVisibility(View.GONE);
         netErrorView.setVisibility(View.GONE);
         dataEmptyView.setVisibility(View.GONE);
-        dataContentView.setVisibility(View.GONE);
+        if (!showContent) {
+            dataContentView.setVisibility(View.GONE);
+        }
         flContainer.addView(progressView);
         flContainer.addView(netErrorView);
         flContainer.addView(dataEmptyView);
@@ -83,6 +86,11 @@ public abstract class BaseStateViewActivity extends BaseActivity {
     }
 
     public abstract View createContentView(LayoutInflater inflater, ViewGroup contentRoot);
+
+    // 子类在调用super.onCreate方法前调用
+    public void showContent(boolean showContent) {
+        this.showContent = showContent;
+    }
 
     public void setOnStateChangeListener(@NonNull OnStateChangeListener onStateChangeListener) {
         this.onStateChangeListener = onStateChangeListener;

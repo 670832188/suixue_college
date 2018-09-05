@@ -133,7 +133,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             return;
         }
         PreferenceUtil.setStringValue(Constants.YEAR_OF_BIRTH, yearOfBirth);
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, VisitorInterestActivity.class));
     }
 
     private void getSecurityCode() {

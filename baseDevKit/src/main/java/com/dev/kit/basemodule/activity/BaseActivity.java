@@ -98,6 +98,18 @@ public class BaseActivity extends RxActivity {
         void onBackPressed();
     }
 
+    public void setHideKeyBoardTouchOutside() {
+        View contentView = findViewById(android.R.id.content);
+        if (contentView != null) {
+            contentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideKeyBoard();
+                }
+            });
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

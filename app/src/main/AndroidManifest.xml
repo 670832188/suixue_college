@@ -27,6 +27,10 @@
             android:name=".activity.RegisterActivity"
             android:theme="@style/BaseTheme.TranslucentStatusTheme"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/BaseTheme.TranslucentStatusTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.MainActivity" />
 
     </application>

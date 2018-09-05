@@ -11,7 +11,7 @@ public class UserInfo {
     private String userId;
     private String mobile;
     private String userAvatarUrl;
-
+    private String authToken;
 
     public String getUserName() {
         return userName;
@@ -29,7 +29,10 @@ public class UserInfo {
         return userAvatarUrl;
     }
 
-// testCode
+    public String getAuthToken() {
+        return authToken;
+    }
+    // testCode
 
 
     public void setUserName(String userName) {
@@ -46,5 +49,9 @@ public class UserInfo {
 
     public void setUserAvatarUrl(String userAvatarUrl) {
         this.userAvatarUrl = userAvatarUrl;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }

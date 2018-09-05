@@ -31,4 +31,13 @@ public class StringUtil {
         spannableString.setSpan(new ForegroundColorSpan(color), startIndex, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
+
+    public static int stringToInteger(String intString) {
+        try {
+            return Integer.valueOf(intString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Integer.MIN_VALUE;
+        }
+    }
 }

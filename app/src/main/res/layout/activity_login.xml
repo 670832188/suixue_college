@@ -1,39 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="30dp"
-    android:gravity="center_horizontal"
+    android:background="@color/color_main_bg"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ll_tip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+    <ImageView
+        android:id="@+id/iv_left"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/margin_super"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_back" />
 
-        <TextView
-            style="@style/style_text_large_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name_tip" />
-
-        <TextView
-            android:id="@+id/tv_name_desc"
-            style="@style/style_text_normal_ashen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/name_desc" />
-    </LinearLayout>
-
+    <ImageView
+        android:id="@+id/iv_guide_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_larger"
+        android:src="@drawable/ic_guide_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ll_tip"
-        android:layout_marginTop="40dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="@dimen/margin_super"
         android:orientation="vertical">
 
         <EditText
@@ -99,49 +93,17 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:src="@drawable/bg_common_et_bottom_line_unfocused" />
-
-        <EditText
-            android:id="@+id/et_user_name"
-            style="@style/style_text_normal_ashen"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/common_edit_height"
-            android:background="@null"
-            android:gravity="bottom"
-            android:hint="@string/user_name"
-            android:paddingBottom="@dimen/margin_small"
-            android:textColorHint="@color/color_common_ashen"
-            android:textCursorDrawable="@drawable/bg_common_et_cursor" />
-
-        <ImageView
-            android:id="@+id/divider_3"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:src="@drawable/bg_common_et_bottom_line_unfocused" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/style_text_normal_ashen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/has_user_account_tip" />
-
-        <TextView
-            android:id="@+id/tv_login"
-            style="@style/style_text_normal_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_small"
-            android:paddingEnd="@dimen/margin_normal"
-            android:paddingStart="@dimen/margin_normal"
-            android:paddingTop="@dimen/margin_small"
-            android:text="@string/action_login" />
-    </LinearLayout>
-</RelativeLayout>
+    <Button
+        android:id="@+id/bt_login"
+        style="@style/style_text_large_white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/confirm_btn_height"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="@dimen/margin_super"
+        android:background="@drawable/bg_login_btn"
+        android:gravity="center"
+        android:text="@string/action_login" />
+</LinearLayout>

@@ -26,9 +26,11 @@
     <string name="user_name">用户名</string>
     <string name="has_user_account_tip">已经有账户了？</string>
     <string name="tip_please_input_year_of_birth">请输入出生年份</string>
+    <string name="tip_year_of_birth_error">出生年份错误</string>
     <string name="tip_please_input_mobile_number">请输入手机号</string>
     <string name="tip_please_input_security_code">请输入验证码</string>
     <string name="tip_please_input_user_name">请输入用户名</string>
     <string name="time_count_down">%d&#160;s</string>
+    <string name="action_complete">完成</string>
 
 </resources>

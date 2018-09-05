@@ -62,7 +62,7 @@ public abstract class BaseStateViewActivity extends BaseActivity {
     }
 
     private void initBaseView() {
-        flContainer = (FrameLayout) findViewById(R.id.fl_container);
+        flContainer = findViewById(R.id.fl_container);
         LayoutInflater inflater = LayoutInflater.from(this);
         progressView = inflater.inflate(R.layout.layout_net_loading, flContainer, false);
         netErrorView = inflater.inflate(R.layout.layout_net_error, flContainer, false);

@@ -32,7 +32,7 @@
             android:theme="@style/BaseTheme.TranslucentStatusTheme"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".activity.VisitorInterestActivity" />
+        <activity android:name=".activity.InterestActivity" />
         <activity android:name=".activity.MainActivity" />
 
     </application>

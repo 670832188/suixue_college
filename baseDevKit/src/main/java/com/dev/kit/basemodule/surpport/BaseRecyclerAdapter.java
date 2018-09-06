@@ -70,6 +70,15 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
         }
     }
 
+    public void insertData(int index, List<T> expendedData) {
+        synchronized (this) {
+            if (dataList != null) {
+                dataList.addAll(index, expendedData);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
     public void appendItem(T item, boolean updateSingleItem) {
         synchronized (this) {
             if (dataList != null) {

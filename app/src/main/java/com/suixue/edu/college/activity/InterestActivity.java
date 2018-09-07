@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
+import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.InterestAdapter;
@@ -55,6 +56,36 @@ public class InterestActivity extends BaseStateViewActivity {
             }
         });
         rvInterest.setLayoutManager(layoutManager);
+        interestAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                InterestInfo info = interestAdapter.getItem(position);
+                if (!info.isLocalCategoryTitle()) {
+                    if (info.isChecked()) {
+                        info.setChecked(false);
+                        interestAdapter.removeSelectedItem(info);
+                        interestAdapter.notifyItemChanged(position);
+                    } else {
+                        if (interestAdapter.getSelectedItemCount() < 5) {
+                            info.setChecked(true);
+                            interestAdapter.addSelectedItem(info);
+                            interestAdapter.notifyItemChanged(position);
+                        } else {
+                            showToast(R.string.tip_selected_interest_reach_limit);
+                        }
+                    }
+
+                    if (!info.isChildCategory() && !info.isChildAdded()) {
+                        if (info.getSubCategoryList() != null && info.getSubCategoryList().size() > 0) {
+                            info.setChildAdded(true);
+                            interestAdapter.getDataList().addAll(position + 1, info.getSubCategoryList());
+                            interestAdapter.notifyItemRangeInserted(position + 1, info.getSubCategoryList().size());
+                            interestAdapter.notifyItemRangeChanged(position + 1, interestAdapter.getDataList().size());
+                        }
+                    }
+                }
+            }
+        });
         rvInterest.setAdapter(interestAdapter);
     }
 

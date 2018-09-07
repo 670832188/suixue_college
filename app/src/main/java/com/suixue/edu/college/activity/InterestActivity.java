@@ -113,6 +113,7 @@ public class InterestActivity extends BaseStateViewActivity {
                     child.setCategoryName("专业类" + k);
                     child.setCategoryId(String.valueOf(k));
                     child.setBgColor(itemBgColors[i % 5]);
+                    child.setChildCategory(true);
                     childList.add(child);
                 }
                 info.setSubCategoryList(childList);
@@ -140,6 +141,7 @@ public class InterestActivity extends BaseStateViewActivity {
                     child.setCategoryName("生活类" + k);
                     child.setCategoryId(String.valueOf(k));
                     child.setBgColor(itemBgColors[i % 5]);
+                    child.setChildCategory(true);
                     childList.add(child);
                 }
                 info.setSubCategoryList(childList);

@@ -12,6 +12,12 @@ public class BlogContentInfo {
     private String contentType;
     // picture或video类型时为url地址；text类型时为文本内容
     private String content;
+    // 视频类型使用：视频封面缩略图
+    private String videoThumbnail;
+    // 视频及图片类型使用：视频宽度
+    private int width;
+    // 视频及图片类型使用：视频高度
+    private int height;
 
     public String getContentType() {
         return contentType;
@@ -21,11 +27,35 @@ public class BlogContentInfo {
         return content;
     }
 
+    public String getVideoThumbnail() {
+        return videoThumbnail;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+/////////////////////////////////////////////////////////////////
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setVideoThumbnail(String videoThumbnail) {
+        this.videoThumbnail = videoThumbnail;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

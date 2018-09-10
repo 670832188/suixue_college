@@ -7,9 +7,9 @@ import java.util.List;
  * Created by cuiyan on 2018/8/30.
  */
 public class BlogInfo {
-    private String creatorName;
-    private String creatorId;
-    private String creatorAvatarUrl;
+    private String bloggerName;
+    private String bloggerId;
+    private String bloggerAvatarUrl;
     // 是否被用户关注
     private boolean isConcerned;
     // 帖子内容数据列表
@@ -19,16 +19,16 @@ public class BlogInfo {
     // 关注度、热度
     private String attentionLevel;
 
-    public String getCreatorName() {
-        return creatorName;
+    public String getBloggerName() {
+        return bloggerName;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    public String getBloggerId() {
+        return bloggerId;
     }
 
-    public String getCreatorAvatarUrl() {
-        return creatorAvatarUrl;
+    public String getBloggerAvatarUrl() {
+        return bloggerAvatarUrl;
     }
 
     public boolean isConcerned() {
@@ -47,16 +47,16 @@ public class BlogInfo {
         return attentionLevel;
     }
 
-    public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
+    public void setBloggerName(String bloggerName) {
+        this.bloggerName = bloggerName;
     }
 
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
+    public void setBloggerId(String bloggerId) {
+        this.bloggerId = bloggerId;
     }
 
-    public void setCreatorAvatarUrl(String creatorAvatarUrl) {
-        this.creatorAvatarUrl = creatorAvatarUrl;
+    public void setBloggerAvatarUrl(String bloggerAvatarUrl) {
+        this.bloggerAvatarUrl = bloggerAvatarUrl;
     }
 
     public void setConcerned(boolean concerned) {

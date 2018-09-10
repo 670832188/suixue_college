@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.entity.BlogContentInfo;
@@ -51,6 +52,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_FULL);
         setContentView(R.layout.layout_blog_list);
         init();
     }

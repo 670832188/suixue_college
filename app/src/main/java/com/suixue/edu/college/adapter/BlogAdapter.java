@@ -89,6 +89,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
         RecyclerView rvContent = holder.getView(R.id.rv_blog_content);
         rvContent.setLayoutManager(new LinearLayoutManager(context));
+//        rvContent.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, context.getResources().getColor(R.color.transparent), DisplayUtil.dp2px(5)));
         rvContent.setAdapter(new BlogContentAdapter(context, info.getBlogContentList()));
         holder.setText(R.id.tv_attention_level, "热度" + info.getAttentionLevel());
     }
@@ -97,7 +98,5 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         RecyclerView rvRecommendBlogger = holder.getView(R.id.rv_recommended_blogger);
         rvRecommendBlogger.setLayoutManager(new LinearLayoutManager(context));
         rvRecommendBlogger.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, Color.TRANSPARENT, DisplayUtil.dp2px(5)));
-
     }
-
 }

@@ -13,8 +13,8 @@
 
         <com.joooonho.SelectableRoundedImageView
             android:id="@+id/iv_blogger_avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
             app:sriv_oval="true" />

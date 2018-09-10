@@ -38,7 +38,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
     @NonNull
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return RecyclerViewHolder.getViewHolder(context, parent, viewType == VIEW_TYPE_BLOG ? R.layout.item_bolog_info : R.layout.item_recommended_blogger);
+        return RecyclerViewHolder.getViewHolder(context, null, viewType == VIEW_TYPE_BLOG ? R.layout.item_bolog_info : R.layout.item_recommended_blogger);
     }
 
     @Override

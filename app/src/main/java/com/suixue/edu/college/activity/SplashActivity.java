@@ -71,7 +71,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra(Constants.REGISTER_MODE, Constants.REGISTER_MODE_VISITOR);
                 startActivity(intent);
-                finish();
+//                finish();
                 break;
             }
         }

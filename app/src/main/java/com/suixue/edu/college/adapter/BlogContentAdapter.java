@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
 import com.dev.kit.basemodule.util.ImageUtil;
-import com.dev.kit.basemodule.util.LogUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -45,7 +44,6 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
             case BlogContentInfo.CONTENT_TYPE_PICTURE: {
                 holder.setVisibility(R.id.iv_img_item, View.VISIBLE);
                 ImageView ivImgItem = holder.getView(R.id.iv_img_item);
-                LogUtil.e("mytag", "imgUrl: " + info.getContent());
                 ImageUtil.showImg(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivImgItem, 1);
                 break;
             }

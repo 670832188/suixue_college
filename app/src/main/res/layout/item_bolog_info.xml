@@ -16,6 +16,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
             app:sriv_oval="true" />
 
         <TextView
@@ -57,23 +58,23 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:src="@mipmap/ic_back"
                 android:id="@+id/iv_transfer"
                 android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_height="30dp"
+                android:src="@mipmap/ic_back" />
 
             <ImageView
-                android:src="@mipmap/ic_back"
                 android:id="@+id/iv_share"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="@dimen/margin_normal" />
+                android:layout_marginStart="@dimen/margin_normal"
+                android:src="@mipmap/ic_back" />
 
             <ImageView
-                android:src="@mipmap/ic_back"
                 android:id="@+id/iv_like"
                 android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_height="30dp"
+                android:src="@mipmap/ic_back" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

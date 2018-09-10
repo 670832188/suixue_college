@@ -1,6 +1,7 @@
 package com.dev.kit.basemodule.surpport;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +21,23 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
 
+    public BaseRecyclerAdapter(Context context, List<T> dataList) {
+        this.context = context;
+        this.dataList = dataList;
+    }
+
     public BaseRecyclerAdapter(Context context, List<T> dataList, int itemViewLayoutId) {
         this.context = context;
         this.dataList = dataList;
         this.itemViewLayoutId = itemViewLayoutId;
     }
 
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return RecyclerViewHolder.getViewHolder(context, parent, itemViewLayoutId);
     }
 
-    public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         fillData(holder, position);
         if (onItemClickListener != null) {
             holder.getItemView().setOnClickListener(new View.OnClickListener() {

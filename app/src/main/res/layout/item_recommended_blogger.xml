@@ -12,7 +12,7 @@
         android:layout_marginTop="@dimen/margin_normal"
         android:text="@string/recommended" />
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recommended_blogger"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

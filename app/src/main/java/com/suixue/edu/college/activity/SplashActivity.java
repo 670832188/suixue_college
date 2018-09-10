@@ -67,7 +67,8 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
             }
 
             case R.id.bt_start_browse: {
-                Intent intent = new Intent(this, RegisterActivity.class);
+//                Intent intent = new Intent(this, RegisterActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra(Constants.REGISTER_MODE, Constants.REGISTER_MODE_VISITOR);
                 startActivity(intent);
                 finish();

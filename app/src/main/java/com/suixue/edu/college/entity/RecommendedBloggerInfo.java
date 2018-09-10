@@ -3,7 +3,7 @@ package com.suixue.edu.college.entity;
 /**
  * Created by cuiyan on 2018/9/10.
  */
-public class RecommendedBlogger {
+public class RecommendedBloggerInfo {
     private String bloggerId;
     private String bloggerAvatarUrl;
     private String bloggerName;

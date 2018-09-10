@@ -50,4 +50,5 @@ dependencies {
     api 'com.googlecode.mp4parser:isoparser:1.1.21'
     api 'com.daasuu:CameraRecorder-android:0.1.0'
     api 'com.shuyu:gsyVideoPlayer-java:6.0.0-beta'
+    api 'com.shuyu:gsyVideoPlayer-arm64:6.0.0-beta'
 }

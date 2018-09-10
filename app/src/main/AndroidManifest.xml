@@ -33,7 +33,9 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name=".activity.InterestActivity" />
-        <activity android:name=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
     </application>
 

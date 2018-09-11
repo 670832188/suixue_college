@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="210dp"
     android:layout_height="300dp"
+    android:layout_marginEnd="@dimen/margin_small"
     android:background="@drawable/bg_white_corner"
     android:orientation="vertical">
 
@@ -86,11 +87,14 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
+        <com.joooonho.SelectableRoundedImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginEnd="@dimen/margin_small"
-            android:src="@drawable/bg_left_corner_light_gray" />
+            android:background="@drawable/bg_left_corner_light_gray"
+            android:scaleType="centerCrop"
+            app:sriv_left_bottom_corner_radius="5dp"
+            app:sriv_left_top_corner_radius="5dp" />
 
         <com.joooonho.SelectableRoundedImageView
             android:layout_width="60dp"
@@ -98,9 +102,12 @@
             android:layout_marginEnd="@dimen/margin_small"
             android:background="@color/color_common_light_gray" />
 
-        <ImageView
+        <com.joooonho.SelectableRoundedImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/bg_right_corner_light_gray" />
+            android:background="@drawable/bg_right_corner_light_gray"
+            android:scaleType="centerCrop"
+            app:sriv_right_bottom_corner_radius="5dp"
+            app:sriv_right_top_corner_radius="5dp" />
     </LinearLayout>
 </LinearLayout>

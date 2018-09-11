@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.entity.BlogContentInfo;
@@ -27,34 +28,50 @@ public class MainActivity extends BaseActivity {
     private BlogAdapter adapter;
     private static final String[] thumbList =
             {
-                    "http://img19.3lian.com/d/file/201803/13/580bae0442a95837bd6f2724a22c9a3b.jpg",
-                    "http://img19.3lian.com/d/file/201803/10/292711fbc1fb75bb7d0d87717ddfed7c.jpg",
-                    "http://img19.3lian.com/d/file/201803/13/b8d6f128d9363249060cebb5be7c5a53.jpg",
-                    "http://img19.3lian.com/d/file/201803/10/9148e66ead8afa3751c971f0c49882f0.jpg",
-                    "http://img19.3lian.com/d/file/201803/13/e5f77d6b93426a53cb37e1d1a103ecaf.jpg",
-                    "http://img19.3lian.com/d/file/201803/10/161a0853bb9eff46b8bb2ce165ca7bfb.jpg"
+                    "http://img19.3lian.com/d/file/201803/09/b701b8995fccf7d7664636765a519008.jpg",
+                    "http://img19.3lian.com/d/file/201803/09/27b8e420b535310d6420eb42c000956a.jpg",
+                    "http://img19.3lian.com/d/file/201803/09/d53b7b6804298cbfe30e379505dba03c.jpg",
+                    "http://img19.3lian.com/d/file/201803/09/b69a01203075c52a28844a7d52e32d8b.jpg",
+                    "http://img19.3lian.com/d/file/201803/09/a8cb38251d3d2244eae41923b19e2de3.jpg",
+                    "http://img19.3lian.com/d/file/201803/09/ec8c139d6760cdd2274bb0362df73877.jpg",
+                    "http://img18.3lian.com/d/file/201709/28/a8835327b8e05f48b85426e3dd121091.jpg",
+                    "http://img18.3lian.com/d/file/201709/28/fe795f27efc072a5bff0645a0ba6ba1e.jpg",
+                    "http://img18.3lian.com/d/file/201709/28/12a4e4bac045735da67f10c807aadbde.jpg",
             };
 
     private static final String[] avatarUrl = {
+            "http://img19.3lian.com/d/file/201803/05/635adb96f8a4c0d41e4292ad01b52044.png",
+            "http://img19.3lian.com/d/file/201803/05/fa6cf18ea93c86703344a2b95c437048.png",
+            "http://img19.3lian.com/d/file/201803/05/3d59d002675cfeac149550c49f9189a4.png",
             "http://img19.3lian.com/d/file/201804/17/d1e2ff112d89de99362ab1ec161ac89a.jpg",
             "http://img19.3lian.com/d/file/201804/17/564553543ae3fb6e54dc96b0073ae1f7.jpg",
             "http://img19.3lian.com/d/file/201804/17/917cea7c38dfaf09c15a84a3ecc380f4.jpg",
             "http://img19.3lian.com/d/file/201804/17/cdb99115a97aa9b8a99f52f200c6172d.jpg",
             "http://img19.3lian.com/d/file/201804/17/e9ef0fdf40a70df14821aa6be5a69685.jpg",
-            "http://img19.3lian.com/d/file/201804/17/514f5c6966876fd43eccb432fa6113cb.jpg"
+            "http://img19.3lian.com/d/file/201804/17/514f5c6966876fd43eccb432fa6113cb.jpg",
     };
 
     private static final String[] videoUrls = {
-            "http://jzvd.nathen.cn/6ea7357bc3fa4658b29b7933ba575008/fbbba953374248eb913cb1408dc61d85-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/35b3dc97fbc240219961bd1fccc6400b/8d9b76ab5a584bce84a8afce012b72d3-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/df6096e7878541cbbea3f7298683fbed/ef76450342914427beafe9368a4e0397-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/384d341e000145fb82295bdc54ecef88/103eab5afca34baebc970378dd484942-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/f55530ba8a59403da0621cbf4faef15e/adae4f2e3ecf4ea780beb057e7bce84c-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/6340efd1962946ad80eeffd19b3be89c/65b499c0f16e4dd8900497e51ffa0949-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/f07fa9fddd1e45a6ae1570c7fe7967c1/c6db82685b894e25b523b1cb28d79f2e-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/d2e969f2ec734520b46ab0965d2b68bd/f124edfef6c24be8b1a7b7f996ccc5e0-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/4f965ad507ef4194a60a943a34cfe147/32af151ea132471f92c9ced2cff785ea-5287d2089db37e62345123a1be272f8b.mp4",
-            "http://jzvd.nathen.cn/342a5f7ef6124a4a8faf00e738b8bee4/cf6d9db0bd4d41f59d09ea0a81e918fd-5287d2089db37e62345123a1be272f8b.mp4"
+            "http://ksy.fffffive.com/mda-hinp1ik37b0rt1mj/mda-hinp1ik37b0rt1mj.mp4",
+            "http://ksy.fffffive.com/mda-himtqzs2un1u8x2v/mda-himtqzs2un1u8x2v.mp4",
+            "http://ksy.fffffive.com/mda-hiw5zixc1ghpgrhn/mda-hiw5zixc1ghpgrhn.mp4",
+            "http://ksy.fffffive.com/mda-hiw61ic7i4qkcvmx/mda-hiw61ic7i4qkcvmx.mp4",
+            "http://ksy.fffffive.com/mda-hihvysind8etz7ga/mda-hihvysind8etz7ga.mp4",
+            "http://ksy.fffffive.com/mda-hiw60i3kczgum0av/mda-hiw60i3kczgum0av.mp4",
+            "http://ksy.fffffive.com/mda-hidnzn5r61qwhxp4/mda-hidnzn5r61qwhxp4.mp4",
+            "http://ksy.fffffive.com/mda-he1zy3rky0rwrf60/mda-he1zy3rky0rwrf60.mp4",
+            "http://ksy.fffffive.com/mda-hh6cxd0dqjqcszcj/mda-hh6cxd0dqjqcszcj.mp4",
+            "http://ksy.fffffive.com/mda-hifsrhtqjn8jxeha/mda-hifsrhtqjn8jxeha.mp4",
+            "http://ksy.fffffive.com/mda-hics799vjrg0w5az/mda-hics799vjrg0w5az.mp4",
+            "http://ksy.fffffive.com/mda-hfshah045smezhtf/mda-hfshah045smezhtf.mp4",
+            "http://ksy.fffffive.com/mda-hh4mbturm902j7wi/mda-hh4mbturm902j7wi.mp4",
+            "http://ksy.fffffive.com/mda-hiwxzficjivwmsch/mda-hiwxzficjivwmsch.mp4",
+            "http://ksy.fffffive.com/mda-hhug2p7hfbhnv40r/mda-hhug2p7hfbhnv40r.mp4",
+            "http://ksy.fffffive.com/mda-hieuuaei6cufye2c/mda-hieuuaei6cufye2c.mp4",
+            "http://ksy.fffffive.com/mda-hibhufepe5m1tfw1/mda-hibhufepe5m1tfw1.mp4",
+            "http://ksy.fffffive.com/mda-hhzeh4c05ivmtiv7/mda-hhzeh4c05ivmtiv7.mp4",
+            "http://ksy.fffffive.com/mda-hfrigfn2y9jvzm72/mda-hfrigfn2y9jvzm72.mp4",
+            "http://ksy.fffffive.com/mda-himek207gvvqg3wq/mda-himek207gvvqg3wq.mp4"
     };
 
     @Override
@@ -83,8 +100,8 @@ public class MainActivity extends BaseActivity {
                 List<RecommendedBloggerInfo> recommendedBloggerInfoList = new ArrayList<>();
                 for (int j = 0; j < 5; j++) {
                     RecommendedBloggerInfo info = new RecommendedBloggerInfo();
-                    info.setBloggerAvatarUrl(avatarUrl[Math.abs(random.nextInt() % 6)]);
-                    info.setBloggerCoverUrl(thumbList[Math.abs(random.nextInt() % 6)]);
+                    info.setBloggerAvatarUrl(avatarUrl[Math.abs(random.nextInt() % avatarUrl.length)]);
+                    info.setBloggerCoverUrl(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
                     if (random.nextInt() % 2 == 0) {
                         info.setBloggerCoverDesc("李四" + (j + 1) + "的博客");
                     }
@@ -100,7 +117,7 @@ public class MainActivity extends BaseActivity {
                 info.setBloggerId(String.valueOf(i + 1));
                 info.setBloggerName("张三" + (i + 1));
                 info.setAttentionLevel(String.valueOf(random.nextInt(100) + 10));
-                info.setBloggerAvatarUrl(thumbList[Math.abs(random.nextInt() % 6)]);
+                info.setBloggerAvatarUrl(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
                 int contentItemSize = random.nextInt(5) + 3;
                 List<BlogContentInfo> contentInfoList = new ArrayList<>();
                 boolean isVideoAdded = false;
@@ -108,10 +125,10 @@ public class MainActivity extends BaseActivity {
                     BlogContentInfo contentInfo = new BlogContentInfo();
                     if (random.nextInt() % 3 == 0 && !isVideoAdded) {
                         contentInfo.setContentType(BlogContentInfo.CONTENT_TYPE_VIDEO);
-                        contentInfo.setContent(videoUrls[Math.abs(random.nextInt() % 10)]);
+                        contentInfo.setContent(videoUrls[Math.abs(random.nextInt() % videoUrls.length)]);
                         isVideoAdded = true;
                     } else if (Math.abs(random.nextInt() % 2) == 0) {
-                        contentInfo.setContent(thumbList[Math.abs(random.nextInt() % 6)]);
+                        contentInfo.setContent(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
                         contentInfo.setContentType(BlogContentInfo.CONTENT_TYPE_PICTURE);
                     } else {
                         contentInfo.setContent("这是一段文本");
@@ -124,5 +141,31 @@ public class MainActivity extends BaseActivity {
             }
         }
         adapter = new BlogAdapter(this, dataList);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        GSYVideoManager.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GSYVideoManager.onResume(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GSYVideoManager.releaseAllVideos();
     }
 }

@@ -97,7 +97,6 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     private void fillRecommendedBloggerData(RecyclerViewHolder holder, RecommendedBloggerResult recommendedBloggerResult) {
         RecyclerView rvRecommendBlogger = holder.getView(R.id.rv_recommended_blogger);
         rvRecommendBlogger.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        rvRecommendBlogger.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_VERTICAL, Color.TRANSPARENT, DisplayUtil.dp2px(5)));
         rvRecommendBlogger.setAdapter(new RecommendedBloggerAdapter(context, recommendedBloggerResult.getRecommendedBloggerInfoList()));
     }
 }

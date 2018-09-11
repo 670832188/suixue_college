@@ -52,7 +52,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_FULL);
+//        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_FULL);
         setContentView(R.layout.layout_blog_list);
         init();
     }

@@ -56,7 +56,7 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
 
     private void setVideoPlay(RecyclerViewHolder holder, int position) {
         holder.setVisibility(R.id.video_player, View.VISIBLE);
-        BlogContentInfo info = getItem(position);
+        final BlogContentInfo info = getItem(position);
         final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_player);
         GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
         gsyVideoPlayer.loadCoverImage(info.getContent(), R.mipmap.ic_launcher);
@@ -68,7 +68,7 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
                 .setVideoTitle("")
                 .setCacheWithPlay(true)
                 .setRotateViewAuto(true)
-                .setLockLand(true)
+                .setLockLand(false)
                 .setPlayTag(info.getContent() + position)
                 .setShowFullAnimation(true)
                 .setNeedLockFull(true)

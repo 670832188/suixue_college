@@ -169,4 +169,8 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
         byStartedClick = true;
         super.onStartTrackingTouch(seekBar);
     }
+
+    public ImageView getCoverImage() {
+        return mCoverImage;
+    }
 }

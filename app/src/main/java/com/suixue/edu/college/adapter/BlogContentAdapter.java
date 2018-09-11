@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.Transformation;
@@ -110,8 +111,64 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         holder.setVisibility(R.id.video_player, View.VISIBLE);
         final BlogContentInfo info = getItem(position);
         final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_player);
+        if (info.getWidth() > 0 && info.getHeight() > 0) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+            if (layoutParams != null) {
+                gsyVideoPlayer.getLayoutParams().width = info.getWidth();
+                gsyVideoPlayer.getLayoutParams().height = info.getHeight();
+            } else {
+                layoutParams = new FrameLayout.LayoutParams(info.getWidth(), info.getHeight());
+                gsyVideoPlayer.setLayoutParams(layoutParams);
+            }
+        }
         GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
-        gsyVideoPlayer.loadCoverImage(info.getContent(), R.mipmap.ic_launcher);
+//        gsyVideoPlayer.loadCoverImage(info.getContent(), R.mipmap.ic_launcher);
+        final ImageView coverImage = gsyVideoPlayer.getCoverImage();
+        GlideUtil.loadImage(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, coverImage, 1, new Transformation<Bitmap>() {
+            @NonNull
+            @Override
+            public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
+                if (info.getWidth() == 0 && info.getHeight() == 0) {
+                    int imgWidth = resource.get().getWidth();
+                    int imgHeight = resource.get().getHeight();
+                    int ivWidth = gsyVideoPlayer.getWidth();
+
+                    if (ivWidth == 0) {
+                        gsyVideoPlayer.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
+                        ivWidth = gsyVideoPlayer.getMeasuredWidth();
+                    }
+
+                    if (imgWidth > ivWidth) {
+                        imgWidth = ivWidth;
+                        imgHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
+                    }
+                    info.setWidth(imgWidth);
+                    info.setHeight(imgHeight);
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+                    if (layoutParams != null) {
+                        gsyVideoPlayer.getLayoutParams().width = info.getWidth();
+                        gsyVideoPlayer.getLayoutParams().height = info.getHeight();
+                    } else {
+                        layoutParams = new FrameLayout.LayoutParams(info.getWidth(), info.getHeight());
+                        gsyVideoPlayer.setLayoutParams(layoutParams);
+                    }
+                    RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) coverImage.getLayoutParams();
+                    if (layoutParams1 != null) {
+                        coverImage.getLayoutParams().width = info.getWidth();
+                        coverImage.getLayoutParams().height = info.getHeight();
+                    } else {
+                        layoutParams1 = new RelativeLayout.LayoutParams(info.getWidth(), info.getHeight());
+                        coverImage.setLayoutParams(layoutParams1);
+                    }
+                }
+                return resource;
+            }
+
+            @Override
+            public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
+            }
+        });
         gsyVideoOptionBuilder
                 .setIsTouchWiget(false)
 //                .setThumbImageView(ivCover)

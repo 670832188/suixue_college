@@ -62,7 +62,7 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
         Glide.with(getContext().getApplicationContext())
                 .setDefaultRequestOptions(
                         new RequestOptions()
-                                .frame(1000000)
+//                                .frame(1000000) 屏蔽
                                 .centerCrop()
                                 .error(res)
                                 .placeholder(res))

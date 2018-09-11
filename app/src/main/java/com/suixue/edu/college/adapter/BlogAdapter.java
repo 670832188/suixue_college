@@ -13,7 +13,7 @@ import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
 import com.dev.kit.basemodule.util.DisplayUtil;
-import com.dev.kit.basemodule.util.ImageUtil;
+import com.dev.kit.basemodule.util.GlideUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.entity.BlogInfo;
@@ -59,7 +59,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
     private void fillBlogData(RecyclerViewHolder holder, BlogInfo info) {
         ImageView ivBloggerAvatar = holder.getView(R.id.iv_blogger_avatar);
-        ImageUtil.showImg(context, info.getBloggerAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivBloggerAvatar, 1);
+        GlideUtil.loadImage(context, info.getBloggerAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivBloggerAvatar, 1);
         holder.setText(R.id.tv_blogger_name, info.getBloggerName());
         holder.setOnClickListener(R.id.iv_close, new View.OnClickListener() {
             @Override
@@ -96,7 +96,8 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
     private void fillRecommendedBloggerData(RecyclerViewHolder holder, RecommendedBloggerResult recommendedBloggerResult) {
         RecyclerView rvRecommendBlogger = holder.getView(R.id.rv_recommended_blogger);
-        rvRecommendBlogger.setLayoutManager(new LinearLayoutManager(context));
-        rvRecommendBlogger.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, Color.TRANSPARENT, DisplayUtil.dp2px(5)));
+        rvRecommendBlogger.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        rvRecommendBlogger.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_VERTICAL, Color.TRANSPARENT, DisplayUtil.dp2px(5)));
+        rvRecommendBlogger.setAdapter(new RecommendedBloggerAdapter(context, recommendedBloggerResult.getRecommendedBloggerInfoList()));
     }
 }

@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.entity.BlogContentInfo;
@@ -28,13 +27,22 @@ public class MainActivity extends BaseActivity {
     private BlogAdapter adapter;
     private static final String[] thumbList =
             {
-                    "http://jzvd-pic.nathen.cn/jzvd-pic/00b026e7-b830-4994-bc87-38f4033806a6.jpg",
-                    "http://jzvd-pic.nathen.cn/jzvd-pic/1d935cc5-a1e7-4779-bdfa-20fd7a60724c.jpg",
-                    "http://jzvd-pic.nathen.cn/jzvd-pic/a019ffc1-556c-4a85-b70c-b1b49811d577.jpg",
-                    "http://jzvd-pic.nathen.cn/jzvd-pic/6fc2ae91-36e2-44c5-bb10-29ae5d5c678c.png",
-                    "http://jzvd-pic.nathen.cn/jzvd-pic/f03cee95-9b78-4dd5-986f-d162c06c385c.png",
-                    "http://jzvd-pic.nathen.cn/jzvd-pic/e7ea659f-c3d2-4979-9ea5-f993b05e5930.png",
+                    "http://img19.3lian.com/d/file/201803/13/580bae0442a95837bd6f2724a22c9a3b.jpg",
+                    "http://img19.3lian.com/d/file/201803/10/292711fbc1fb75bb7d0d87717ddfed7c.jpg",
+                    "http://img19.3lian.com/d/file/201803/13/b8d6f128d9363249060cebb5be7c5a53.jpg",
+                    "http://img19.3lian.com/d/file/201803/10/9148e66ead8afa3751c971f0c49882f0.jpg",
+                    "http://img19.3lian.com/d/file/201803/13/e5f77d6b93426a53cb37e1d1a103ecaf.jpg",
+                    "http://img19.3lian.com/d/file/201803/10/161a0853bb9eff46b8bb2ce165ca7bfb.jpg"
             };
+
+    private static final String[] avatarUrl = {
+            "http://img19.3lian.com/d/file/201804/17/d1e2ff112d89de99362ab1ec161ac89a.jpg",
+            "http://img19.3lian.com/d/file/201804/17/564553543ae3fb6e54dc96b0073ae1f7.jpg",
+            "http://img19.3lian.com/d/file/201804/17/917cea7c38dfaf09c15a84a3ecc380f4.jpg",
+            "http://img19.3lian.com/d/file/201804/17/cdb99115a97aa9b8a99f52f200c6172d.jpg",
+            "http://img19.3lian.com/d/file/201804/17/e9ef0fdf40a70df14821aa6be5a69685.jpg",
+            "http://img19.3lian.com/d/file/201804/17/514f5c6966876fd43eccb432fa6113cb.jpg"
+    };
 
     private static final String[] videoUrls = {
             "http://jzvd.nathen.cn/6ea7357bc3fa4658b29b7933ba575008/fbbba953374248eb913cb1408dc61d85-5287d2089db37e62345123a1be272f8b.mp4",
@@ -75,7 +83,12 @@ public class MainActivity extends BaseActivity {
                 List<RecommendedBloggerInfo> recommendedBloggerInfoList = new ArrayList<>();
                 for (int j = 0; j < 5; j++) {
                     RecommendedBloggerInfo info = new RecommendedBloggerInfo();
-                    info.setBloggerAvatarUrl(thumbList[Math.abs(random.nextInt() % 6)]);
+                    info.setBloggerAvatarUrl(avatarUrl[Math.abs(random.nextInt() % 6)]);
+                    info.setBloggerCoverUrl(thumbList[Math.abs(random.nextInt() % 6)]);
+                    if (random.nextInt() % 2 == 0) {
+                        info.setBloggerCoverDesc("李四" + (j + 1) + "的博客");
+                    }
+                    info.setBloggerDesc("风拂二月柳~");
                     info.setBloggerId(String.valueOf(i * 10 + j));
                     info.setBloggerName("李四" + String.valueOf(i * 10 + j));
                     recommendedBloggerInfoList.add(info);

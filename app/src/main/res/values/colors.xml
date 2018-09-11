@@ -3,9 +3,16 @@
     <color name="color_common_white">#FFFFFF</color>
     <color name="color_common_text">#666666</color>
     <color name="color_common_gray">#b5b5b5</color>
+    <color name="color_common_light_gray">#d9d9d9</color>
     <color name="color_common_ashen">#dfd2d2</color>
+    <color name="color_common_red">#ff0000</color>
+    <color name="color_common_blue">#3d85c6</color>
+    <color name="color_common_orange">#ff9900</color>
+    <color name="color_common_purple">#8e7cc3</color>
+    <color name="color_common_green">#25540e</color>
     <color name="color_transparent">#00000000</color>
     <color name="color_main_bg">#465C96</color>
     <color name="color_et_bottom_unfocused">#dfd2d2</color>
     <color name="color_et_bottom_focused">#FFFFFF</color>
+
 </resources>

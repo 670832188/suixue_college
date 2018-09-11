@@ -26,42 +26,6 @@ import me.shaohui.advancedluban.Luban;
  */
 
 public class ImageUtil {
-    public static synchronized void showImg(Context context, String imgUri, @DrawableRes int defaultSrcId, @DrawableRes int errorSrcId, ImageView target, float sizeMultiplier) {
-        if (TextUtils.isEmpty(imgUri)) {
-            return;
-        }
-        Glide.with(context)
-                .load(imgUri)
-                .apply(new RequestOptions()
-                        .placeholder(defaultSrcId)
-                        .error(errorSrcId))
-                .thumbnail((sizeMultiplier > 0 && sizeMultiplier < 1) ? sizeMultiplier : 1.0f)
-                .into(target);
-    }
-
-    public static synchronized void showImg(Context context, String imgUri, SimpleTarget<Drawable> target, @DrawableRes int defaultSrcId, @DrawableRes int errorSrcId, float sizeMultiplier) {
-        if (TextUtils.isEmpty(imgUri)) {
-            return;
-        }
-        Glide.with(context).load(imgUri)
-                .apply(new RequestOptions()
-                        .placeholder(defaultSrcId)
-                        .error(errorSrcId))
-                .thumbnail((sizeMultiplier > 0 && sizeMultiplier < 1) ? 1.0f : sizeMultiplier)
-                .into(target);
-    }
-
-    public static synchronized void showImg(Context context, String imgUri, @DrawableRes int defaultSrcId, @DrawableRes int errorSrcId, SimpleTarget<Bitmap> target, float sizeMultiplier) {
-        if (TextUtils.isEmpty(imgUri)) {
-            return;
-        }
-        Glide.with(context).asBitmap().load(imgUri)
-                .apply(new RequestOptions()
-                        .placeholder(defaultSrcId)
-                        .error(errorSrcId))
-                .thumbnail((sizeMultiplier > 0 && sizeMultiplier < 1) ? 1.0f : sizeMultiplier)
-                .into(target);
-    }
 
     public static synchronized Bitmap cropSquareBitmap(Bitmap bitmap) {//从中间截取一个正方形
         return cropSquareBitmap(bitmap, Integer.MAX_VALUE);

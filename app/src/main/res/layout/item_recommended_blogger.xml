@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_small"
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        style="@style/style_text_normal_white"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_normal"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:padding="@dimen/margin_normal"
         android:text="@string/recommended" />
 
     <android.support.v7.widget.RecyclerView

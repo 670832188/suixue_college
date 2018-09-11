@@ -1,5 +1,6 @@
 package com.suixue.edu.college.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -41,6 +42,14 @@ public class InterestActivity extends BaseStateViewActivity {
 
     private void init() {
         generateTestData();
+        setVisibility(R.id.tv_right, View.VISIBLE);
+        setText(R.id.tv_right, R.string.action_next_step);
+        setOnClickListener(R.id.tv_right, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(InterestActivity.this, MainActivity.class));
+            }
+        });
         RecyclerView rvInterest = findViewById(R.id.rv_interest);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 12);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

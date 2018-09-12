@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
-import com.dev.kit.basemodule.util.LogUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.InterestAdapter;
 import com.suixue.edu.college.entity.InterestInfo;

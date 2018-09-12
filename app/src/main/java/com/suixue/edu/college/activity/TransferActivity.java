@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
-import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.config.Constants;
+import com.suixue.edu.college.util.PreferenceUtil;
 
 public class TransferActivity extends BaseActivity {
 

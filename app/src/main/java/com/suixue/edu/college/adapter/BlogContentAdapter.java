@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.Resource;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
 import com.dev.kit.basemodule.util.GlideUtil;
+import com.dev.kit.basemodule.util.LogUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -131,19 +132,16 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
                 if (info.getWidth() == 0 && info.getHeight() == 0) {
                     int imgWidth = resource.get().getWidth();
                     int imgHeight = resource.get().getHeight();
-                    int ivWidth = gsyVideoPlayer.getWidth();
-
-                    if (ivWidth == 0) {
+                    int videoWidth = gsyVideoPlayer.getWidth();
+                    int videoHeight;
+                    if (videoWidth == 0) {
                         gsyVideoPlayer.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
-                        ivWidth = gsyVideoPlayer.getMeasuredWidth();
+                        videoWidth = gsyVideoPlayer.getMeasuredWidth();
                     }
+                    videoHeight = (int) ((float) imgHeight * videoWidth / imgWidth);
 
-                    if (imgWidth > ivWidth) {
-                        imgWidth = ivWidth;
-                        imgHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
-                    }
-                    info.setWidth(imgWidth);
-                    info.setHeight(imgHeight);
+                    info.setWidth(videoWidth);
+                    info.setHeight(videoHeight);
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
                     if (layoutParams != null) {
                         gsyVideoPlayer.getLayoutParams().width = info.getWidth();

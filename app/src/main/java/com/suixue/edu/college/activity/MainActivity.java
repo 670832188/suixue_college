@@ -3,6 +3,7 @@ package com.suixue.edu.college.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
@@ -26,6 +27,10 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
     }
 
     private void init() {
+        final RadioButton rbHome = findViewById(R.id.rb_home);
+        final RadioButton rbSearch = findViewById(R.id.rb_search);
+        final RadioButton rbMsg = findViewById(R.id.rb_msg);
+        final RadioButton rbPersonal = findViewById(R.id.rb_personal_center);
         final ViewPager vpFrg = findViewById(R.id.vp_frg);
         vpFrg.setOffscreenPageLimit(3);
         final RadioGroup rgNav = findViewById(R.id.rg_nav);
@@ -39,19 +44,19 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0: {
-                        rgNav.check(R.id.rb_home);
+                        rbHome.setChecked(true);
                         break;
                     }
                     case 1: {
-                        rgNav.check(R.id.rb_search);
+                        rbSearch.setChecked(true);
                         break;
                     }
                     case 2: {
-                        rgNav.check(R.id.rb_msg);
+                        rbMsg.setChecked(true);
                         break;
                     }
                     default: {
-                        rgNav.check(R.id.rb_personal_center);
+                        rbPersonal.setChecked(true);
                         break;
                     }
 
@@ -70,25 +75,25 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_home: {
-                        vpFrg.setCurrentItem(0);
+                        vpFrg.setCurrentItem(0, false);
                         break;
                     }
                     case R.id.rb_search: {
-                        vpFrg.setCurrentItem(1);
+                        vpFrg.setCurrentItem(1, false);
                         break;
                     }
                     case R.id.rb_msg: {
-                        vpFrg.setCurrentItem(2);
+                        vpFrg.setCurrentItem(2, false);
                         break;
                     }
                     case R.id.rb_personal_center: {
-                        vpFrg.setCurrentItem(3);
+                        vpFrg.setCurrentItem(3, false);
                         break;
                     }
                 }
             }
         });
-        rgNav.check(R.id.rb_home);
+        rbHome.setChecked(true);
     }
 
     @Override

@@ -31,7 +31,7 @@ import java.util.Random;
 public class MainFragment extends BaseFragment {
     private View rootView;
     private BlogAdapter blogAdapter;
-    private static final String[] thumbList =
+    public static final String[] thumbList =
             {
                     "http://img19.3lian.com/d/file/201803/09/b701b8995fccf7d7664636765a519008.jpg",
                     "http://img19.3lian.com/d/file/201803/09/27b8e420b535310d6420eb42c000956a.jpg",
@@ -44,7 +44,7 @@ public class MainFragment extends BaseFragment {
                     "http://img18.3lian.com/d/file/201709/28/12a4e4bac045735da67f10c807aadbde.jpg",
             };
 
-    private static final String[] avatarUrl = {
+    public static final String[] avatarUrl = {
             "http://img19.3lian.com/d/file/201803/05/635adb96f8a4c0d41e4292ad01b52044.png",
             "http://img19.3lian.com/d/file/201803/05/fa6cf18ea93c86703344a2b95c437048.png",
             "http://img19.3lian.com/d/file/201803/05/3d59d002675cfeac149550c49f9189a4.png",
@@ -56,7 +56,7 @@ public class MainFragment extends BaseFragment {
             "http://img19.3lian.com/d/file/201804/17/514f5c6966876fd43eccb432fa6113cb.jpg",
     };
 
-    private static final String[] videoUrls = {
+    public static final String[] videoUrls = {
             "http://ksy.fffffive.com/mda-hinp1ik37b0rt1mj/mda-hinp1ik37b0rt1mj.mp4",
             "http://ksy.fffffive.com/mda-himtqzs2un1u8x2v/mda-himtqzs2un1u8x2v.mp4",
             "http://ksy.fffffive.com/mda-hiw5zixc1ghpgrhn/mda-hiw5zixc1ghpgrhn.mp4",

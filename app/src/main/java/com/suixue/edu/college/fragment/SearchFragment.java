@@ -17,6 +17,9 @@ import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.fragment.BaseFragment;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.suixue.edu.college.R;
@@ -38,7 +41,8 @@ import static com.suixue.edu.college.fragment.MainFragment.videoUrls;
  * Created by cuiyan on 2018/9/12.
  */
 public class SearchFragment extends BaseFragment {
-
+    private String keyWord;
+    private int pageIndex;
     private View rootView;
     private BlogAdapter blogAdapter;
 
@@ -135,5 +139,22 @@ public class SearchFragment extends BaseFragment {
         blogAdapter = new BlogAdapter(getContext(), dataList);
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
         rvBlog.setAdapter(blogAdapter);
+    }
+
+    private void getBlog() {
+        NetRequestSubscriber<BaseResult<List<Object>>> subscriber = new NetRequestSubscriber<BaseResult<List<Object>>>(new NetRequestCallback<BaseResult<List<Object>>>(){
+            @Override
+            public void onSuccess(@NonNull BaseResult<List<Object>> listBaseResult) {
+
+            }
+
+            @Override
+            public void onResultNull() {
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+            }
+        }, getContext());
     }
 }

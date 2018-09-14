@@ -7,5 +7,6 @@ public class ApiConstants {
     public static final String GET_SECURITY_CODE_API = "afd";
     public static final String REGISTER_API = "adf";
     public static final String LOGIN_API = "adf";
-    public static final String GET_POST_LIST_API = "ads";
+    public static final String GET_BLOG_LIST_API = "ads";
+    public static final String GET_BLOG_LIST_BY_SEARCH_API = "ads";
 }

@@ -7,13 +7,23 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 
-import com.dev.kit.basemodule.fragment.BaseFragment;
+import com.dev.kit.basemodule.fragment.BaseStateFragment;
+import com.dev.kit.basemodule.netRequest.Configs.Config;
+import com.dev.kit.basemodule.netRequest.model.BaseController;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
+import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.dev.kit.basemodule.view.WaveSmoothRefreshLayout;
+import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
+import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
@@ -23,13 +33,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.Observable;
+import me.dkzwm.widget.srl.SmoothRefreshLayout;
+import me.dkzwm.widget.srl.extra.IRefreshView;
+import me.dkzwm.widget.srl.extra.footer.ClassicFooter;
+
 /**
  * Author: cuiyan
  * Date:   18/8/26 23:01
  * Desc:
  */
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseStateFragment {
+    private int pageIndex = 1;
+    private final int loadCount = 20;
     private View rootView;
+    WaveSmoothRefreshLayout refreshLayout;
     private BlogAdapter blogAdapter;
     public static final String[] thumbList =
             {
@@ -79,12 +97,13 @@ public class MainFragment extends BaseFragment {
             "http://ksy.fffffive.com/mda-himek207gvvqg3wq/mda-himek207gvvqg3wq.mp4"
     };
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.frg_main, container, false);
+    public View createContentView(LayoutInflater inflater, FrameLayout flRootContainer) {
+        rootView = inflater.inflate(R.layout.frg_main, flRootContainer, false);
         return rootView;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -93,17 +112,115 @@ public class MainFragment extends BaseFragment {
     }
 
     private void init() {
+        setOnEmptyViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshLayout.autoRefresh();
+            }
+        });
+        setOnErrorViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshLayout.autoRefresh();
+            }
+        });
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
-        generateTestData();
+        blogAdapter = new BlogAdapter(getContext(), new ArrayList<>());
         rvBlog.setAdapter(blogAdapter);
+        refreshLayout = rootView.findViewById(R.id.refresh_layout);
+        refreshLayout.setFooterView(new ClassicFooter(getContext()));
+        refreshLayout.getDefaultHeader().setWaveColor(getResources().getColor(R.color.color_common_ashen));
+        refreshLayout.getDefaultHeader().setBackgroundColor(getResources().getColor(R.color.color_main_bg));
+        refreshLayout.getDefaultHeader().setStyle(IRefreshView.STYLE_PIN);
+        //自动刷新
+        refreshLayout.setAutomaticSpringInterpolator(new OvershootInterpolator(3f));
+
+        refreshLayout.setOnRefreshListener(new SmoothRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefreshBegin(boolean isRefresh) {
+                if (isRefresh) {
+                    pageIndex = 1;
+                }
+                getBlogList();
+            }
+
+            @Override
+            public void onRefreshComplete(boolean isSuccessful) {
+            }
+        });
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.autoRefresh();
+            }
+        }, 100);
     }
 
-    private void generateTestData() {
+    private void getBlogList() {
+        NetRequestSubscriber<BaseResult<List<Object>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<List<Object>>>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult<List<Object>> result) {
+                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    if (result.getData() != null && result.getData().size() == 0) {
+                        if (pageIndex == 1) {
+                            setContentState(STATE_EMPTY);
+                        } else {
+                            refreshLayout.setEnableNoMoreData(true);
+                        }
+                    } else {
+                        if (pageIndex == 1) {
+                            blogAdapter.updateDataList(generateTestData());
+                        } else {
+                            blogAdapter.appendData(generateTestData());
+                        }
+                        if (result.getData().size() < loadCount) {
+                            refreshLayout.setEnableNoMoreData(true);
+                        } else {
+                            pageIndex++;
+                        }
+                    }
+                } else {
+                    showToast(result.getMessage());
+                }
+                refreshLayout.refreshComplete();
+            }
+
+            @Override
+            public void onResultNull() {
+                refreshLayout.refreshComplete();
+                if (pageIndex == 1) {
+                    setContentState(STATE_EMPTY);
+                } else {
+                    showToast(R.string.data_empty);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                refreshLayout.refreshComplete();
+                if (BuildConfig.DEBUG) {
+                    blogAdapter.appendData(generateTestData());
+                    pageIndex++;
+                    refreshLayout.setDisableLoadMore(false);
+                    return;
+                }
+                if (pageIndex == 1) {
+                    setContentState(STATE_ERROR);
+                } else {
+                    showToast(R.string.error_net_request_failed);
+                }
+            }
+        }, getContext());
+        Observable<BaseResult<List<Object>>> observable = BaseServiceUtil.createService(ApiService.class).getBlogList(String.valueOf(pageIndex));
+        BaseController.sendRequest(this, subscriber, observable);
+    }
+
+    private List<Object> generateTestData() {
         List<Object> dataList = new ArrayList<>();
         Random random = new Random();
-        int size = random.nextInt(10) + 10;
+        int size = random.nextInt(5) + 5;
         for (int i = 0; i < size; i++) {
             if (i % 5 == 0) {
                 RecommendedBloggerResult recommendedBloggerResult = new RecommendedBloggerResult();
@@ -150,6 +267,6 @@ public class MainFragment extends BaseFragment {
                 dataList.add(info);
             }
         }
-        blogAdapter = new BlogAdapter(getContext(), dataList);
+        return dataList;
     }
 }

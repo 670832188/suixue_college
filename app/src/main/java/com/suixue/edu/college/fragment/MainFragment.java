@@ -44,6 +44,7 @@ import me.dkzwm.widget.srl.extra.footer.ClassicFooter;
  * Desc:
  */
 public class MainFragment extends BaseStateFragment {
+    private static final int refreshDelayDurationToChangeState = 800;
     private int pageIndex = 1;
     private final int loadCount = 20;
     private View rootView;
@@ -130,7 +131,12 @@ public class MainFragment extends BaseStateFragment {
         blogAdapter = new BlogAdapter(getContext(), new ArrayList<>());
         rvBlog.setAdapter(blogAdapter);
         refreshLayout = rootView.findViewById(R.id.refresh_layout);
-        refreshLayout.setFooterView(new ClassicFooter(getContext()));
+        refreshLayout.getDefaultHeader().setProgressBarColor(getResources().getColor(R.color.color_main_bg));
+        refreshLayout.getDefaultHeader().setTextColor(getResources().getColor(R.color.color_main_bg));
+        refreshLayout.setDurationToClose(500);
+        ClassicFooter loadMoreFooter = new ClassicFooter(getContext());
+        loadMoreFooter.setTitleTextColor(getResources().getColor(R.color.color_common_white));
+        refreshLayout.setFooterView(loadMoreFooter);
         refreshLayout.getDefaultHeader().setWaveColor(getResources().getColor(R.color.color_common_ashen));
         refreshLayout.getDefaultHeader().setBackgroundColor(getResources().getColor(R.color.color_main_bg));
         refreshLayout.getDefaultHeader().setStyle(IRefreshView.STYLE_PIN);
@@ -184,12 +190,12 @@ public class MainFragment extends BaseStateFragment {
                 } else {
                     showToast(result.getMessage());
                 }
-                refreshLayout.refreshComplete();
+                refreshLayout.refreshComplete(refreshDelayDurationToChangeState);
             }
 
             @Override
             public void onResultNull() {
-                refreshLayout.refreshComplete();
+                refreshLayout.refreshComplete(refreshDelayDurationToChangeState);
                 if (pageIndex == 1) {
                     setContentState(STATE_EMPTY);
                 } else {
@@ -199,7 +205,7 @@ public class MainFragment extends BaseStateFragment {
 
             @Override
             public void onError(Throwable throwable) {
-                refreshLayout.refreshComplete();
+                refreshLayout.refreshComplete(refreshDelayDurationToChangeState);
                 if (BuildConfig.DEBUG) {
                     blogAdapter.appendData(generateTestData());
                     pageIndex++;

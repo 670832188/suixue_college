@@ -23,10 +23,15 @@
     </com.dev.kit.basemodule.view.WaveSmoothRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fb_publish_trigger"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="50dp"
         android:layout_marginEnd="@dimen/margin_larger"
-        android:elevation="5dp" />
+        android:backgroundTint="@color/color_main_bg"
+        android:elevation="5dp"
+        android:src="@mipmap/ic_back"
+        app:borderWidth="0dp"
+        app:rippleColor="@color/color_orange" />
 </android.support.design.widget.CoordinatorLayout>

@@ -61,7 +61,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         ImageView ivBloggerAvatar = holder.getView(R.id.iv_blogger_avatar);
         GlideUtil.loadImage(context, info.getBloggerAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivBloggerAvatar, 1);
         holder.setText(R.id.tv_blogger_name, info.getBloggerName());
-        holder.setOnClickListener(R.id.iv_close, new View.OnClickListener() {
+        holder.setOnClickListener(R.id.iv_delete, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToastUtil.showToast(context, "您对这个帖子不感兴趣");

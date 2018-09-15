@@ -1,12 +1,18 @@
 package com.suixue.edu.college.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
@@ -19,15 +25,18 @@ import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.view.WaveSmoothRefreshLayout;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
+import com.suixue.edu.college.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +57,11 @@ public class MainFragment extends BaseStateFragment {
     private int pageIndex = 1;
     private final int loadCount = 20;
     private View rootView;
-    WaveSmoothRefreshLayout refreshLayout;
+    private WaveSmoothRefreshLayout refreshLayout;
+    private FloatingActionButton fbPublishTrigger;
     private BlogAdapter blogAdapter;
+    private final ValueAnimator hideTriggerAnimator = ValueAnimator.ofFloat(1, 0).setDuration(300);
+    private final ValueAnimator showTriggerAnimator = ValueAnimator.ofFloat(0, 1).setDuration(300);
     public static final String[] thumbList =
             {
                     "http://img19.3lian.com/d/file/201803/09/b701b8995fccf7d7664636765a519008.jpg",
@@ -125,11 +137,39 @@ public class MainFragment extends BaseStateFragment {
                 refreshLayout.autoRefresh();
             }
         });
+        fbPublishTrigger = rootView.findViewById(R.id.fb_publish_trigger);
+        fbPublishTrigger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tryToPublishBlog();
+            }
+        });
+        initTriggerAnimator();
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
         blogAdapter = new BlogAdapter(getContext(), new ArrayList<>());
         rvBlog.setAdapter(blogAdapter);
+        rvBlog.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                LogUtil.e("mytag", "newState: " + newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && !showTriggerAnimator.isRunning()) {
+                    if (hideTriggerAnimator.isRunning()) {
+                        hideTriggerAnimator.cancel();
+                    }
+                    showTriggerAnimator.start();
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                LogUtil.e("mytag", "is refreshing: " + (refreshLayout.isRefreshing() || refreshLayout.isLoadingMore()));
+                if (!hideTriggerAnimator.isRunning() && fbPublishTrigger.getVisibility() == View.VISIBLE && !(refreshLayout.isRefreshing() || refreshLayout.isLoadingMore())) {
+                    hideTriggerAnimator.start();
+                }
+            }
+        });
         refreshLayout = rootView.findViewById(R.id.refresh_layout);
         refreshLayout.getDefaultHeader().setProgressBarColor(getResources().getColor(R.color.color_main_bg));
         refreshLayout.getDefaultHeader().setTextColor(getResources().getColor(R.color.color_main_bg));
@@ -274,5 +314,48 @@ public class MainFragment extends BaseStateFragment {
             }
         }
         return dataList;
+    }
+
+    private void initTriggerAnimator() {
+        hideTriggerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float)animation.getAnimatedValue();
+                fbPublishTrigger.setScaleX(value);
+                fbPublishTrigger.setScaleY(value);
+                fbPublishTrigger.setAlpha(value);
+            }
+        });
+        hideTriggerAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                fbPublishTrigger.setVisibility(View.GONE);
+            }
+        });
+
+        showTriggerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float)animation.getAnimatedValue();
+                fbPublishTrigger.setScaleX(value);
+                fbPublishTrigger.setScaleY(value);
+                fbPublishTrigger.setAlpha(value);
+            }
+        });
+        showTriggerAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                fbPublishTrigger.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void tryToPublishBlog() {
+        if (null == PreferenceUtil.getUserInfo()) {
+            startActivity(new Intent(getContext(), RegisterActivity.class));
+        } else {
+            // ToDo
+            showToast("发布博客");
+        }
     }
 }

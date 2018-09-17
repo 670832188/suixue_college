@@ -3,8 +3,6 @@ package com.suixue.edu.college.activity;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +58,12 @@ public class PublishBlogActivity extends BaseStateViewActivity {
         ckbFontItalic = findViewById(R.id.ckb_font_italic);
         ckbFontUnderline = findViewById(R.id.ckb_font_underline);
         registerTestStyleListener();
+        setOnClickListener(R.id.btn_add_text, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getHtmlStr();
+            }
+        });
     }
 
     /**
@@ -190,8 +194,7 @@ public class PublishBlogActivity extends BaseStateViewActivity {
         if (ckbFontUnderline.isChecked()) {
             style += TextStyleConfig.FontBold.KEY_STYLE_UNDERLINE;//下划线
         }
-        String htmlStr = "<div style='" + style + "' >" + content + "</div>";
-        htmlStr += "<br/>";
+        String htmlStr = "<p style='" + style + "' >" + content + "</p>";
         LogUtil.e("mytag", "getHtmlData: " + htmlStr);
         return htmlStr;
     }

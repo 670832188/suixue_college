@@ -42,4 +42,6 @@
     <string name="recommended">为您推荐</string>
     <string name="action_concern">关注</string>
     <string name="hint_search_college">搜索大学校内</string>
+
+    <string name="action_add">添加</string>
 </resources>

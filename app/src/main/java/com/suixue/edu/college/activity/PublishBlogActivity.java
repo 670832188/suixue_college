@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -23,7 +22,7 @@ import com.suixue.edu.college.config.TextStyleConfig;
 /**
  * Created by cuiyan on 2018/9/17.
  */
-public class PublishBlogActivity extends BaseStateViewActivity {
+public class PublishBlogActivity extends BaseStateViewActivity implements View.OnClickListener {
 
     private EditText etContent;
     private RadioGroup rgFontSize;
@@ -31,14 +30,6 @@ public class PublishBlogActivity extends BaseStateViewActivity {
     private CheckBox ckbFontBold;
     private CheckBox ckbFontItalic;
     private CheckBox ckbFontUnderline;
-
-    private RadioButton rbFontLarge;
-    private RadioButton rbFontNormal;
-    private RadioButton rbFontSmall;
-
-    private RadioButton rbFontAlignLeft;
-    private RadioButton rbFontAlignCenter;
-    private RadioButton rbFontAlignRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +58,9 @@ public class PublishBlogActivity extends BaseStateViewActivity {
                 tvTest.setText(Html.fromHtml(getHtmlString()));
             }
         });
+        setOnClickListener(R.id.iv_add_text_trigger, this);
+        setOnClickListener(R.id.iv_add_img_trigger, this);
+        setOnClickListener(R.id.iv_add_video_trigger, this);
     }
 
     /**
@@ -203,7 +197,6 @@ public class PublishBlogActivity extends BaseStateViewActivity {
     }
 
     private String getHtmlString() {
-        String ts = "<p><b><i><u>这是粗体文本</i></u></b></p>";
         String content = etContent.getText().toString();
         String startTag;
         String endTag = "</p>";
@@ -240,5 +233,24 @@ public class PublishBlogActivity extends BaseStateViewActivity {
         String htmlStr = startTag + content + endTag;
         LogUtil.e("mytag", "htmlString: " + htmlStr);
         return htmlStr;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_add_text: {
+                break;
+            }
+            case R.id.iv_add_text_trigger: {
+                setVisibility(R.id.ll_text_edit, View.VISIBLE);
+                break;
+            }
+            case R.id.iv_add_img_trigger: {
+                break;
+            }
+            case R.id.iv_add_video_trigger: {
+                break;
+            }
+        }
     }
 }

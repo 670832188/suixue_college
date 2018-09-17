@@ -3,6 +3,7 @@ package com.suixue.edu.college.activity;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.util.LogUtil;
@@ -58,10 +60,11 @@ public class PublishBlogActivity extends BaseStateViewActivity {
         ckbFontItalic = findViewById(R.id.ckb_font_italic);
         ckbFontUnderline = findViewById(R.id.ckb_font_underline);
         registerTestStyleListener();
+        final TextView tvTest = findViewById(R.id.tv_test);
         setOnClickListener(R.id.btn_add_text, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getHtmlStr();
+                tvTest.setText(Html.fromHtml(getHtmlString()));
             }
         });
     }
@@ -196,6 +199,46 @@ public class PublishBlogActivity extends BaseStateViewActivity {
         }
         String htmlStr = "<p style='" + style + "' >" + content + "</p>";
         LogUtil.e("mytag", "getHtmlData: " + htmlStr);
+        return htmlStr;
+    }
+
+    private String getHtmlString() {
+        String ts = "<p><b><i><u>这是粗体文本</i></u></b></p>";
+        String content = etContent.getText().toString();
+        String startTag;
+        String endTag = "</p>";
+        switch (rgFontAlign.getCheckedRadioButtonId()) {
+            case R.id.rb_font_align_left: {
+                startTag = "<p style='text-align: start;'>";
+                break;
+            }
+            case R.id.rb_font_align_center: {
+                startTag = "<p style='text-align: center;'>";
+                break;
+            }
+            case R.id.rb_font_align_right: {
+                startTag = "<p style='text-align: end;'>";
+                break;
+            }
+            default: {
+                startTag = "<p>";
+                break;
+            }
+        }
+        if (ckbFontBold.isChecked()) {
+            startTag += "<b>";
+            endTag = "</b>" + endTag;
+        }
+        if (ckbFontItalic.isChecked()) {
+            startTag += "<i>";
+            endTag = "</i>" + endTag;
+        }
+        if (ckbFontUnderline.isChecked()) {
+            startTag += "<u>";
+            endTag = "</u>" + endTag;
+        }
+        String htmlStr = startTag + content + endTag;
+        LogUtil.e("mytag", "htmlString: " + htmlStr);
         return htmlStr;
     }
 }

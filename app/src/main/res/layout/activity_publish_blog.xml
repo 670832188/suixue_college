@@ -11,9 +11,14 @@
         android:layout_weight="1.0" />
 
     <EditText
+        android:id="@+id/et_content"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/bg_editor" />
+        android:layout_height="80dp"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:background="@drawable/bg_editor"
+        android:gravity="start"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,11 +53,13 @@
             android:button="@null" />
 
         <RadioGroup
+            android:id="@+id/rg_font_size"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/rb_font_size_large"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="@dimen/margin_small"
@@ -60,6 +67,7 @@
                 android:button="@null" />
 
             <RadioButton
+                android:id="@+id/rb_font_size_normal"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="@dimen/margin_small"
@@ -67,6 +75,7 @@
                 android:button="@null" />
 
             <RadioButton
+                android:id="@+id/rb_font_size_small"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="@dimen/margin_small"
@@ -75,11 +84,13 @@
         </RadioGroup>
 
         <RadioGroup
+            android:id="@+id/rg_font_align"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/rb_font_align_left"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="@dimen/margin_small"
@@ -87,6 +98,7 @@
                 android:button="@null" />
 
             <RadioButton
+                android:id="@+id/rb_font_align_center"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="@dimen/margin_small"
@@ -94,6 +106,7 @@
                 android:button="@null" />
 
             <RadioButton
+                android:id="@+id/rb_font_align_right"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="@dimen/margin_small"

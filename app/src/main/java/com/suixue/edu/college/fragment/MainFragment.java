@@ -29,6 +29,7 @@ import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.view.WaveSmoothRefreshLayout;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.activity.PublishBlogActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.config.ApiService;
@@ -320,7 +321,7 @@ public class MainFragment extends BaseStateFragment {
         hideTriggerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float)animation.getAnimatedValue();
+                float value = (float) animation.getAnimatedValue();
                 fbPublishTrigger.setScaleX(value);
                 fbPublishTrigger.setScaleY(value);
                 fbPublishTrigger.setAlpha(value);
@@ -336,7 +337,7 @@ public class MainFragment extends BaseStateFragment {
         showTriggerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float)animation.getAnimatedValue();
+                float value = (float) animation.getAnimatedValue();
                 fbPublishTrigger.setScaleX(value);
                 fbPublishTrigger.setScaleY(value);
                 fbPublishTrigger.setAlpha(value);
@@ -351,11 +352,16 @@ public class MainFragment extends BaseStateFragment {
     }
 
     private void tryToPublishBlog() {
+        if (BuildConfig.DEBUG) {
+            startActivity(new Intent(getContext(), PublishBlogActivity.class));
+            return;
+        }
         if (null == PreferenceUtil.getUserInfo()) {
             startActivity(new Intent(getContext(), RegisterActivity.class));
         } else {
             // ToDo
             showToast("发布博客");
+            startActivity(new Intent(getContext(), PublishBlogActivity.class));
         }
     }
 }

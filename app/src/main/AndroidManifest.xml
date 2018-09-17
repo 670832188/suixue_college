@@ -37,6 +37,9 @@
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".activity.PublishBlogActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
         final RadioButton rbHome = findViewById(R.id.rb_home);
         final RadioButton rbSearch = findViewById(R.id.rb_search);
         final RadioButton rbMsg = findViewById(R.id.rb_msg);
-        final RadioButton rbPersonal = findViewById(R.id.rb_personal_center);
+        final RadioButton rbPersonal = findViewById(R.id.rb_me);
         final ViewPager vpFrg = findViewById(R.id.vp_frg);
         vpFrg.setOffscreenPageLimit(3);
         final RadioGroup rgNav = findViewById(R.id.rg_nav);
@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
                         vpFrg.setCurrentItem(2, false);
                         break;
                     }
-                    case R.id.rb_personal_center: {
+                    case R.id.rb_me: {
                         vpFrg.setCurrentItem(3, false);
                         break;
                     }

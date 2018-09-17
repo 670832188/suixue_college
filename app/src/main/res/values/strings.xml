@@ -35,6 +35,10 @@
     <string name="tip_selected_interest_reach_limit">您最多可以选择5个兴趣爱好</string>
 
 
+    <string name="tab_home">主页</string>
+    <string name="tab_search">搜索</string>
+    <string name="tab_msg">消息</string>
+    <string name="tab_me">我的</string>
     <string name="recommended">为您推荐</string>
     <string name="action_concern">关注</string>
     <string name="hint_search_college">搜索大学校内</string>

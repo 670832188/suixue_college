@@ -1,5 +1,6 @@
 package com.vincent.filepicker.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+    private static final String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int RC_READ_EXTERNAL_STORAGE = 123;
     private static final String TAG = BaseActivity.class.getName();
 
@@ -64,12 +66,12 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
      */
     @AfterPermissionGranted(RC_READ_EXTERNAL_STORAGE)
     private void readExternalStorage() {
-        boolean isGranted = EasyPermissions.hasPermissions(this, "android.permission.READ_EXTERNAL_STORAGE");
+        boolean isGranted = EasyPermissions.hasPermissions(this, permissions);
         if (isGranted) {
             permissionGranted();
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.vw_rationale_storage),
-                    RC_READ_EXTERNAL_STORAGE, "android.permission.READ_EXTERNAL_STORAGE");
+                    RC_READ_EXTERNAL_STORAGE, permissions);
         }
     }
 

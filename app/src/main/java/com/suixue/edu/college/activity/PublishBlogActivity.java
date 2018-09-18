@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
+import com.dev.kit.basemodule.activity.RecordVideoActivity;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.config.TextStyleConfig;

@@ -1,4 +1,4 @@
-package com.dev.kit.basemodule.videoconverter;
+package com.dev.kit.basemodule.videoCompress;
 
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;

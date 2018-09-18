@@ -1,13 +1,12 @@
 package com.vincent.filepicker.adapter;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.os.Environment.DIRECTORY_DCIM;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.vincent.filepicker.Constant.REQUEST_CODE_TAKE_VIDEO;
 
@@ -52,14 +50,15 @@ public class VideoPickAdapter extends BaseAdapter<VideoFile, VideoPickAdapter.Vi
         this(ctx, new ArrayList<VideoFile>(), needCamera, max);
     }
 
-    public VideoPickAdapter(Context ctx, ArrayList<VideoFile> list, boolean needCamera, int max) {
+    private VideoPickAdapter(Context ctx, ArrayList<VideoFile> list, boolean needCamera, int max) {
         super(ctx, list);
         isNeedCamera = needCamera;
         mMaxNumber = max;
     }
 
+    @NonNull
     @Override
-    public VideoPickAdapter.VideoPickViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public VideoPickAdapter.VideoPickViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.vw_layout_item_video_pick, parent, false);
         ViewGroup.LayoutParams params = itemView.getLayoutParams();
         if (params != null) {
@@ -71,7 +70,7 @@ public class VideoPickAdapter extends BaseAdapter<VideoFile, VideoPickAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final VideoPickViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final VideoPickViewHolder holder, int position) {
         if (isNeedCamera && position == 0) {
             holder.mIvCamera.setVisibility(View.VISIBLE);
             holder.mIvThumbnail.setVisibility(View.INVISIBLE);
@@ -81,23 +80,12 @@ public class VideoPickAdapter extends BaseAdapter<VideoFile, VideoPickAdapter.Vi
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
-                    File file = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM).getAbsolutePath()
-                            + "/VID_" + timeStamp + ".mp4");
-                    mVideoPath = file.getAbsolutePath();
+                    Intent intent = new Intent();
+                    intent.setClassName(mContext, "com.dev.kit.basemodule.activity.RecordVideoActivity");
+                    mVideoPath = getVideoOutputFilePath();
 
-                    ContentValues contentValues = new ContentValues(1);
-                    contentValues.put(MediaStore.Images.Media.DATA, mVideoPath);
-                    Uri uri = mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                    if (Util.detectIntent(mContext, intent)) {
-                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE_TAKE_VIDEO);
-                    } else {
-                        ToastUtil.getInstance(mContext).showToast(mContext.getString(R.string.vw_no_video_app));
-                    }
+                    intent.putExtra("recordFilePath", mVideoPath);
+                    ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE_TAKE_VIDEO);
                 }
             });
         } else {
@@ -165,7 +153,7 @@ public class VideoPickAdapter extends BaseAdapter<VideoFile, VideoPickAdapter.Vi
                         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         File f = new File(file.getPath());
                         uri = FileProvider.getUriForFile(mContext, mContext.getApplicationContext().getPackageName() + ".provider", f);
-                    }else{
+                    } else {
                         uri = Uri.parse("file://" + file.getPath());
                     }
                     intent.setDataAndType(uri, "video/mp4");
@@ -194,14 +182,14 @@ public class VideoPickAdapter extends BaseAdapter<VideoFile, VideoPickAdapter.Vi
         private TextView mDuration;
         private RelativeLayout mDurationLayout;
 
-        public VideoPickViewHolder(View itemView) {
+        private VideoPickViewHolder(View itemView) {
             super(itemView);
-            mIvCamera = (ImageView) itemView.findViewById(R.id.iv_camera);
-            mIvThumbnail = (ImageView) itemView.findViewById(R.id.iv_thumbnail);
+            mIvCamera = itemView.findViewById(R.id.iv_camera);
+            mIvThumbnail = itemView.findViewById(R.id.iv_thumbnail);
             mShadow = itemView.findViewById(R.id.shadow);
-            mCbx = (ImageView) itemView.findViewById(R.id.cbx);
-            mDuration = (TextView) itemView.findViewById(R.id.txt_duration);
-            mDurationLayout = (RelativeLayout) itemView.findViewById(R.id.layout_duration);
+            mCbx = itemView.findViewById(R.id.cbx);
+            mDuration = itemView.findViewById(R.id.txt_duration);
+            mDurationLayout = itemView.findViewById(R.id.layout_duration);
         }
     }
 
@@ -211,5 +199,15 @@ public class VideoPickAdapter extends BaseAdapter<VideoFile, VideoPickAdapter.Vi
 
     public void setCurrentNumber(int number) {
         mCurrentNumber = number;
+    }
+
+    private String getVideoOutputFilePath() {
+        String videoDirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "suiXueEdu";
+        File videoDirFile = new File(videoDirPath);
+        if (!videoDirFile.exists() && !videoDirFile.mkdir()) {
+            return null;
+        }
+        String videoFileName = "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".mp4";
+        return videoDirPath + File.separator + videoFileName;
     }
 }

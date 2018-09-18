@@ -1,4 +1,4 @@
-package com.dev.kit.basemodule.videoconverter;
+package com.dev.kit.basemodule.videoCompress;
 
 /**
  * Created by xuyuming on 2018/4/25

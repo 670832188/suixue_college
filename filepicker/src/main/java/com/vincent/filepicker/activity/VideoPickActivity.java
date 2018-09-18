@@ -160,12 +160,11 @@ public class VideoPickActivity extends BaseActivity {
         switch (requestCode) {
             case Constant.REQUEST_CODE_TAKE_VIDEO:
                 if (resultCode == RESULT_OK) {
-                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    File file = new File(mAdapter.mVideoPath);
-                    Uri contentUri = Uri.fromFile(file);
-                    mediaScanIntent.setData(contentUri);
-                    sendBroadcast(mediaScanIntent);
-
+//                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                    File file = new File(data.getStringExtra("recordFilePath"));
+//                    Uri contentUri = Uri.fromFile(file);
+//                    mediaScanIntent.setData(contentUri);
+//                    sendBroadcast(mediaScanIntent);
                     loadData();
                 }
                 break;

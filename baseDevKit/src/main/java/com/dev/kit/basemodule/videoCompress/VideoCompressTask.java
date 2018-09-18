@@ -1,4 +1,4 @@
-package com.dev.kit.basemodule.videoconverter;
+package com.dev.kit.basemodule.videoCompress;
 
 import android.os.AsyncTask;
 

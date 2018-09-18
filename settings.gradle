@@ -1,1 +1,1 @@
-include ':app', ':baseDevKit'
+include ':app', ':baseDevKit','filepicker'

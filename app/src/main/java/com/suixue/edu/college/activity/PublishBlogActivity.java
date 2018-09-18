@@ -1,5 +1,6 @@
 package com.suixue.edu.college.activity;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,6 +19,11 @@ import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.config.TextStyleConfig;
+import com.vincent.filepicker.Constant;
+import com.vincent.filepicker.activity.ImagePickActivity;
+
+import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
+import static com.vincent.filepicker.activity.ImagePickActivity.IS_NEED_CAMERA;
 
 /**
  * Created by cuiyan on 2018/9/17.
@@ -246,11 +252,20 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 break;
             }
             case R.id.iv_add_img_trigger: {
+                startPictureSelect();
                 break;
             }
             case R.id.iv_add_video_trigger: {
                 break;
             }
         }
+    }
+
+    private void startPictureSelect() {
+        Intent intent1 = new Intent(this, ImagePickActivity.class);
+        intent1.putExtra(IS_NEED_CAMERA, true);
+        intent1.putExtra(Constant.MAX_NUMBER, 9);
+        intent1.putExtra(IS_NEED_FOLDER_LIST, true);
+        startActivityForResult(intent1, Constant.REQUEST_CODE_PICK_IMAGE);
     }
 }

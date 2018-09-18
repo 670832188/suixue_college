@@ -21,6 +21,7 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.config.TextStyleConfig;
 import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.ImagePickActivity;
+import com.vincent.filepicker.activity.VideoPickActivity;
 
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
 import static com.vincent.filepicker.activity.ImagePickActivity.IS_NEED_CAMERA;
@@ -256,6 +257,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 break;
             }
             case R.id.iv_add_video_trigger: {
+                startVideoSelect();
                 break;
             }
         }
@@ -267,5 +269,13 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         intent1.putExtra(Constant.MAX_NUMBER, 9);
         intent1.putExtra(IS_NEED_FOLDER_LIST, true);
         startActivityForResult(intent1, Constant.REQUEST_CODE_PICK_IMAGE);
+    }
+
+    private void startVideoSelect() {
+        Intent intent = new Intent(this, VideoPickActivity.class);
+        intent.putExtra(IS_NEED_CAMERA, true);
+        intent.putExtra(Constant.MAX_NUMBER, 1);
+        intent.putExtra(IS_NEED_FOLDER_LIST, true);
+        startActivityForResult(intent, Constant.REQUEST_CODE_PICK_VIDEO);
     }
 }

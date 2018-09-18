@@ -29,6 +29,7 @@ allprojects {
         minSdkVersion = 21
         targetSdkVersion = 7
         supportLibraryVersion = '27.1.1'
+        glideVersion = "4.8.0"
     }
 }
 

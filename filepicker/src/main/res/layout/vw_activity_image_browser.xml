@@ -9,7 +9,7 @@
         android:id="@+id/tb_image_pick"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/vw_BgToolBar"
+        android:background="@color/colorPrimary"
         android:theme="@style/vw_ToolbarTheme"
         app:titleTextColor="#FFFFFF"
         app:navigationIcon="@drawable/vw_ic_back" />

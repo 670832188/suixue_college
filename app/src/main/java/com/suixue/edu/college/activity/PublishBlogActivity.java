@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Html;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +14,24 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
-import com.dev.kit.basemodule.activity.RecordVideoActivity;
+import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
+import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.adapter.PublishBlogAdapter;
 import com.suixue.edu.college.config.TextStyleConfig;
+import com.suixue.edu.college.entity.BlogContentInfo;
 import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.activity.VideoPickActivity;
+import com.vincent.filepicker.filter.entity.ImageFile;
+import com.vincent.filepicker.filter.entity.VideoFile;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
 import static com.vincent.filepicker.activity.ImagePickActivity.IS_NEED_CAMERA;
@@ -38,6 +47,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private CheckBox ckbFontBold;
     private CheckBox ckbFontItalic;
     private CheckBox ckbFontUnderline;
+    private PublishBlogAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,11 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     }
 
     private void init() {
+        RecyclerView rvBlogContent = findViewById(R.id.rv_blog_content);
+        rvBlogContent.setLayoutManager(new LinearLayoutManager(this));
+        rvBlogContent.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_common_ashen), DisplayUtil.dp2px(5)));
+        adapter = new PublishBlogAdapter(this, new ArrayList<BlogContentInfo>());
+        rvBlogContent.setAdapter(adapter);
         etContent = findViewById(R.id.et_content);
         rgFontSize = findViewById(R.id.rg_font_size);
         rgFontAlign = findViewById(R.id.rg_font_align);
@@ -59,13 +74,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         ckbFontItalic = findViewById(R.id.ckb_font_italic);
         ckbFontUnderline = findViewById(R.id.ckb_font_underline);
         registerTestStyleListener();
-        final TextView tvTest = findViewById(R.id.tv_test);
-        setOnClickListener(R.id.btn_add_text, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTest.setText(Html.fromHtml(getHtmlString()));
-            }
-        });
+        setOnClickListener(R.id.btn_add_text, this);
         setOnClickListener(R.id.iv_add_text_trigger, this);
         setOnClickListener(R.id.iv_add_img_trigger, this);
         setOnClickListener(R.id.iv_add_video_trigger, this);
@@ -240,6 +249,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         }
         String htmlStr = startTag + content + endTag;
         LogUtil.e("mytag", "htmlString: " + htmlStr);
+        etContent.setText("");
         return htmlStr;
     }
 
@@ -247,6 +257,9 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_text: {
+                BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_TEXT, getHtmlString());
+                adapter.appendItem(info, true);
+                setVisibility(R.id.ll_text_edit, View.GONE);
                 break;
             }
             case R.id.iv_add_text_trigger: {
@@ -278,5 +291,32 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         intent.putExtra(Constant.MAX_NUMBER, 1);
         intent.putExtra(IS_NEED_FOLDER_LIST, true);
         startActivityForResult(intent, Constant.REQUEST_CODE_PICK_VIDEO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constant.REQUEST_CODE_PICK_IMAGE) {
+                List<ImageFile> imageFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
+                List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
+                for (ImageFile imageFile : imageFileList) {
+                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, imageFile.getPath());
+                    blogContentInfoList.add(info);
+                }
+                adapter.appendDataAndRefreshLocal(blogContentInfoList);
+                setVisibility(R.id.ll_text_edit, View.GONE);
+            } else if (requestCode == Constant.REQUEST_CODE_PICK_VIDEO) {
+                ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
+                List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
+                for (VideoFile videoFile : videoFileList) {
+                    String videoUri = android.net.Uri.fromFile(new File(videoFile.getPath())).toString();
+                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, videoUri);
+                    blogContentInfoList.add(info);
+                }
+                adapter.appendDataAndRefreshLocal(blogContentInfoList);
+                setVisibility(R.id.ll_text_edit, View.GONE);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

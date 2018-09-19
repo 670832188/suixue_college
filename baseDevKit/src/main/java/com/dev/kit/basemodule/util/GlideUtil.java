@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -44,6 +45,21 @@ public class GlideUtil {
             return;
         }
         RequestOptions options = new RequestOptions().placeholder(defaultSrcId).error(defaultSrcId);
+        if (transformation != null) {
+            options.transform(transformation);
+        }
+        Glide.with(context)
+                .load(imgUri)
+                .apply(options)
+                .thumbnail((sizeMultiplier > 0 && sizeMultiplier < 1) ? sizeMultiplier : 1.0f)
+                .into(target);
+    }
+
+    public static synchronized void loadImageWithDisableDiskCache(Context context, String imgUri, @DrawableRes int defaultSrcId, @DrawableRes int errorSrcId, ImageView target, float sizeMultiplier, Transformation<Bitmap> transformation) {
+        if (TextUtils.isEmpty(imgUri)) {
+            return;
+        }
+        RequestOptions options = new RequestOptions().placeholder(defaultSrcId).error(defaultSrcId).diskCacheStrategy(DiskCacheStrategy.NONE);
         if (transformation != null) {
             options.transform(transformation);
         }

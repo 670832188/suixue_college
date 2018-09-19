@@ -19,6 +19,14 @@ public class BlogContentInfo {
     // 视频及图片类型使用：视频高度
     private int height;
 
+    public BlogContentInfo() {
+    }
+
+    public BlogContentInfo(String contentType, String content) {
+        this.contentType = contentType;
+        this.content = content;
+    }
+
     public String getContentType() {
         return contentType;
     }
@@ -38,7 +46,8 @@ public class BlogContentInfo {
     public int getHeight() {
         return height;
     }
-/////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }

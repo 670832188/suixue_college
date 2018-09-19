@@ -11,8 +11,6 @@ import android.view.View;
 
 import com.vincent.filepicker.FolderListHelper;
 import com.vincent.filepicker.R;
-import com.vincent.filepicker.adapter.FolderListAdapter;
-import com.vincent.filepicker.filter.entity.Directory;
 
 import java.util.List;
 

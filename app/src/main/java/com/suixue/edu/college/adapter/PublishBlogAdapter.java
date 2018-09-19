@@ -5,8 +5,9 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,7 +16,6 @@ import com.bumptech.glide.load.engine.Resource;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
 import com.dev.kit.basemodule.util.GlideUtil;
-import com.dev.kit.basemodule.util.LogUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -30,75 +30,66 @@ import java.util.List;
 /**
  * Created by cuiyan on 2018/9/10.
  */
-public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
-    public BlogContentAdapter(Context context, List<BlogContentInfo> dataList) {
-        super(context, dataList, R.layout.item_blog_content);
+public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
+    private static final int VIEW_TYPE_TEXT = 1;
+    private static final int VIEW_TYPE_PICTURE = 2;
+    private static final int VIEW_TYPE_VIDEO = 3;
+
+    public PublishBlogAdapter(Context context, List<BlogContentInfo> dataList) {
+        super(context, dataList);
+    }
+
+    @NonNull
+    @Override
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_TEXT: {
+                return RecyclerViewHolder.getViewHolder(context, parent, R.layout.item_text);
+            }
+            case VIEW_TYPE_PICTURE: {
+                return RecyclerViewHolder.getViewHolder(context, parent, R.layout.item_picture);
+            }
+            default: {
+                return RecyclerViewHolder.getViewHolder(context, parent, R.layout.item_video);
+            }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        int type;
+        BlogContentInfo info = getItem(position);
+        switch (info.getContentType()) {
+            case BlogContentInfo.CONTENT_TYPE_TEXT: {
+                type = VIEW_TYPE_TEXT;
+                break;
+            }
+            case BlogContentInfo.CONTENT_TYPE_PICTURE: {
+                type = VIEW_TYPE_PICTURE;
+                break;
+            }
+            case BlogContentInfo.CONTENT_TYPE_VIDEO: {
+                type = VIEW_TYPE_VIDEO;
+                break;
+            }
+            default: {
+                throw new RuntimeException("content type error");
+            }
+        }
+        return type;
     }
 
     @Override
     public void fillData(RecyclerViewHolder holder, final int position) {
-        final BlogContentInfo info = getItem(position);
-        holder.setVisibility(R.id.tv_text_item, View.GONE);
-        holder.setVisibility(R.id.iv_img_item, View.GONE);
-        holder.setVisibility(R.id.video_player, View.GONE);
-
+        BlogContentInfo info = getItem(position);
         switch (info.getContentType()) {
             case BlogContentInfo.CONTENT_TYPE_TEXT: {
-                holder.setVisibility(R.id.tv_text_item, View.VISIBLE);
                 TextView tvTextItem = holder.getView(R.id.tv_text_item);
                 tvTextItem.setText(Html.fromHtml(info.getContent()));
                 break;
             }
             case BlogContentInfo.CONTENT_TYPE_PICTURE: {
-                holder.setVisibility(R.id.iv_img_item, View.VISIBLE);
-                final ImageView ivImgItem = holder.getView(R.id.iv_img_item);
-                if (info.getWidth() > 0 && info.getHeight() > 0) {
-                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ivImgItem.getLayoutParams();
-                    if (layoutParams != null) {
-                        ivImgItem.getLayoutParams().width = info.getWidth();
-                        ivImgItem.getLayoutParams().height = info.getHeight();
-                    } else {
-                        layoutParams = new FrameLayout.LayoutParams(info.getWidth(), info.getHeight());
-                        ivImgItem.setLayoutParams(layoutParams);
-                    }
-                }
-                GlideUtil.loadImage(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivImgItem, 1, new Transformation<Bitmap>() {
-                    @NonNull
-                    @Override
-                    public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
-                        if (info.getWidth() == 0 && info.getHeight() == 0) {
-                            int imgWidth = resource.get().getWidth();
-                            int imgHeight = resource.get().getHeight();
-                            int ivWidth = ivImgItem.getWidth();
-
-                            if (ivWidth == 0) {
-                                ivImgItem.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
-                                ivWidth = ivImgItem.getMeasuredWidth();
-                            }
-
-                            if (imgWidth > ivWidth) {
-                                imgWidth = ivWidth;
-                                imgHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
-                            }
-                            info.setWidth(imgWidth);
-                            info.setHeight(imgHeight);
-                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ivImgItem.getLayoutParams();
-                            if (layoutParams != null) {
-                                ivImgItem.getLayoutParams().width = info.getWidth();
-                                ivImgItem.getLayoutParams().height = info.getHeight();
-                            } else {
-                                layoutParams = new FrameLayout.LayoutParams(info.getWidth(), info.getHeight());
-                                ivImgItem.setLayoutParams(layoutParams);
-                            }
-                        }
-                        return resource;
-                    }
-
-                    @Override
-                    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
-
-                    }
-                });
+                setPicture(holder, position);
                 break;
             }
             case BlogContentInfo.CONTENT_TYPE_VIDEO: {
@@ -108,22 +99,71 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         }
     }
 
-    private void setVideoPlay(RecyclerViewHolder holder, int position) {
-        holder.setVisibility(R.id.video_player, View.VISIBLE);
+    private void setPicture(RecyclerViewHolder holder, int position) {
         final BlogContentInfo info = getItem(position);
-        final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_player);
+        final ImageView ivImgItem = holder.getView(R.id.iv_picture_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivImgItem.getLayoutParams();
+            if (layoutParams != null) {
+                ivImgItem.getLayoutParams().width = info.getWidth();
+                ivImgItem.getLayoutParams().height = info.getHeight();
+            } else {
+                layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
+                ivImgItem.setLayoutParams(layoutParams);
+            }
+        }
+        GlideUtil.loadImageWithDisableDiskCache(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivImgItem, 1, new Transformation<Bitmap>() {
+            @NonNull
+            @Override
+            public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
+                if (info.getWidth() == 0 && info.getHeight() == 0) {
+                    int imgWidth = resource.get().getWidth();
+                    int imgHeight = resource.get().getHeight();
+                    int ivWidth = ivImgItem.getWidth();
+
+                    if (ivWidth == 0) {
+                        ivImgItem.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
+                        ivWidth = ivImgItem.getMeasuredWidth();
+                    }
+
+                    if (imgWidth > ivWidth) {
+                        imgWidth = ivWidth;
+                        imgHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
+                    }
+                    info.setWidth(imgWidth);
+                    info.setHeight(imgHeight);
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivImgItem.getLayoutParams();
+                    if (layoutParams != null) {
+                        ivImgItem.getLayoutParams().width = info.getWidth();
+                        ivImgItem.getLayoutParams().height = info.getHeight();
+                    } else {
+                        layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
+                        ivImgItem.setLayoutParams(layoutParams);
+                    }
+                }
+                return resource;
+            }
+
+            @Override
+            public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+            }
+        });
+    }
+
+    private void setVideoPlay(RecyclerViewHolder holder, int position) {
+        final BlogContentInfo info = getItem(position);
+        final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_item);
+        if (info.getWidth() > 0 && info.getHeight() > 0) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
             if (layoutParams != null) {
                 gsyVideoPlayer.getLayoutParams().width = info.getWidth();
                 gsyVideoPlayer.getLayoutParams().height = info.getHeight();
             } else {
-                layoutParams = new FrameLayout.LayoutParams(info.getWidth(), info.getHeight());
+                layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
                 gsyVideoPlayer.setLayoutParams(layoutParams);
             }
         }
         GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
-//        gsyVideoPlayer.loadCoverImage(info.getContent(), R.mipmap.ic_launcher);
         final ImageView coverImage = gsyVideoPlayer.getCoverImage();
         GlideUtil.loadImageWithDisableDiskCache(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, coverImage, 1, new Transformation<Bitmap>() {
             @NonNull
@@ -142,12 +182,12 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
 
                     info.setWidth(videoWidth);
                     info.setHeight(videoHeight);
-                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
                     if (layoutParams != null) {
                         gsyVideoPlayer.getLayoutParams().width = info.getWidth();
                         gsyVideoPlayer.getLayoutParams().height = info.getHeight();
                     } else {
-                        layoutParams = new FrameLayout.LayoutParams(info.getWidth(), info.getHeight());
+                        layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
                         gsyVideoPlayer.setLayoutParams(layoutParams);
                     }
                     RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) coverImage.getLayoutParams();

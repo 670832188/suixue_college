@@ -77,6 +77,17 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
         }
     }
 
+    public void appendDataAndRefreshLocal(List<T> expendedData) {
+        synchronized (this) {
+            if (dataList != null) {
+                int startPosition = dataList.size();
+                dataList.addAll(expendedData);
+                notifyItemRangeInserted(startPosition, expendedData.size());
+                notifyItemRangeChanged(startPosition, expendedData.size());
+            }
+        }
+    }
+
     public void insertData(int index, List<T> expendedData) {
         synchronized (this) {
             if (dataList != null) {
@@ -92,6 +103,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
                 dataList.add(item);
                 if (updateSingleItem) {
                     notifyItemInserted(dataList.size() - 1);
+                    notifyItemRangeChanged(dataList.size() - 1, 1);
                 } else {
                     notifyDataSetChanged();
                 }

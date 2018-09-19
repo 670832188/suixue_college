@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_normal"
-    android:paddingEnd="@dimen/margin_large"
-    android:paddingStart="@dimen/margin_large"
-    android:paddingTop="@dimen/margin_normal">
-
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="end"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:padding="2dp"
-        android:src="@mipmap/ic_delete" />
+    android:orientation="vertical">
 
     <com.suixue.edu.college.video.SampleCoverVideo
         android:id="@+id/video_item"
@@ -24,10 +12,23 @@
         android:nestedScrollingEnabled="false" />
 
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:id="@+id/iv_move_up"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
         android:layout_gravity="end"
-        android:layout_marginTop="@dimen/margin_small"
-        android:padding="2dp"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:padding="@dimen/margin_small"
         android:src="@mipmap/ic_delete" />
-</LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_move_down"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:padding="@dimen/margin_small"
+        android:src="@mipmap/ic_delete" />
+</RelativeLayout>

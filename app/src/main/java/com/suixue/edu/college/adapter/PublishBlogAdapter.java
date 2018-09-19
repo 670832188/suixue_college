@@ -7,7 +7,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -103,12 +102,12 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         final BlogContentInfo info = getItem(position);
         final ImageView ivImgItem = holder.getView(R.id.iv_picture_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivImgItem.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = ivImgItem.getLayoutParams();
             if (layoutParams != null) {
                 ivImgItem.getLayoutParams().width = info.getWidth();
                 ivImgItem.getLayoutParams().height = info.getHeight();
             } else {
-                layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
+                layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
                 ivImgItem.setLayoutParams(layoutParams);
             }
         }
@@ -116,28 +115,24 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
             @NonNull
             @Override
             public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
+                int ivWidth = ivImgItem.getWidth();
+                int ivHeight;
                 if (info.getWidth() == 0 && info.getHeight() == 0) {
                     int imgWidth = resource.get().getWidth();
                     int imgHeight = resource.get().getHeight();
-                    int ivWidth = ivImgItem.getWidth();
-
                     if (ivWidth == 0) {
                         ivImgItem.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
                         ivWidth = ivImgItem.getMeasuredWidth();
                     }
-
-                    if (imgWidth > ivWidth) {
-                        imgWidth = ivWidth;
-                        imgHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
-                    }
-                    info.setWidth(imgWidth);
-                    info.setHeight(imgHeight);
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ivImgItem.getLayoutParams();
+                    ivHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
+                    info.setWidth(ivWidth);
+                    info.setHeight(ivHeight);
+                    ViewGroup.LayoutParams layoutParams = ivImgItem.getLayoutParams();
                     if (layoutParams != null) {
                         ivImgItem.getLayoutParams().width = info.getWidth();
                         ivImgItem.getLayoutParams().height = info.getHeight();
                     } else {
-                        layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
+                        layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
                         ivImgItem.setLayoutParams(layoutParams);
                     }
                 }
@@ -154,12 +149,12 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         final BlogContentInfo info = getItem(position);
         final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = gsyVideoPlayer.getLayoutParams();
             if (layoutParams != null) {
                 gsyVideoPlayer.getLayoutParams().width = info.getWidth();
                 gsyVideoPlayer.getLayoutParams().height = info.getHeight();
             } else {
-                layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
+                layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
                 gsyVideoPlayer.setLayoutParams(layoutParams);
             }
         }
@@ -182,12 +177,12 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
 
                     info.setWidth(videoWidth);
                     info.setHeight(videoHeight);
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
+                    ViewGroup.LayoutParams layoutParams = gsyVideoPlayer.getLayoutParams();
                     if (layoutParams != null) {
                         gsyVideoPlayer.getLayoutParams().width = info.getWidth();
                         gsyVideoPlayer.getLayoutParams().height = info.getHeight();
                     } else {
-                        layoutParams = new LinearLayout.LayoutParams(info.getWidth(), info.getHeight());
+                        layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
                         gsyVideoPlayer.setLayoutParams(layoutParams);
                     }
                     RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) coverImage.getLayoutParams();

@@ -47,7 +47,10 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private CheckBox ckbFontBold;
     private CheckBox ckbFontItalic;
     private CheckBox ckbFontUnderline;
+    private View textEditView;
     private PublishBlogAdapter adapter;
+    private RecyclerView rvBlogContent;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +65,9 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     }
 
     private void init() {
-        RecyclerView rvBlogContent = findViewById(R.id.rv_blog_content);
-        rvBlogContent.setLayoutManager(new LinearLayoutManager(this));
+        rvBlogContent = findViewById(R.id.rv_blog_content);
+        layoutManager = new LinearLayoutManager(this);
+        rvBlogContent.setLayoutManager(layoutManager);
         rvBlogContent.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_common_ashen), DisplayUtil.dp2px(5)));
         adapter = new PublishBlogAdapter(this, new ArrayList<BlogContentInfo>());
         rvBlogContent.setAdapter(adapter);
@@ -73,6 +77,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         ckbFontBold = findViewById(R.id.ckb_font_bold);
         ckbFontItalic = findViewById(R.id.ckb_font_italic);
         ckbFontUnderline = findViewById(R.id.ckb_font_underline);
+        textEditView = findViewById(R.id.ll_text_edit);
         registerTestStyleListener();
         setOnClickListener(R.id.btn_add_text, this);
         setOnClickListener(R.id.iv_add_text_trigger, this);
@@ -259,18 +264,26 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             case R.id.btn_add_text: {
                 BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_TEXT, getHtmlString());
                 adapter.appendItem(info, true);
+//                layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - 1, 0);
+                scrollBlogItem(adapter.getItemCount() - 1);
                 setVisibility(R.id.ll_text_edit, View.GONE);
                 break;
             }
             case R.id.iv_add_text_trigger: {
-                setVisibility(R.id.ll_text_edit, View.VISIBLE);
+                textEditView.setVisibility(textEditView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 break;
             }
             case R.id.iv_add_img_trigger: {
+                textEditView.setVisibility(View.GONE);
                 startPictureSelect();
                 break;
             }
             case R.id.iv_add_video_trigger: {
+                textEditView.setVisibility(View.GONE);
+                if (adapter.getVideoSize() > 0) {
+                    showToast(R.string.tip_video_publish_size_limit);
+                    return;
+                }
                 startVideoSelect();
                 break;
             }
@@ -303,7 +316,9 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, imageFile.getPath());
                     blogContentInfoList.add(info);
                 }
-                adapter.appendDataAndRefreshLocal(blogContentInfoList);
+                adapter.appendData(blogContentInfoList);
+//                layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - blogContentInfoList.size(), 0);
+                scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
                 setVisibility(R.id.ll_text_edit, View.GONE);
             } else if (requestCode == Constant.REQUEST_CODE_PICK_VIDEO) {
                 ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
@@ -311,12 +326,20 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 for (VideoFile videoFile : videoFileList) {
                     String videoUri = android.net.Uri.fromFile(new File(videoFile.getPath())).toString();
                     BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, videoUri);
+                    info.setWidth(videoFile.getWidth());
+                    info.setHeight(videoFile.getHeight());
                     blogContentInfoList.add(info);
                 }
-                adapter.appendDataAndRefreshLocal(blogContentInfoList);
+                adapter.appendData(blogContentInfoList);
+//                layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - blogContentInfoList.size(), 0);
+                scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
                 setVisibility(R.id.ll_text_edit, View.GONE);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void scrollBlogItem(int targetPosition) {
+        layoutManager.scrollToPositionWithOffset(targetPosition, 0);
     }
 }

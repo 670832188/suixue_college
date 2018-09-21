@@ -2,10 +2,9 @@ package com.vincent.filepicker.filter.callback;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -21,14 +20,9 @@ import com.vincent.filepicker.filter.loader.FileLoader;
 import com.vincent.filepicker.filter.loader.ImageLoader;
 import com.vincent.filepicker.filter.loader.VideoLoader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +71,7 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
         }
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (mType) {
@@ -98,7 +93,7 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data == null) return;
         switch (mType) {
             case TYPE_IMAGE:
@@ -117,7 +112,7 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
 
@@ -181,7 +176,22 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
             video.setDate(data.getLong(data.getColumnIndexOrThrow(DATE_ADDED)));
 
             video.setDuration(data.getLong(data.getColumnIndexOrThrow(DURATION)));
-
+            MediaMetadataRetriever retr = new MediaMetadataRetriever();
+            retr.setDataSource(video.getPath());
+            try {
+                int height = Integer.valueOf(retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)); // 视频高度
+                int width = Integer.valueOf(retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)); // 视频宽度
+                String rotation = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                if ("90".equals(rotation) || "270".equals(rotation)) {
+                    video.setHeight(width);
+                    video.setWidth(height);
+                } else {
+                    video.setHeight(height);
+                    video.setWidth(width);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //Create a Directory
             Directory<VideoFile> directory = new Directory<>();
             directory.setId(video.getBucketId());
@@ -287,8 +297,8 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
 
     private String obtainSuffixRegex(String[] suffixes) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < suffixes.length ; i++) {
-            if (i ==0) {
+        for (int i = 0; i < suffixes.length; i++) {
+            if (i == 0) {
                 builder.append(suffixes[i].replace(".", ""));
             } else {
                 builder.append("|\\.");

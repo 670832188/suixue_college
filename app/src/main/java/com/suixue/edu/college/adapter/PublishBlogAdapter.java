@@ -14,7 +14,9 @@ import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.Resource;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
+import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.GlideUtil;
+import com.dev.kit.basemodule.util.LogUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -23,6 +25,8 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.video.SampleCoverVideo;
 
+import java.io.File;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.util.List;
 
@@ -149,17 +153,28 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         final BlogContentInfo info = getItem(position);
         final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
+            int videoWidth = DisplayUtil.getScreenWidth(); // 横向满屏
+            LogUtil.e("mytag", "vwh1: " + videoWidth + " " + info.getWidth() + " " + info.getHeight());
+            int videoHeight = (int) ((float) videoWidth / info.getWidth() * info.getHeight());
+            LogUtil.e("mytag", "vwh2: " + videoHeight);
             ViewGroup.LayoutParams layoutParams = gsyVideoPlayer.getLayoutParams();
             if (layoutParams != null) {
-                gsyVideoPlayer.getLayoutParams().width = info.getWidth();
-                gsyVideoPlayer.getLayoutParams().height = info.getHeight();
+                gsyVideoPlayer.getLayoutParams().width = videoWidth;
+                gsyVideoPlayer.getLayoutParams().height = videoHeight;
             } else {
-                layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
+                layoutParams = new ViewGroup.LayoutParams(videoWidth, videoHeight);
                 gsyVideoPlayer.setLayoutParams(layoutParams);
             }
         }
         GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
         final ImageView coverImage = gsyVideoPlayer.getCoverImage();
+        LogUtil.e("mytag", "content: " + info.getContent());
+        File file = new File(URI.create(info.getContent()));
+        if (file.exists()) {
+            LogUtil.e("mytag", "videoPath: " + file.getAbsolutePath());
+        } else {
+            LogUtil.e("mytag", "file not exist");
+        }
         GlideUtil.loadImageWithDisableDiskCache(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, coverImage, 1, new Transformation<Bitmap>() {
             @NonNull
             @Override
@@ -262,5 +277,15 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
      */
     private void resolveFullBtn(final StandardGSYVideoPlayer standardGSYVideoPlayer) {
         standardGSYVideoPlayer.startWindowFullscreen(context, true, true);
+    }
+
+    public int getVideoSize() {
+        int videoSize = 0;
+        for (BlogContentInfo info : dataList) {
+            if (BlogContentInfo.CONTENT_TYPE_VIDEO.equals(info.getContentType())) {
+                videoSize++;
+            }
+        }
+        return videoSize;
     }
 }

@@ -44,4 +44,5 @@
     <string name="hint_search_college">搜索大学校内</string>
 
     <string name="action_add">添加</string>
+    <string name="tip_video_publish_size_limit">您每次最多只能发布一条视频</string>
 </resources>

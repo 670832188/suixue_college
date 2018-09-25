@@ -340,24 +340,17 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     try {
                         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                         retriever.setDataSource(videoPath);
-                        LogUtil.e("mytag", "videoWH: " +   retriever.getFrameAtTime().getWidth() + " " +   retriever.getFrameAtTime().getHeight());
-                        int height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)); // 视频高度
-                        int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)); // 视频宽度
-                        String rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-                        if ("90".equals(rotation) || "270".equals(rotation)) {
-                            info.setHeight(width);
-                            info.setWidth(height);
-                        } else {
-                            info.setHeight(height);
-                            info.setWidth(width);
-                        }
+                        Bitmap firstFrameBitmap = retriever.getFrameAtTime();
+                        int width = firstFrameBitmap.getWidth(); // 视频宽度
+                        int height = firstFrameBitmap.getHeight(); // 视频高度
+                        info.setWidth(width);
+                        info.setHeight(height);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     blogContentInfoList.add(info);
                 }
                 adapter.appendData(blogContentInfoList);
-//                layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - blogContentInfoList.size(), 0);
                 scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
                 setVisibility(R.id.ll_text_edit, View.GONE);
             }

@@ -124,11 +124,14 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
                 if (info.getWidth() == 0 && info.getHeight() == 0) {
                     int imgWidth = resource.get().getWidth();
                     int imgHeight = resource.get().getHeight();
+                    LogUtil.e("mytag", "imgWH: " + imgWidth + " " + imgHeight);
+
                     if (ivWidth == 0) {
                         ivImgItem.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
                         ivWidth = ivImgItem.getMeasuredWidth();
                     }
                     ivHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
+                    LogUtil.e("mytag", "ivWH: " + ivWidth + " " + ivHeight);
                     info.setWidth(ivWidth);
                     info.setHeight(ivHeight);
                     ViewGroup.LayoutParams layoutParams = ivImgItem.getLayoutParams();
@@ -154,9 +157,7 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
             int videoWidth = DisplayUtil.getScreenWidth(); // 横向满屏
-            LogUtil.e("mytag", "vwh1: " + videoWidth + " " + info.getWidth() + " " + info.getHeight());
             int videoHeight = (int) ((float) videoWidth / info.getWidth() * info.getHeight());
-            LogUtil.e("mytag", "vwh2: " + videoHeight);
             ViewGroup.LayoutParams layoutParams = gsyVideoPlayer.getLayoutParams();
             if (layoutParams != null) {
                 gsyVideoPlayer.getLayoutParams().width = videoWidth;
@@ -168,7 +169,6 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         }
         GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
         final ImageView coverImage = gsyVideoPlayer.getCoverImage();
-        LogUtil.e("mytag", "content: " + info.getContent());
         File file = new File(URI.create(info.getContent()));
         if (file.exists()) {
             LogUtil.e("mytag", "videoPath: " + file.getAbsolutePath());

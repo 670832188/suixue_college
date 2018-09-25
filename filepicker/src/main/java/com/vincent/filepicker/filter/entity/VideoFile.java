@@ -12,8 +12,6 @@ import android.os.Parcelable;
 public class VideoFile extends BaseFile implements Parcelable {
     private long duration;
     private String thumbnail;
-    private int width;
-    private int height;
 
     public long getDuration() {
         return duration;
@@ -31,22 +29,6 @@ public class VideoFile extends BaseFile implements Parcelable {
         this.thumbnail = thumbnail;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(getId());
@@ -59,8 +41,6 @@ public class VideoFile extends BaseFile implements Parcelable {
         dest.writeByte((byte) (isSelected() ? 1 : 0));
         dest.writeLong(getDuration());
         dest.writeString(getThumbnail());
-        dest.writeInt(getWidth());
-        dest.writeInt(getHeight());
     }
 
     @Override
@@ -87,8 +67,6 @@ public class VideoFile extends BaseFile implements Parcelable {
             file.setSelected(in.readByte() != 0);
             file.setDuration(in.readLong());
             file.setThumbnail(in.readString());
-            file.setWidth(in.readInt());
-            file.setHeight(in.readInt());
             return file;
         }
     };

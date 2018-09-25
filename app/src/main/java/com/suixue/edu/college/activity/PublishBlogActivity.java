@@ -1,8 +1,11 @@
 package com.suixue.edu.college.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -313,21 +316,44 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 List<ImageFile> imageFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
                 List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
                 for (ImageFile imageFile : imageFileList) {
-                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, imageFile.getPath());
+                    String imgPath = imageFile.getPath();
+                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, imgPath);
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
+                        info.setWidth(bitmap.getWidth());
+                        info.setHeight(bitmap.getHeight());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     blogContentInfoList.add(info);
                 }
                 adapter.appendData(blogContentInfoList);
-//                layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - blogContentInfoList.size(), 0);
                 scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
                 setVisibility(R.id.ll_text_edit, View.GONE);
             } else if (requestCode == Constant.REQUEST_CODE_PICK_VIDEO) {
                 ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
                 List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
                 for (VideoFile videoFile : videoFileList) {
-                    String videoUri = android.net.Uri.fromFile(new File(videoFile.getPath())).toString();
+                    String videoPath = videoFile.getPath();
+                    String videoUri = android.net.Uri.fromFile(new File(videoPath)).toString();
                     BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, videoUri);
-                    info.setWidth(videoFile.getWidth());
-                    info.setHeight(videoFile.getHeight());
+                    try {
+                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                        retriever.setDataSource(videoPath);
+                        LogUtil.e("mytag", "videoWH: " +   retriever.getFrameAtTime().getWidth() + " " +   retriever.getFrameAtTime().getHeight());
+                        int height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)); // 视频高度
+                        int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)); // 视频宽度
+                        String rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                        if ("90".equals(rotation) || "270".equals(rotation)) {
+                            info.setHeight(width);
+                            info.setWidth(height);
+                        } else {
+                            info.setHeight(height);
+                            info.setWidth(width);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     blogContentInfoList.add(info);
                 }
                 adapter.appendData(blogContentInfoList);

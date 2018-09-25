@@ -2,7 +2,6 @@ package com.vincent.filepicker.filter.callback;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -176,22 +175,6 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
             video.setDate(data.getLong(data.getColumnIndexOrThrow(DATE_ADDED)));
 
             video.setDuration(data.getLong(data.getColumnIndexOrThrow(DURATION)));
-            MediaMetadataRetriever retr = new MediaMetadataRetriever();
-            retr.setDataSource(video.getPath());
-            try {
-                int height = Integer.valueOf(retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)); // 视频高度
-                int width = Integer.valueOf(retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)); // 视频宽度
-                String rotation = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-                if ("90".equals(rotation) || "270".equals(rotation)) {
-                    video.setHeight(width);
-                    video.setWidth(height);
-                } else {
-                    video.setHeight(height);
-                    video.setWidth(width);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             //Create a Directory
             Directory<VideoFile> directory = new Directory<>();
             directory.setId(video.getBucketId());

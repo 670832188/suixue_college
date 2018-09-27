@@ -27,11 +27,11 @@ import okhttp3.RequestBody;
  * Created by cuiyan on 2018/8/6.
  */
 public class FileUploadUtil {
-    public static void uploadImg(final Context context, List<String> imgPaths, final Map<String, String> strParams) {
+    public static void uploadImg(final Context context, List<String> imgPaths, final Map<String, String> strParams, @NonNull final UploadFileListener uploadFileListener) {
         ImageUtil.compressImgByPaths(context, imgPaths, new ImageUtil.CompressImgListener() {
             @Override
             public void onSuccess(List<File> compressedImgFileList) {
-                actualUploadFiles(context, compressedImgFileList, strParams);
+                actualUploadFiles(context, compressedImgFileList, strParams, uploadFileListener);
             }
 
             @Override
@@ -41,7 +41,7 @@ public class FileUploadUtil {
         });
     }
 
-    private static void actualUploadFiles(Context context, @NonNull List<File> fileList, Map<String, String> strParams) {
+    private static void actualUploadFiles(Context context, @NonNull List<File> fileList, Map<String, String> strParams, @NonNull final UploadFileListener uploadFileListener) {
         List<MultipartBody.Part> filePartList = new ArrayList<>();
         if (strParams != null) {
             for (String key : strParams.keySet()) {
@@ -56,23 +56,31 @@ public class FileUploadUtil {
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), fileParamBody);
             filePartList.add(filePart);
         }
-        NetRequestSubscriber<BaseResult> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult>() {
+        NetRequestSubscriber<BaseResult<List<FileUploadResult>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<List<FileUploadResult>>>() {
             @Override
-            public void onSuccess(@NonNull BaseResult baseResult) {
-                super.onSuccess(baseResult);
+            public void onSuccess(@NonNull BaseResult<List<FileUploadResult>> result) {
+                uploadFileListener.onSuccess(result);
             }
 
             @Override
             public void onResultNull() {
-                super.onResultNull();
+                uploadFileListener.onResultNull();
             }
 
             @Override
             public void onError(Throwable throwable) {
-                super.onError(throwable);
+                uploadFileListener.onError(throwable);
             }
         }, context, true, null);
         Observable observable = BaseServiceUtil.createService(FileUploadApiService.class).uploadFile(filePartList);
         BaseController.sendRequest(subscriber, observable);
+    }
+
+    public interface UploadFileListener {
+        void onSuccess(BaseResult<List<FileUploadResult>> result);
+
+        void onError(Throwable throwable);
+
+        void onResultNull();
     }
 }

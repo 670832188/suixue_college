@@ -17,11 +17,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.LogUtil;
+import com.google.gson.Gson;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.PublishBlogAdapter;
 import com.suixue.edu.college.config.TextStyleConfig;
@@ -44,6 +46,7 @@ import static com.vincent.filepicker.activity.ImagePickActivity.IS_NEED_CAMERA;
  */
 public class PublishBlogActivity extends BaseStateViewActivity implements View.OnClickListener {
 
+    private TextView tvPublishTrigger;
     private EditText etContent;
     private RadioGroup rgFontSize;
     private RadioGroup rgFontAlign;
@@ -54,6 +57,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private PublishBlogAdapter adapter;
     private RecyclerView rvBlogContent;
     private LinearLayoutManager layoutManager;
+    private RecyclerView.AdapterDataObserver dataObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +85,32 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         ckbFontItalic = findViewById(R.id.ckb_font_italic);
         ckbFontUnderline = findViewById(R.id.ckb_font_underline);
         textEditView = findViewById(R.id.ll_text_edit);
+        tvPublishTrigger = findViewById(R.id.tv_right);
+        tvPublishTrigger.setText(R.string.action_publish);
+        tvPublishTrigger.setVisibility(View.VISIBLE);
+        tvPublishTrigger.setTextColor(getResources().getColor(R.color.color_common_ashen));
+        tvPublishTrigger.setEnabled(false);
         registerTestStyleListener();
+        setOnClickListener(R.id.tv_right, this);
         setOnClickListener(R.id.btn_add_text, this);
         setOnClickListener(R.id.iv_add_text_trigger, this);
         setOnClickListener(R.id.iv_add_img_trigger, this);
         setOnClickListener(R.id.iv_add_video_trigger, this);
+        registerTestStyleListener();
+        registerDataObserver();
+    }
+
+    private void registerDataObserver() {
+        dataObserver = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                boolean enabled = adapter.getItemCount() > 0;
+                int color = enabled ? getResources().getColor(R.color.color_common_white) : getResources().getColor(R.color.color_common_ashen);
+                tvPublishTrigger.setEnabled(enabled);
+                tvPublishTrigger.setTextColor(color);
+            }
+        };
+        adapter.registerAdapterDataObserver(dataObserver);
     }
 
     /**
@@ -264,6 +289,10 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tv_right: {
+                tryToPublish();
+                break;
+            }
             case R.id.btn_add_text: {
                 BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_TEXT, getHtmlString());
                 adapter.appendItem(info, true);
@@ -358,5 +387,17 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
 
     private void scrollBlogItem(int targetPosition) {
         layoutManager.scrollToPositionWithOffset(targetPosition, 0);
+    }
+
+    private void tryToPublish() {
+        LogUtil.e("mytag", "publishContent: " + new Gson().toJson(adapter.getDataList()));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (adapter != null && dataObserver != null) {
+            adapter.unregisterAdapterDataObserver(dataObserver);
+        }
     }
 }

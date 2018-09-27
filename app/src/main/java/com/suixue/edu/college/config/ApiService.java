@@ -36,4 +36,6 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
     Observable<BaseResult<List<Object>>> getBlogListBySearch(@Field("pageIndex") String pageIndex, @Field("keyWord") String keyWord);
+
+
 }

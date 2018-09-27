@@ -33,5 +33,5 @@
         android:elevation="5dp"
         android:src="@mipmap/ic_back"
         app:borderWidth="0dp"
-        app:rippleColor="@color/color_orange" />
+        app:rippleColor="@color/color_common_orange" />
 </android.support.design.widget.CoordinatorLayout>

@@ -32,7 +32,7 @@ public class InterestAdapter extends BaseRecyclerAdapter<InterestInfo> {
         holder.setText(R.id.tv_category_name, info.getCategoryName());
         if (info.isLocalCategoryTitle()) {
             itemView.setTextColor(context.getResources().getColor(R.color.color_common_white));
-            itemView.setBackgroundResource(R.color.transparent);
+            itemView.setBackgroundResource(R.color.color_transparent);
         } else {
             if (!info.isChecked()) {
                 itemView.setTextColor(context.getResources().getColor(R.color.color_common_white));

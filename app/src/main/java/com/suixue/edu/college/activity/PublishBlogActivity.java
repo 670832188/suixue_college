@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.dev.kit.basemodule.util.ImageUtil;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.google.gson.Gson;
 import com.suixue.edu.college.R;
@@ -36,6 +37,7 @@ import com.vincent.filepicker.filter.entity.VideoFile;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
@@ -72,6 +74,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     }
 
     private void init() {
+        setText(R.id.tv_title, R.string.title_publish_blog);
         rvBlogContent = findViewById(R.id.rv_blog_content);
         layoutManager = new LinearLayoutManager(this);
         rvBlogContent.setLayoutManager(layoutManager);
@@ -346,6 +349,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
                 for (ImageFile imageFile : imageFileList) {
                     String imgPath = imageFile.getPath();
+                    LogUtil.e("mytag", "imgPath: " + imgPath);
                     BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, imgPath);
                     try {
                         Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
@@ -355,6 +359,17 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                         e.printStackTrace();
                     }
                     blogContentInfoList.add(info);
+                    ImageUtil.compressImgByPaths(this, Arrays.asList(imgPath), new ImageUtil.CompressImgListener() {
+                        @Override
+                        public void onSuccess(List<File> compressedImgFileList) {
+                            LogUtil.e("mytag", "compressedImgPath: " + compressedImgFileList.get(0).getAbsolutePath());
+                        }
+
+                        @Override
+                        public void onFailed() {
+
+                        }
+                    });
                 }
                 adapter.appendData(blogContentInfoList);
                 scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
@@ -391,6 +406,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
 
     private void tryToPublish() {
         LogUtil.e("mytag", "publishContent: " + new Gson().toJson(adapter.getDataList()));
+
     }
 
     @Override

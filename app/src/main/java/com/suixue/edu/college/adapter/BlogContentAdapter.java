@@ -14,6 +14,7 @@ import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.Resource;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
+import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.GlideUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -64,6 +65,12 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         holder.setVisibility(R.id.iv_img_item, View.VISIBLE);
         final ImageView ivImgItem = holder.getView(R.id.iv_img_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
+            // 重新计算，适应横向满屏
+            int ivWidth = getBlogWidth();
+            int ivHeight = (int) ((float) ivWidth / info.getWidth() * info.getHeight());
+            info.setWidth(ivWidth);
+            info.setHeight(ivHeight);
+
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ivImgItem.getLayoutParams();
             if (layoutParams != null) {
                 ivImgItem.getLayoutParams().width = info.getWidth();
@@ -77,18 +84,13 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
             @NonNull
             @Override
             public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
-                int ivWidth = ivImgItem.getWidth();
-                int ivHeight;
                 if (info.getWidth() == 0 && info.getHeight() == 0) {
-                    int imgWidth = resource.get().getWidth();
-                    int imgHeight = resource.get().getHeight();
-                    if (ivWidth == 0) {
-                        ivImgItem.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
-                        ivWidth = ivImgItem.getMeasuredWidth();
-                    }
-                    ivHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
+                    // 重新计算，适应横向满屏
+                    int ivWidth = getBlogWidth();
+                    int ivHeight = (int) ((float) ivWidth / resource.get().getWidth() * resource.get().getHeight());
                     info.setWidth(ivWidth);
                     info.setHeight(ivHeight);
+
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ivImgItem.getLayoutParams();
                     if (layoutParams != null) {
                         ivImgItem.getLayoutParams().width = info.getWidth();
@@ -113,6 +115,12 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         final BlogContentInfo info = getItem(position);
         final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_player);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
+            // 重新计算，适应横向满屏
+            int videoWidth = getBlogWidth(); // 横向满屏
+            int videoHeight = (int) ((float) videoWidth / info.getWidth() * info.getHeight());
+            info.setWidth(videoWidth);
+            info.setHeight(videoHeight);
+
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
             if (layoutParams != null) {
                 gsyVideoPlayer.getLayoutParams().width = info.getWidth();
@@ -130,16 +138,8 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
             @Override
             public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
                 if (info.getWidth() == 0 && info.getHeight() == 0) {
-                    int imgWidth = resource.get().getWidth();
-                    int imgHeight = resource.get().getHeight();
-                    int videoWidth = gsyVideoPlayer.getWidth();
-                    int videoHeight;
-                    if (videoWidth == 0) {
-                        gsyVideoPlayer.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
-                        videoWidth = gsyVideoPlayer.getMeasuredWidth();
-                    }
-                    videoHeight = (int) ((float) imgHeight * videoWidth / imgWidth);
-
+                    int videoWidth = getBlogWidth();
+                    int videoHeight = (int) ((float) videoWidth / resource.get().getWidth() * resource.get().getHeight());
                     info.setWidth(videoWidth);
                     info.setHeight(videoHeight);
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gsyVideoPlayer.getLayoutParams();
@@ -227,5 +227,9 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
      */
     private void resolveFullBtn(final StandardGSYVideoPlayer standardGSYVideoPlayer) {
         standardGSYVideoPlayer.startWindowFullscreen(context, true, true);
+    }
+
+    private int getBlogWidth() {
+        return DisplayUtil.getScreenWidth();
     }
 }

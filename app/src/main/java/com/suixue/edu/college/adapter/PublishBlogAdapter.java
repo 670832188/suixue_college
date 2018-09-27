@@ -106,12 +106,14 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         final BlogContentInfo info = getItem(position);
         final ImageView ivImgItem = holder.getView(R.id.iv_picture_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
+            int ivWidth = getBlogWidth();
+            int ivHeight = (int) ((float) ivWidth / info.getWidth() * info.getHeight());
             ViewGroup.LayoutParams layoutParams = ivImgItem.getLayoutParams();
             if (layoutParams != null) {
-                ivImgItem.getLayoutParams().width = info.getWidth();
-                ivImgItem.getLayoutParams().height = info.getHeight();
+                ivImgItem.getLayoutParams().width = ivWidth;
+                ivImgItem.getLayoutParams().height = ivHeight;
             } else {
-                layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
+                layoutParams = new ViewGroup.LayoutParams(ivWidth, ivHeight);
                 ivImgItem.setLayoutParams(layoutParams);
             }
         }
@@ -119,27 +121,17 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
             @NonNull
             @Override
             public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
-                int ivWidth = ivImgItem.getWidth();
-                int ivHeight;
                 if (info.getWidth() == 0 && info.getHeight() == 0) {
-                    int imgWidth = resource.get().getWidth();
-                    int imgHeight = resource.get().getHeight();
-                    LogUtil.e("mytag", "imgWH: " + imgWidth + " " + imgHeight);
-
-                    if (ivWidth == 0) {
-                        ivImgItem.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
-                        ivWidth = ivImgItem.getMeasuredWidth();
-                    }
-                    ivHeight = (int) ((float) imgHeight * ivWidth / imgWidth);
-                    LogUtil.e("mytag", "ivWH: " + ivWidth + " " + ivHeight);
-                    info.setWidth(ivWidth);
-                    info.setHeight(ivHeight);
+                    info.setWidth(resource.get().getWidth());
+                    info.setHeight(resource.get().getHeight());
+                    int ivWidth = getBlogWidth();
+                    int ivHeight = (int) ((float) ivWidth / resource.get().getWidth() * resource.get().getHeight());
                     ViewGroup.LayoutParams layoutParams = ivImgItem.getLayoutParams();
                     if (layoutParams != null) {
-                        ivImgItem.getLayoutParams().width = info.getWidth();
-                        ivImgItem.getLayoutParams().height = info.getHeight();
+                        ivImgItem.getLayoutParams().width = ivWidth;
+                        ivImgItem.getLayoutParams().height = ivHeight;
                     } else {
-                        layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
+                        layoutParams = new ViewGroup.LayoutParams(ivWidth, ivHeight);
                         ivImgItem.setLayoutParams(layoutParams);
                     }
                 }
@@ -156,7 +148,7 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         final BlogContentInfo info = getItem(position);
         final SampleCoverVideo gsyVideoPlayer = holder.getView(R.id.video_item);
         if (info.getWidth() > 0 && info.getHeight() > 0) {
-            int videoWidth = DisplayUtil.getScreenWidth(); // 横向满屏
+            int videoWidth = getBlogWidth(); // 横向满屏
             int videoHeight = (int) ((float) videoWidth / info.getWidth() * info.getHeight());
             ViewGroup.LayoutParams layoutParams = gsyVideoPlayer.getLayoutParams();
             if (layoutParams != null) {
@@ -180,32 +172,24 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
             @Override
             public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
                 if (info.getWidth() == 0 && info.getHeight() == 0) {
-                    int imgWidth = resource.get().getWidth();
-                    int imgHeight = resource.get().getHeight();
-                    int videoWidth = gsyVideoPlayer.getWidth();
-                    int videoHeight;
-                    if (videoWidth == 0) {
-                        gsyVideoPlayer.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.UNSPECIFIED);
-                        videoWidth = gsyVideoPlayer.getMeasuredWidth();
-                    }
-                    videoHeight = (int) ((float) imgHeight * videoWidth / imgWidth);
-
-                    info.setWidth(videoWidth);
-                    info.setHeight(videoHeight);
+                    info.setWidth(resource.get().getWidth());
+                    info.setHeight(resource.get().getHeight());
+                    int videoWidth = getBlogWidth();
+                    int videoHeight = (int) ((float) videoWidth / info.getWidth() * info.getHeight());
                     ViewGroup.LayoutParams layoutParams = gsyVideoPlayer.getLayoutParams();
                     if (layoutParams != null) {
-                        gsyVideoPlayer.getLayoutParams().width = info.getWidth();
-                        gsyVideoPlayer.getLayoutParams().height = info.getHeight();
+                        gsyVideoPlayer.getLayoutParams().width = videoWidth;
+                        gsyVideoPlayer.getLayoutParams().height = videoHeight;
                     } else {
-                        layoutParams = new ViewGroup.LayoutParams(info.getWidth(), info.getHeight());
+                        layoutParams = new ViewGroup.LayoutParams(videoWidth, videoHeight);
                         gsyVideoPlayer.setLayoutParams(layoutParams);
                     }
                     RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) coverImage.getLayoutParams();
                     if (layoutParams1 != null) {
-                        coverImage.getLayoutParams().width = info.getWidth();
-                        coverImage.getLayoutParams().height = info.getHeight();
+                        coverImage.getLayoutParams().width = videoWidth;
+                        coverImage.getLayoutParams().height = videoHeight;
                     } else {
-                        layoutParams1 = new RelativeLayout.LayoutParams(info.getWidth(), info.getHeight());
+                        layoutParams1 = new RelativeLayout.LayoutParams(videoWidth, videoHeight);
                         coverImage.setLayoutParams(layoutParams1);
                     }
                 }
@@ -287,5 +271,9 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
             }
         }
         return videoSize;
+    }
+
+    private int getBlogWidth() {
+        return DisplayUtil.getScreenWidth();
     }
 }

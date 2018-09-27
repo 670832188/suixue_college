@@ -123,15 +123,15 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
 
     public void removeItem(T item, boolean updateSingleItem) {
         synchronized (this) {
-            int itemPos = -1;
-            if (updateSingleItem) {
-                itemPos = dataList.indexOf(item);
-            }
-            dataList.remove(item);
-            if (itemPos > 0) {
-                notifyItemRemoved(itemPos);
-            } else {
-                notifyDataSetChanged();
+            int itemPos = dataList.indexOf(item);
+            if (itemPos >= 0) {
+                dataList.remove(item);
+                if (updateSingleItem) {
+                    notifyItemRemoved(itemPos);
+                    notifyItemRangeChanged(itemPos - 1, dataList.size() - itemPos);
+                } else {
+                    notifyItemRemoved(itemPos);
+                }
             }
         }
     }

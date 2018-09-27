@@ -329,7 +329,6 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 }
                 adapter.appendData(blogContentInfoList);
                 scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
-                setVisibility(R.id.ll_text_edit, View.GONE);
             } else if (requestCode == Constant.REQUEST_CODE_PICK_VIDEO) {
                 ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
                 List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
@@ -352,7 +351,6 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 }
                 adapter.appendData(blogContentInfoList);
                 scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
-                setVisibility(R.id.ll_text_edit, View.GONE);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

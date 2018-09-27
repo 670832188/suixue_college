@@ -84,7 +84,7 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
 
     @Override
     public void fillData(RecyclerViewHolder holder, final int position) {
-        BlogContentInfo info = getItem(position);
+        final BlogContentInfo info = getItem(position);
         switch (info.getContentType()) {
             case BlogContentInfo.CONTENT_TYPE_TEXT: {
                 TextView tvTextItem = holder.getView(R.id.tv_text_item);
@@ -100,6 +100,12 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
                 break;
             }
         }
+        holder.setOnClickListener(R.id.iv_delete, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItem(info, true);
+            }
+        });
     }
 
     private void setPicture(RecyclerViewHolder holder, int position) {

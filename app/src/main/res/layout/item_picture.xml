@@ -7,11 +7,11 @@
     <ImageView
         android:id="@+id/iv_picture_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/picture_default_height"
         android:scaleType="centerCrop" />
 
     <ImageView
-        android:id="@+id/iv_move_up"
+        android:id="@+id/iv_delete"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
@@ -22,15 +22,4 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_delete" />
 
-    <ImageView
-        android:id="@+id/iv_move_down"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:padding="@dimen/margin_small"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_delete" />
 </RelativeLayout>

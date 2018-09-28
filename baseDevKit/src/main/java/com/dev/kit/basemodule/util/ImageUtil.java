@@ -104,12 +104,12 @@ public class ImageUtil {
     }
 
     private static File getCacheDir() {
-        String cacheDirName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "testCache";
+        String cacheDirName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.IMG_CACHE_DIR_NAME;
         File cacheDirFile = new File(cacheDirName);
         if (cacheDirFile.exists()) {
             return cacheDirFile;
         } else {
-            if (cacheDirFile.mkdir()) {
+            if (cacheDirFile.mkdirs()) {
                 return cacheDirFile;
             }
         }

@@ -37,7 +37,6 @@ import com.vincent.filepicker.filter.entity.VideoFile;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
@@ -346,33 +345,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         if (resultCode == RESULT_OK) {
             if (requestCode == Constant.REQUEST_CODE_PICK_IMAGE) {
                 List<ImageFile> imageFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
-                List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
-                for (ImageFile imageFile : imageFileList) {
-                    String imgPath = imageFile.getPath();
-                    LogUtil.e("mytag", "imgPath: " + imgPath);
-                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, imgPath);
-                    try {
-                        Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
-                        info.setWidth(bitmap.getWidth());
-                        info.setHeight(bitmap.getHeight());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    blogContentInfoList.add(info);
-                    ImageUtil.compressImgByPaths(this, Arrays.asList(imgPath), new ImageUtil.CompressImgListener() {
-                        @Override
-                        public void onSuccess(List<File> compressedImgFileList) {
-                            LogUtil.e("mytag", "compressedImgPath: " + compressedImgFileList.get(0).getAbsolutePath());
-                        }
-
-                        @Override
-                        public void onFailed() {
-
-                        }
-                    });
-                }
-                adapter.appendData(blogContentInfoList);
-                scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
+                handleSelectedImage(imageFileList);
             } else if (requestCode == Constant.REQUEST_CODE_PICK_VIDEO) {
                 ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
                 List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
@@ -415,5 +388,33 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         if (adapter != null && dataObserver != null) {
             adapter.unregisterAdapterDataObserver(dataObserver);
         }
+    }
+
+    private void handleSelectedImage(List<ImageFile> imageFileList) {
+        final List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
+        List<String> imgPathList = new ArrayList<>();
+        for (ImageFile imageFile : imageFileList) {
+            String imgPath = imageFile.getPath();
+            imgPathList.add(imgPath);
+        }
+        ImageUtil.compressImgByPaths(this, imgPathList, new ImageUtil.CompressImgListener() {
+            @Override
+            public void onSuccess(List<File> compressedImgFileList) {
+                for (File file : compressedImgFileList) {
+                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, file.getAbsolutePath());
+                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    info.setWidth(bitmap.getWidth());
+                    info.setHeight(bitmap.getHeight());
+                    blogContentInfoList.add(info);
+                }
+                adapter.appendData(blogContentInfoList);
+                scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
+            }
+
+            @Override
+            public void onFailed() {
+                showToast(R.string.tip_image_handle_failed);
+            }
+        });
     }
 }

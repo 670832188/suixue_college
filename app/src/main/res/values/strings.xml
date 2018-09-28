@@ -47,4 +47,5 @@
     <string name="title_publish_blog">发布博客</string>
     <string name="action_add">添加</string>
     <string name="tip_video_publish_size_limit">您每次最多只能发布一条视频</string>
+    <string name="tip_image_handle_failed">图片处理失败</string>
 </resources>

@@ -14,6 +14,7 @@ import com.daasuu.camerarecorder.CameraRecorder;
 import com.daasuu.camerarecorder.CameraRecorderBuilder;
 import com.daasuu.camerarecorder.LensFacing;
 import com.dev.kit.basemodule.R;
+import com.dev.kit.basemodule.util.Config;
 import com.dev.kit.basemodule.util.ToastUtil;
 
 import java.io.File;
@@ -114,9 +115,9 @@ public class RecordVideoActivity extends BaseActivity {
     }
 
     private String getVideoOutputFilePath() {
-        String videoDirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "suiXueEdu";
+        String videoDirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.VIDEO_CACHE_DIR_NAME;
         File videoDirFile = new File(videoDirPath);
-        if (!videoDirFile.exists() && !videoDirFile.mkdir()) {
+        if (!videoDirFile.exists() && !videoDirFile.mkdirs()) {
             return null;
         }
         String videoFileName = "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".mp4";

@@ -48,4 +48,6 @@
     <string name="action_add">添加</string>
     <string name="tip_video_publish_size_limit">您每次最多只能发布一条视频</string>
     <string name="tip_image_handle_failed">图片处理失败</string>
+    <string name="tip_dir_make_failed">文件夹创建失败</string>
+    <string name="tip_video_handle_failed">视频处理失败</string>
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -21,9 +22,12 @@ import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
+import com.dev.kit.basemodule.util.Config;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.ImageUtil;
 import com.dev.kit.basemodule.util.LogUtil;
+import com.dev.kit.basemodule.videoCompress.IVideoCompress;
+import com.dev.kit.basemodule.videoCompress.VideoCompressUtil;
 import com.dev.kit.basemodule.view.NetProgressDialog;
 import com.google.gson.Gson;
 import com.suixue.edu.college.R;
@@ -37,8 +41,11 @@ import com.vincent.filepicker.filter.entity.ImageFile;
 import com.vincent.filepicker.filter.entity.VideoFile;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import me.shaohui.advancedluban.OnMultiCompressListener;
 
@@ -353,26 +360,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 handleSelectedImage(imageFileList);
             } else if (requestCode == Constant.REQUEST_CODE_PICK_VIDEO) {
                 ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
-                List<BlogContentInfo> blogContentInfoList = new ArrayList<>();
-                for (VideoFile videoFile : videoFileList) {
-                    String videoPath = videoFile.getPath();
-                    String videoUri = android.net.Uri.fromFile(new File(videoPath)).toString();
-                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, videoUri);
-                    try {
-                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                        retriever.setDataSource(videoPath);
-                        Bitmap firstFrameBitmap = retriever.getFrameAtTime();
-                        int width = firstFrameBitmap.getWidth(); // 视频宽度
-                        int height = firstFrameBitmap.getHeight(); // 视频高度
-                        info.setWidth(width);
-                        info.setHeight(height);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    blogContentInfoList.add(info);
-                }
-                adapter.appendData(blogContentInfoList);
-                scrollBlogItem(adapter.getItemCount() - blogContentInfoList.size());
+                handleVideo(videoFileList.get(0));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -427,6 +415,55 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 progressDialog.dismiss();
                 showToast(R.string.tip_image_handle_failed);
                 e.printStackTrace();
+            }
+        });
+    }
+
+    private void handleVideo(VideoFile videoFile) {
+        String targetDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.VIDEO_CACHE_DIR_NAME;
+        File dirFile = new File(targetDir);
+        if (!dirFile.exists()) {
+            if (!dirFile.mkdirs()) {
+                showToast(R.string.tip_dir_make_failed);
+                return;
+            }
+        }
+        String videoPath = videoFile.getPath();
+        String videoFileName = "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + videoPath.substring(videoPath.lastIndexOf(".") + 1);
+        VideoCompressUtil.compressVideo(videoFile.getPath(), targetDir + File.separator + videoFileName, new IVideoCompress() {
+            @Override
+            public void onPrePared() {
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(String sourcePath, String newPath) {
+                progressDialog.dismiss();
+                String videoUri = android.net.Uri.fromFile(new File(newPath)).toString();
+                BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, videoUri);
+                try {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(newPath);
+                    Bitmap firstFrameBitmap = retriever.getFrameAtTime();
+                    int width = firstFrameBitmap.getWidth(); // 视频宽度
+                    int height = firstFrameBitmap.getHeight(); // 视频高度
+                    info.setWidth(width);
+                    info.setHeight(height);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                adapter.appendItem(info, true);
+            }
+
+            @Override
+            public void onFail() {
+                progressDialog.dismiss();
+                showToast(R.string.tip_video_handle_failed);
+            }
+
+            @Override
+            public void onProgress(int percent) {
+
             }
         });
     }

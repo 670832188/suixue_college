@@ -429,7 +429,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             }
         }
         String videoPath = videoFile.getPath();
-        String videoFileName = "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + videoPath.substring(videoPath.lastIndexOf(".") + 1);
+        String videoFileName = "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + videoPath.substring(videoPath.lastIndexOf("."));
         VideoCompressUtil.compressVideo(videoFile.getPath(), targetDir + File.separator + videoFileName, new IVideoCompress() {
             @Override
             public void onPrePared() {

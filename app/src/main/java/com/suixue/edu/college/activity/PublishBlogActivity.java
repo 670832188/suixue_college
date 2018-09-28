@@ -24,6 +24,7 @@ import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.ImageUtil;
 import com.dev.kit.basemodule.util.LogUtil;
+import com.dev.kit.basemodule.view.NetProgressDialog;
 import com.google.gson.Gson;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.PublishBlogAdapter;
@@ -38,6 +39,8 @@ import com.vincent.filepicker.filter.entity.VideoFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.shaohui.advancedluban.OnMultiCompressListener;
 
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
 import static com.vincent.filepicker.activity.ImagePickActivity.IS_NEED_CAMERA;
@@ -59,6 +62,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private RecyclerView rvBlogContent;
     private LinearLayoutManager layoutManager;
     private RecyclerView.AdapterDataObserver dataObserver;
+    private NetProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         setOnClickListener(R.id.iv_add_video_trigger, this);
         registerTestStyleListener();
         registerDataObserver();
+        progressDialog = NetProgressDialog.getInstance(this);
     }
 
     private void registerDataObserver() {
@@ -397,10 +402,16 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             String imgPath = imageFile.getPath();
             imgPathList.add(imgPath);
         }
-        ImageUtil.compressImgByPaths(this, imgPathList, new ImageUtil.CompressImgListener() {
+        ImageUtil.compressImgByPaths(this, imgPathList, new OnMultiCompressListener() {
             @Override
-            public void onSuccess(List<File> compressedImgFileList) {
-                for (File file : compressedImgFileList) {
+            public void onStart() {
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(List<File> fileList) {
+                progressDialog.dismiss();
+                for (File file : fileList) {
                     BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, file.getAbsolutePath());
                     Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                     info.setWidth(bitmap.getWidth());
@@ -412,8 +423,10 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             }
 
             @Override
-            public void onFailed() {
+            public void onError(Throwable e) {
+                progressDialog.dismiss();
                 showToast(R.string.tip_image_handle_failed);
+                e.printStackTrace();
             }
         });
     }

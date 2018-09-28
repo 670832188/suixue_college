@@ -2,23 +2,16 @@ package com.dev.kit.basemodule.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.functions.Consumer;
 import me.shaohui.advancedluban.Luban;
+import me.shaohui.advancedluban.OnCompressListener;
+import me.shaohui.advancedluban.OnMultiCompressListener;
 
 /**
  * image工具类
@@ -38,44 +31,29 @@ public class ImageUtil {
         return Bitmap.createBitmap(bitmap, (bitmap.getWidth() - cropWidth) / 2, (bitmap.getHeight() - cropWidth) / 2, cropWidth, cropWidth);
     }
 
-    public static synchronized void compressImg(Context context, File imgFile, int compressMode, @NonNull final CompressImgListener listener) {
-        Luban.compress(context, imgFile)
-                .putGear(compressMode)
-                .asObservable()
-                .subscribe(new Consumer<File>() {
-                    @Override
-                    public void accept(File file) throws Exception {
-                        List<File> fileList = new ArrayList<>();
-                        fileList.add(file);
-                        listener.onSuccess(fileList);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                        listener.onFailed();
-                    }
-                });
+    public static synchronized void compressImg(Context context, File imgFile, @NonNull final OnCompressListener listener) {
+        Luban luban;
+        File cacheFile = getCacheDir();
+        if (cacheFile != null) {
+            luban = Luban.compress(imgFile, cacheFile).putGear(Luban.THIRD_GEAR);
+        } else {
+            luban = Luban.compress(context, imgFile).putGear(Luban.THIRD_GEAR);
+        }
+        luban.launch(listener);
     }
 
-    public static synchronized void compressImgByFiles(Context context, List<File> imgFileList, int compressMode, @NonNull final CompressImgListener listener) {
-        Luban.compress(context, imgFileList)           // 加载多张图片
-                .putGear(compressMode)
-                .asListObservable()
-                .subscribe(new Consumer<List<File>>() {
-                    @Override
-                    public void accept(List<File> files) throws Exception {
-                        listener.onSuccess(files);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        listener.onFailed();
-                    }
-                });
+    public static synchronized void compressImgByFiles(Context context, List<File> imgFileList, int compressMode, @NonNull final OnMultiCompressListener listener) {
+        Luban luban;
+        File cacheFile = getCacheDir();
+        if (cacheFile != null) {
+            luban = Luban.compress(imgFileList, cacheFile).putGear(Luban.THIRD_GEAR);
+        } else {
+            luban = Luban.compress(context, imgFileList).putGear(Luban.THIRD_GEAR);
+        }
+        luban.launch(listener);
     }
 
-    public static synchronized void compressImgByPaths(Context context, List<String> imgPathList, @NonNull final CompressImgListener listener) {
+    public static synchronized void compressImgByPaths(Context context, List<String> imgPathList, @NonNull final OnMultiCompressListener listener) {
         List<File> imgFileList = new ArrayList<>();
         for (String path : imgPathList) {
             imgFileList.add(new File(path));
@@ -83,24 +61,11 @@ public class ImageUtil {
         Luban luban;
         File cacheFile = getCacheDir();
         if (cacheFile != null) {
-            luban = Luban.compress(imgFileList, cacheFile);
+            luban = Luban.compress(imgFileList, cacheFile).putGear(Luban.THIRD_GEAR);
         } else {
-            luban = Luban.compress(context, imgFileList);
+            luban = Luban.compress(context, imgFileList).putGear(Luban.THIRD_GEAR);
         }
-
-        luban.putGear(Luban.THIRD_GEAR)
-                .asListObservable()
-                .subscribe(new Consumer<List<File>>() {
-                    @Override
-                    public void accept(List<File> files) throws Exception {
-                        listener.onSuccess(files);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        listener.onFailed();
-                    }
-                });
+        luban.launch(listener);
     }
 
     private static File getCacheDir() {
@@ -114,11 +79,5 @@ public class ImageUtil {
             }
         }
         return null;
-    }
-
-    public interface CompressImgListener {
-        void onSuccess(List<File> compressedImgFileList);
-
-        void onFailed();
     }
 }

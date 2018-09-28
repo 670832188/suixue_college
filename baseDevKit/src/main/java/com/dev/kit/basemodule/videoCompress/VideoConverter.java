@@ -29,7 +29,7 @@ public class VideoConverter {
 
     // parameters for the video encoder
     private static final String OUTPUT_VIDEO_MIME_TYPE = "video/avc"; // H.264 Advanced Video Coding
-    private static final int OUTPUT_VIDEO_FRAME_RATE = 25; // 15fps
+    private static final int OUTPUT_VIDEO_FRAME_RATE = 30; // 15fps
     private static final int OUTPUT_VIDEO_IFRAME_INTERVAL = 10; // 10 seconds between I-frames
     private static final int OUTPUT_VIDEO_COLOR_FORMAT =
             MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface;
@@ -162,21 +162,14 @@ public class VideoConverter {
      * Sets the desired frame size.
      */
     private void setSize(int originalWidth, int originalHeight) {
-        int resultWidth, resultHeight;
-        if (originalWidth > originalHeight && originalWidth > 960) {
-            resultWidth = 960;
-            float scale = originalWidth * 1f / 960;
-            resultHeight = (int) Math.floor(originalHeight / scale);
-        } else if (originalWidth <= originalHeight && originalHeight > 960) {
-            resultHeight = 960;
-            float scale = originalHeight * 1f / 960;
-            resultWidth = (int) Math.floor(originalWidth / scale);
+        int resultWidth;
+        int resultHeight;
+        if (originalWidth > 720) {
+            resultWidth = 720;
         } else {
             resultWidth = originalWidth;
-            resultHeight = originalHeight;
         }
-        if (resultWidth % 16 != 0) resultWidth += resultWidth % 16;
-        if (resultHeight % 16 != 0) resultHeight += resultHeight % 16;
+        resultHeight = (int) ((float) resultWidth / originalWidth * originalHeight);
         mWidth = resultWidth;
         mHeight = resultHeight;
         bitrate = (resultWidth / 2) * (resultHeight / 2) * 10;

@@ -170,6 +170,8 @@ public class VideoConverter {
             resultWidth = originalWidth;
         }
         resultHeight = (int) ((float) resultWidth / originalWidth * originalHeight);
+        if (resultWidth % 16 != 0) resultWidth += resultWidth % 16;
+        if (resultHeight % 16 != 0) resultHeight += resultHeight % 16;
         mWidth = resultWidth;
         mHeight = resultHeight;
         bitrate = (resultWidth / 2) * (resultHeight / 2) * 10;
@@ -230,18 +232,27 @@ public class VideoConverter {
         int rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
         int width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
         int height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-        setSize(width, height);
-
-        if (rotation == 90) {
-            int temp = mHeight;
-            mHeight = mWidth;
-            mWidth = temp;
-        } else if (rotation == 270) {
-            int temp = mHeight;
-            mHeight = mWidth;
-            mWidth = temp;
+/////////////////////////////////////////////////////////////////////////
+       // 以下屏蔽by cuiyan
+//        setSize(width, height);
+//        if (rotation == 90) {
+//            int temp = mHeight;
+//            mHeight = mWidth;
+//            mWidth = temp;
+//        } else if (rotation == 270) {
+//            int temp = mHeight;
+//            mHeight = mWidth;
+//            mWidth = temp;
+//        }
+////////////////////////////////////////////////////////////////////////
+        // 以下添加by cuiyan
+        if (rotation == 90 || rotation == 270) {
+            int temp = height;
+            height = width;
+            width = temp;
         }
-
+        setSize(width, height);
+///////////////////////////////////////////////////////////////////////
         Log.i(TAG, "width = " + width + ", height = " + height + ", rW = " + mWidth + ", rH = " + mHeight + ", rotate = " + rotation + "bit_rate = " + bitrate);
     }
 

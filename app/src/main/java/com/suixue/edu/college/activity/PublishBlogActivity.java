@@ -34,6 +34,7 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.PublishBlogAdapter;
 import com.suixue.edu.college.config.TextStyleConfig;
 import com.suixue.edu.college.entity.BlogContentInfo;
+import com.suixue.edu.college.gifEncoder.GitEncoderUtil;
 import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.activity.VideoPickActivity;
@@ -76,6 +77,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         showContent(true);
         super.onCreate(savedInstanceState);
         init();
+        gifTest();
     }
 
     @Override
@@ -445,6 +447,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                     retriever.setDataSource(newPath);
                     Bitmap firstFrameBitmap = retriever.getFrameAtTime();
+                    retriever.release();
                     int width = firstFrameBitmap.getWidth(); // 视频宽度
                     int height = firstFrameBitmap.getHeight(); // 视频高度
                     info.setWidth(width);
@@ -466,5 +469,52 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
 
             }
         });
+    }
+
+    private void gifTest() {
+        String inputVideoPath = "storage/emulated/0/suiXueEdu/suiXue_20180928195217.mp4";
+        String outputFilePath = getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
+
+        new GitEncoderUtil().generateGifByVideoPath(inputVideoPath, outputFilePath, 10, new GitEncoderUtil.OnGifEncodeListener() {
+            @Override
+            public void onStart() {
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(String gifPath) {
+                progressDialog.dismiss();
+                showToast("git创建成功");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private String getOutputVideoDirPath() {
+        String targetDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.VIDEO_CACHE_DIR_NAME;
+        File dirFile = new File(targetDir);
+        if (!dirFile.exists()) {
+            if (!dirFile.mkdirs()) {
+                showToast(R.string.tip_dir_make_failed);
+                return null;
+            }
+        }
+        return dirFile.getAbsolutePath();
+    }
+
+    private String getOutputImgDirPath() {
+        String targetDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.IMG_CACHE_DIR_NAME;
+        File dirFile = new File(targetDir);
+        if (!dirFile.exists()) {
+            if (!dirFile.mkdirs()) {
+                showToast(R.string.tip_dir_make_failed);
+                return null;
+            }
+        }
+        return dirFile.getAbsolutePath();
     }
 }

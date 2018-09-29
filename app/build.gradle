@@ -32,6 +32,4 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':baseDevKit')
     implementation project(':filepicker')
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-    compile 'com.android.support:multidex:1.0.1'
 }

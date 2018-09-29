@@ -1,1 +1,1 @@
-include ':app', ':baseDevKit','filepicker','gifLibrary'
+include ':app', ':baseDevKit','filepicker'

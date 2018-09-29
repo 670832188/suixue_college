@@ -77,7 +77,6 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         showContent(true);
         super.onCreate(savedInstanceState);
         init();
-        gifTest();
     }
 
     @Override
@@ -456,6 +455,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     e.printStackTrace();
                 }
                 adapter.appendItem(info, true);
+                gifTest(newPath);
             }
 
             @Override
@@ -471,10 +471,8 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         });
     }
 
-    private void gifTest() {
-        String inputVideoPath = "storage/emulated/0/suiXueEdu/suiXue_20180928195217.mp4";
+    private void gifTest(String inputVideoPath) {
         String outputFilePath = getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
-
         new GitEncoderUtil().generateGifByVideoPath(inputVideoPath, outputFilePath, 5, new GitEncoderUtil.OnGifEncodeListener() {
             @Override
             public void onStart() {

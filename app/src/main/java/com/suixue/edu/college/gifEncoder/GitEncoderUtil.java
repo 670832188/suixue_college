@@ -72,7 +72,12 @@ public class GitEncoderUtil {
         for (long timePointUs = 0; timePointUs < durationUs; timePointUs += frameIntervalUs) {
             Bitmap bitmap = retriever.getFrameAtTime(timePointUs, MediaMetadataRetriever.OPTION_CLOSEST);
             if (bitmap != null) {
-                bitmapList.add(bitmap);
+                // 压缩
+                Bitmap dst = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 2, bitmap.getHeight() / 2, false);
+                if (bitmap != dst) {
+                    bitmap.recycle();
+                }
+                bitmapList.add(dst);
             }
         }
         retriever.release();

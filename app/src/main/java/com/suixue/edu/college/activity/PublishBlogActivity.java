@@ -475,7 +475,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         String inputVideoPath = "storage/emulated/0/suiXueEdu/suiXue_20180928195217.mp4";
         String outputFilePath = getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
 
-        new GitEncoderUtil().generateGifByVideoPath(inputVideoPath, outputFilePath, 10, new GitEncoderUtil.OnGifEncodeListener() {
+        new GitEncoderUtil().generateGifByVideoPath(inputVideoPath, outputFilePath, 5, new GitEncoderUtil.OnGifEncodeListener() {
             @Override
             public void onStart() {
                 progressDialog.show();

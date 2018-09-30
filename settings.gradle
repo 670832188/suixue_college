@@ -1,1 +1,1 @@
-include ':app', ':baseDevKit','filepicker'
+include ':app', ':baseDevKit',':filepicker',':camerarecorder'

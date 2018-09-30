@@ -63,9 +63,14 @@ public class RecordVideoActivity extends BaseActivity {
         cameraRecorder = new CameraRecorderBuilder(this, surfaceView)
                 .lensFacing(LensFacing.BACK)
                 .videoSize(720, 1280)
-                .cameraSize(1280, 720)
+                .cameraSize(1920, 1080)
                 .recordNoFilter(true)
                 .cameraRecordListener(new CameraRecordListener() {
+                    @Override
+                    public void onRecordStart() {
+
+                    }
+
                     @Override
                     public void onGetFlashSupport(boolean b) {
 

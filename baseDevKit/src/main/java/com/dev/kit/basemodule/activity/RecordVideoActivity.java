@@ -30,6 +30,10 @@ public class RecordVideoActivity extends BaseActivity {
     public static final String RECODE_FILE_PATH = "recordFilePath";
     private CameraRecorder cameraRecorder;
     private String recordFilePath;
+    private static final int videoWidth = 720;
+    private static final int videoHeight = 1280;
+    private static final int cameraWidth = 1280;
+    private static final int cameraHeight = 720;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +66,10 @@ public class RecordVideoActivity extends BaseActivity {
         GLSurfaceView surfaceView = findViewById(R.id.GLSurfaceView);
         cameraRecorder = new CameraRecorderBuilder(this, surfaceView)
                 .lensFacing(LensFacing.BACK)
-                .videoSize(720, 1280)
-                .cameraSize(1280, 720)
+                .videoSize(videoWidth, videoHeight)
+                .cameraSize(cameraWidth, cameraHeight)
                 .recordNoFilter(true)
-                .setBitRate((int) (720 * 1280 * 1.5))
+                .setBitRate((int) (videoWidth * videoHeight * 1.5))
                 .cameraRecordListener(new CameraRecordListener() {
                     @Override
                     public void onRecordStart() {

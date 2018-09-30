@@ -34,6 +34,7 @@ public class CameraRecorderBuilder {
     private int cameraWidth = 1280;
     private int cameraHeight = 720;
     private GlFilter glFilter;
+    private int bitRate;
 
     public CameraRecorderBuilder(@NonNull Activity activity, @NonNull GLSurfaceView glSurfaceView) {
         this.activity = activity;
@@ -60,6 +61,11 @@ public class CameraRecorderBuilder {
     public CameraRecorderBuilder cameraSize(int cameraWidth, int cameraHeight) {
         this.cameraWidth = cameraWidth;
         this.cameraHeight = cameraHeight;
+        return this;
+    }
+
+    public CameraRecorderBuilder setBitRate(int bitRate) {
+        this.bitRate = bitRate;
         return this;
     }
 
@@ -117,7 +123,8 @@ public class CameraRecorderBuilder {
                 cameraManager,
                 isLandscapeDevice,
                 degrees,
-                recordNoFilter
+                recordNoFilter,
+                bitRate
         );
 
         cameraRecorder.setFilter(glFilter);

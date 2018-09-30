@@ -44,6 +44,7 @@ public class CameraRecorder {
     private final boolean isLandscapeDevice;
     private final int degrees;
     private final boolean recordNoFilter;
+    private int bitRate;
 
     CameraRecorder(
             CameraRecordListener cameraRecordListener,
@@ -59,7 +60,8 @@ public class CameraRecorder {
             final CameraManager cameraManager,
             final boolean isLandscapeDevice,
             final int degrees,
-            final boolean recordNoFilter
+            final boolean recordNoFilter,
+            final int bitRate
     ) {
 
 
@@ -80,6 +82,7 @@ public class CameraRecorder {
         this.isLandscapeDevice = isLandscapeDevice;
         this.degrees = degrees;
         this.recordNoFilter = recordNoFilter;
+        this.bitRate = bitRate;
 
         // create preview Renderer
         if (null == glPreviewRenderer) {
@@ -235,7 +238,8 @@ public class CameraRecorder {
                             glSurfaceView.getMeasuredWidth(),
                             glSurfaceView.getMeasuredHeight(),
                             recordNoFilter,
-                            glPreviewRenderer.getFilter()
+                            glPreviewRenderer.getFilter(),
+                            bitRate
                     );
                     if (!mute) {
                         // for audio capturing

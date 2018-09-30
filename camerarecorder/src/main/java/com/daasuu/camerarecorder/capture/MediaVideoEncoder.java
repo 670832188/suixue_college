@@ -26,6 +26,7 @@ public class MediaVideoEncoder extends MediaEncoder {
 
     private final int fileWidth;
     private final int fileHeight;
+    private int bitRate;
     private EncodeRenderHandler encodeRenderHandler;
     private Surface surface;
 
@@ -38,11 +39,13 @@ public class MediaVideoEncoder extends MediaEncoder {
                              final float viewWidth,
                              final float viewHeight,
                              final boolean recordNoFilter,
-                             final GlFilter filter
+                             final GlFilter filter,
+                             final int bitRate
     ) {
         super(muxer, listener);
         this.fileWidth = fileWidth;
         this.fileHeight = fileHeight;
+        this.bitRate = bitRate;
         encodeRenderHandler = EncodeRenderHandler.createHandler(
                 TAG,
                 flipVertical,
@@ -88,7 +91,13 @@ public class MediaVideoEncoder extends MediaEncoder {
 
         final MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, fileWidth, fileHeight);
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-        format.setInteger(MediaFormat.KEY_BIT_RATE, calcBitRate(fileWidth, fileHeight));
+        // 屏蔽 by cuiyan
+//        format.setInteger(MediaFormat.KEY_BIT_RATE, calcBitRate(fileWidth, fileHeight));
+        Log.e("mytag", "bitRate: " + bitRate);
+        if (bitRate <= 0) {
+            bitRate = calcBitRate(fileWidth, fileHeight);
+        }
+        format.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 3);
         Log.i(TAG, "format: " + format);

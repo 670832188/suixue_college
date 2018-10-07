@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +42,9 @@ public class VideoEditActivity extends BaseActivity {
     private ImageView ivVideoPlay;
     private VideoFrameAdapter adapter;
     private Handler handler = new Handler();
+    // 视频帧选取时间间隔：单位纳秒
+    private int frameInterval;
+    private int seekTimePoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +63,41 @@ public class VideoEditActivity extends BaseActivity {
     }
 
     private void initView() {
-        videoView = findViewById(R.id.video_view);
-        videoView.setVideoPath(targetVideoPath);
-        videoView.seekTo(50);
-        rvVideoFrame = findViewById(R.id.rv_video_frame);
         tvCancel = findViewById(R.id.tv_cancel);
         tvConfirm = findViewById(R.id.tv_confirm);
         ivVideoPlay = findViewById(R.id.iv_video_play);
+        initVideoView();
+        initRvFrame();
+    }
+
+    private void initVideoView() {
+        videoView = findViewById(R.id.video_view);
+        videoView.setVideoPath(targetVideoPath);
+        videoView.seekTo(50);
+    }
+
+    private void initRvFrame() {
         adapter = new VideoFrameAdapter(this, maxEnabledTime, new ArrayList<Bitmap>());
+        rvVideoFrame = findViewById(R.id.rv_video_frame);
         rvVideoFrame.setAdapter(adapter);
-        rvVideoFrame.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
+        rvVideoFrame.setLayoutManager(layoutManager);
+        rvVideoFrame.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+                View firstVisibleChild = layoutManager.findViewByPosition(firstVisiblePosition);
+                int childWidth = ((ViewGroup) firstVisibleChild).getChildAt(0).getWidth();
+                int scrollX = childWidth * firstVisiblePosition - firstVisibleChild.getLeft();
+                seekTimePoint = (int) ((float) scrollX / childWidth * frameInterval / 1000);
+                videoView.seekTo(seekTimePoint);
+            }
+        });
     }
 
     private void loadPreviewFrames() {
@@ -77,7 +107,7 @@ public class VideoEditActivity extends BaseActivity {
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(targetVideoPath);
                 int durationUs = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
-                int frameInterval = (int) (maxEnabledTime * 1000 * 1000 / (float) (FRAME_SHOW_COUNT - 1));
+                frameInterval = (int) (maxEnabledTime * 1000 * 1000 / (float) (FRAME_SHOW_COUNT - 1));
                 for (long timePointUs = 0; timePointUs < durationUs; timePointUs += frameInterval) {
                     final Bitmap bitmap = retriever.getFrameAtTime(timePointUs, MediaMetadataRetriever.OPTION_CLOSEST);
                     if (bitmap != null) {

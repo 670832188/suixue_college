@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.vincent.filepicker.Util;
 import com.vincent.filepicker.filter.entity.AudioFile;
@@ -164,6 +165,7 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
         }
 
         while (data.moveToNext()) {
+            Log.e("mytag", "000000");
             //Create a File instance
             VideoFile video = new VideoFile();
             video.setId(data.getLong(data.getColumnIndexOrThrow(_ID)));

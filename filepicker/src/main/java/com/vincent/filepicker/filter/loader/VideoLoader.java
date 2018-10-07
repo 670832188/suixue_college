@@ -39,9 +39,14 @@ public class VideoLoader extends CursorLoader {
         setUri(MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         setSortOrder(MediaStore.Video.Media.DATE_ADDED + " DESC");
 
-        setSelection(MIME_TYPE + "=? or " + MIME_TYPE + "=?");
+//        setSelection(MIME_TYPE + "=? or " + MIME_TYPE + "=?");
+        // modified by cuiyan
+        String selection = "media_type=? AND _size>0 AND 0 < duration and duration <= 9223372036854775807";
+        setSelection(selection);
         String[] selectionArgs;
-        selectionArgs = new String[] { "video/mpeg", "video/mp4" };
+//        selectionArgs = new String[] { "video/mpeg", "video/mp4" };
+        // modified by cuiyan
+        selectionArgs = new String[] { String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)};
         setSelectionArgs(selectionArgs);
     }
 }

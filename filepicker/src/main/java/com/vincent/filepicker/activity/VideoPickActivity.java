@@ -1,7 +1,6 @@
 package com.vincent.filepicker.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,6 +27,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.vincent.filepicker.Config.DEFAULT_MAX_SELECT_NUMBER;
+import static com.vincent.filepicker.Config.IS_TAKEN_AUTO_SELECTED;
+import static com.vincent.filepicker.Config.MAX_DURATION;
+import static com.vincent.filepicker.Config.MAX_SELECT_NUMBER;
+import static com.vincent.filepicker.Config.MIN_DURATION;
+import static com.vincent.filepicker.Config.NEED_CAMERA;
+import static com.vincent.filepicker.Config.ONLY_MP4;
+
 /**
  * Created by Vincent Woo
  * Date: 2016/10/21
@@ -36,14 +43,8 @@ import java.util.List;
 
 public class VideoPickActivity extends BaseActivity {
     public static final String THUMBNAIL_PATH = "FilePick";
-    public static final String IS_NEED_CAMERA = "IsNeedCamera";
-    public static final String IS_TAKEN_AUTO_SELECTED = "IsTakenAutoSelected";
-
-    public static final int DEFAULT_MAX_NUMBER = 9;
     public static final int COLUMN_NUMBER = 3;
-    private int mMaxNumber;
-    private int mCurrentNumber = 0;
-    private RecyclerView mRecyclerView;
+    private int currentNumber = 0;
     private VideoPickAdapter mAdapter;
     private boolean isNeedCamera;
     private boolean isTakenAutoSelected;
@@ -53,9 +54,17 @@ public class VideoPickActivity extends BaseActivity {
 
     private TextView tv_count;
     private TextView tv_folder;
-    private LinearLayout ll_folder;
-    private RelativeLayout rl_done;
     private RelativeLayout tb_pick;
+
+    // 视频最大时常：ms
+    private int maxDuration;
+    // 视频最小时常：ms
+    private int minDuration;
+    private int maxSelectNumber;
+    private boolean needCamera;
+    private boolean needFolderList;
+    private boolean onlyMp4;
+    private int requestCode;
 
     @Override
     void permissionGranted() {
@@ -66,23 +75,27 @@ public class VideoPickActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vw_activity_video_pick);
-
-        mMaxNumber = getIntent().getIntExtra(Constant.MAX_NUMBER, DEFAULT_MAX_NUMBER);
-        isNeedCamera = getIntent().getBooleanExtra(IS_NEED_CAMERA, false);
-        isTakenAutoSelected = getIntent().getBooleanExtra(IS_TAKEN_AUTO_SELECTED, true);
+        Intent intent = getIntent();
+        maxDuration = intent.getIntExtra(MAX_DURATION, Integer.MAX_VALUE);
+        minDuration = intent.getIntExtra(MIN_DURATION, 0);
+        maxSelectNumber = intent.getIntExtra(MAX_SELECT_NUMBER, DEFAULT_MAX_SELECT_NUMBER);
+        onlyMp4 = intent.getBooleanExtra(ONLY_MP4, false);
+        isNeedCamera = intent.getBooleanExtra(NEED_CAMERA, false);
+        isTakenAutoSelected = intent.getBooleanExtra(IS_TAKEN_AUTO_SELECTED, true);
         initView();
     }
 
     private void initView() {
-        tv_count = (TextView) findViewById(R.id.tv_count);
-        tv_count.setText(mCurrentNumber + "/" + mMaxNumber);
+        tv_count = findViewById(R.id.tv_count);
+        final String currentIndexDesc = currentNumber + "/" + maxSelectNumber;
+        tv_count.setText(currentIndexDesc);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_video_pick);
+        RecyclerView mRecyclerView = findViewById(R.id.rv_video_pick);
         GridLayoutManager layoutManager = new GridLayoutManager(this, COLUMN_NUMBER);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new DividerGridItemDecoration(this));
 
-        mAdapter = new VideoPickAdapter(this, isNeedCamera, mMaxNumber);
+        mAdapter = new VideoPickAdapter(this, isNeedCamera, maxSelectNumber);
         mRecyclerView.setAdapter(mAdapter);
 
         mAdapter.setOnSelectStateListener(new OnSelectStateListener<VideoFile>() {
@@ -90,24 +103,25 @@ public class VideoPickActivity extends BaseActivity {
             public void OnSelectStateChanged(boolean state, VideoFile file) {
                 if (state) {
                     mSelectedList.add(file);
-                    mCurrentNumber++;
+                    currentNumber++;
                 } else {
                     mSelectedList.remove(file);
-                    mCurrentNumber--;
+                    currentNumber--;
                 }
-                tv_count.setText(mCurrentNumber + "/" + mMaxNumber);
+                tv_count.setText(currentIndexDesc);
             }
         });
 
-        mProgressBar = (ProgressBar) findViewById(R.id.pb_video_pick);
-        File folder = new File(getExternalCacheDir().getAbsolutePath() + File.separator + THUMBNAIL_PATH);
+        mProgressBar = findViewById(R.id.pb_video_pick);
+        String cacheDirPath = getExternalCacheDir() == null ? "" : getExternalCacheDir().getAbsolutePath();
+        File folder = new File(cacheDirPath + File.separator + THUMBNAIL_PATH);
         if (!folder.exists()) {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mProgressBar.setVisibility(View.GONE);
         }
 
-        rl_done = (RelativeLayout) findViewById(R.id.rl_done);
+        RelativeLayout rl_done = findViewById(R.id.rl_done);
         rl_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,8 +132,8 @@ public class VideoPickActivity extends BaseActivity {
             }
         });
 
-        tb_pick = (RelativeLayout) findViewById(R.id.tb_pick);
-        ll_folder = (LinearLayout) findViewById(R.id.ll_folder);
+        tb_pick = findViewById(R.id.tb_pick);
+        LinearLayout ll_folder = findViewById(R.id.ll_folder);
         if (isNeedFolderList) {
             ll_folder.setVisibility(View.VISIBLE);
             ll_folder.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +142,7 @@ public class VideoPickActivity extends BaseActivity {
                     mFolderHelper.toggle(tb_pick);
                 }
             });
-            tv_folder = (TextView) findViewById(R.id.tv_folder);
+            tv_folder = findViewById(R.id.tv_folder);
             tv_folder.setText(getResources().getString(R.string.vw_all));
 
             mFolderHelper.setFolderListListener(new FolderListAdapter.FolderListListener() {
@@ -171,26 +185,26 @@ public class VideoPickActivity extends BaseActivity {
         }
     }
 
-    private void loadData() {
-        FileFilter.getVideos(this, new FilterResultCallback<VideoFile>() {
-            @Override
-            public void onResult(List<Directory<VideoFile>> directories) {
-                mProgressBar.setVisibility(View.GONE);
-                // Refresh folder list
-                if (isNeedFolderList) {
-                    ArrayList<Directory> list = new ArrayList<>();
-                    Directory all = new Directory();
-                    all.setName(getResources().getString(R.string.vw_all));
-                    list.add(all);
-                    list.addAll(directories);
-                    mFolderHelper.fillData(list);
-                }
-
-                mAll = directories;
-                refreshData(directories);
-            }
-        });
-    }
+//    private void loadData() {
+//        FileFilter.getVideos(this, new FilterResultCallback<VideoFile>() {
+//            @Override
+//            public void onResult(List<Directory<VideoFile>> directories) {
+//                mProgressBar.setVisibility(View.GONE);
+//                // Refresh folder list
+//                if (isNeedFolderList) {
+//                    ArrayList<Directory> list = new ArrayList<>();
+//                    Directory all = new Directory();
+//                    all.setName(getResources().getString(R.string.vw_all));
+//                    list.add(all);
+//                    list.addAll(directories);
+//                    mFolderHelper.fillData(list);
+//                }
+//
+//                mAll = directories;
+//                refreshData(directories);
+//            }
+//        });
+//    }
 
     private void refreshData(List<Directory<VideoFile>> directories) {
         boolean tryToFindTaken = isTakenAutoSelected;
@@ -221,16 +235,38 @@ public class VideoPickActivity extends BaseActivity {
     }
 
     private boolean findAndAddTaken(List<VideoFile> list) {
+        final String currentIndexDesc = currentNumber + "/" + maxSelectNumber;
         for (VideoFile videoFile : list) {
             if (videoFile.getPath().equals(mAdapter.mVideoPath)) {
                 mSelectedList.add(videoFile);
-                mCurrentNumber++;
-                mAdapter.setCurrentNumber(mCurrentNumber);
-                tv_count.setText(mCurrentNumber + "/" + mMaxNumber);
+                currentNumber++;
+                mAdapter.setCurrentNumber(currentNumber);
+                tv_count.setText(currentIndexDesc);
 
                 return true;   // taken file was found and added
             }
         }
         return false;    // taken file wasn't found
+    }
+
+    private void loadData() {
+        FileFilter.loadVideos(this, new FilterResultCallback<VideoFile>() {
+            @Override
+            public void onResult(List<Directory<VideoFile>> directories) {
+                mProgressBar.setVisibility(View.GONE);
+                // Refresh folder list
+                if (isNeedFolderList) {
+                    ArrayList<Directory> list = new ArrayList<>();
+                    Directory all = new Directory();
+                    all.setName(getResources().getString(R.string.vw_all));
+                    list.add(all);
+                    list.addAll(directories);
+                    mFolderHelper.fillData(list);
+                }
+
+                mAll = directories;
+                refreshData(directories);
+            }
+        }, minDuration, maxDuration, onlyMp4);
     }
 }

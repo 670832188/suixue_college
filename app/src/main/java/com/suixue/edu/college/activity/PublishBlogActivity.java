@@ -40,6 +40,7 @@ import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.activity.VideoPickActivity;
 import com.vincent.filepicker.filter.entity.ImageFile;
 import com.vincent.filepicker.filter.entity.VideoFile;
+import com.vincent.filepicker.utils.VideoSelectBuilder;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -346,11 +347,14 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     }
 
     private void startVideoSelect() {
-        Intent intent = new Intent(this, VideoPickActivity.class);
-        intent.putExtra(IS_NEED_CAMERA, true);
-        intent.putExtra(Constant.MAX_NUMBER, 1);
-        intent.putExtra(IS_NEED_FOLDER_LIST, true);
-        startActivityForResult(intent, Constant.REQUEST_CODE_PICK_VIDEO);
+        new VideoSelectBuilder(this, Constant.REQUEST_CODE_PICK_VIDEO)
+                .isTakenAutoSelected(true)
+                .needCamera(true)
+                .onlyMp4(true)
+                .setMaxSelectNumber(1)
+                .setMinDuration(1)
+                .setMaxDuration(15)
+                .start();
     }
 
     @Override

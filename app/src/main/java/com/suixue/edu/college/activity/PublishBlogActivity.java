@@ -425,6 +425,14 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     }
 
     private void handleVideo(VideoFile videoFile) {
+
+        Intent intent = new Intent(this, VideoEditActivity.class);
+        intent.putExtra(VideoEditActivity.MAX_ENABLED_TIME, 3);
+        intent.putExtra(VideoEditActivity.CONVERT_TO_GIF, true);
+        intent.putExtra(VideoEditActivity.TARGET_VIDEO_PATH, videoFile.getPath());
+        startActivity(intent);
+        if (true) return;
+        ////////////////以上测试代码//////////////
         String targetDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.VIDEO_CACHE_DIR_NAME;
         File dirFile = new File(targetDir);
         if (!dirFile.exists()) {

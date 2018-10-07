@@ -46,6 +46,7 @@
             android:name=".activity.PublishBlogActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.dev.kit.basemodule.activity.RecordVideoActivity"/>
+        <activity android:name=".activity.VideoEditActivity"/>
     </application>
 
 </manifest>

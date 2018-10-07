@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
-import com.dev.kit.basemodule.util.LogUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.VideoFrameAdapter;
 
@@ -60,6 +59,8 @@ public class VideoEditActivity extends BaseActivity {
 
     private void initView() {
         videoView = findViewById(R.id.video_view);
+        videoView.setVideoPath(targetVideoPath);
+        videoView.seekTo(50);
         rvVideoFrame = findViewById(R.id.rv_video_frame);
         tvCancel = findViewById(R.id.tv_cancel);
         tvConfirm = findViewById(R.id.tv_confirm);
@@ -76,7 +77,7 @@ public class VideoEditActivity extends BaseActivity {
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(targetVideoPath);
                 int durationUs = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
-                int frameInterval = (int) (maxEnabledTime * 1000 * 1000 / (float) FRAME_SHOW_COUNT);
+                int frameInterval = (int) (maxEnabledTime * 1000 * 1000 / (float) (FRAME_SHOW_COUNT - 1));
                 for (long timePointUs = 0; timePointUs < durationUs; timePointUs += frameInterval) {
                     final Bitmap bitmap = retriever.getFrameAtTime(timePointUs, MediaMetadataRetriever.OPTION_CLOSEST);
                     if (bitmap != null) {

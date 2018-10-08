@@ -30,6 +30,8 @@
                 android:layout_height="60dp"
                 android:background="@color/color_transparent"
                 android:gravity="start"
+                android:padding="@dimen/margin_small"
+                android:textCursorDrawable="@drawable/bg_edit_cursor"
                 android:textSize="16sp" />
 
             <Button

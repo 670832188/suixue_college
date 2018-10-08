@@ -1,6 +1,7 @@
 package com.vincent.filepicker.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -174,37 +175,14 @@ public class VideoPickActivity extends BaseActivity {
         switch (requestCode) {
             case Constant.REQUEST_CODE_TAKE_VIDEO:
                 if (resultCode == RESULT_OK) {
-//                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                    File file = new File(data.getStringExtra("recordFilePath"));
-//                    Uri contentUri = Uri.fromFile(file);
-//                    mediaScanIntent.setData(contentUri);
-//                    sendBroadcast(mediaScanIntent);
+                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    mediaScanIntent.setData(Uri.fromFile(new File(data.getStringExtra("recordFilePath"))));
+                    sendBroadcast(mediaScanIntent);
                     loadData();
                 }
                 break;
         }
     }
-
-//    private void loadData() {
-//        FileFilter.getVideos(this, new FilterResultCallback<VideoFile>() {
-//            @Override
-//            public void onResult(List<Directory<VideoFile>> directories) {
-//                mProgressBar.setVisibility(View.GONE);
-//                // Refresh folder list
-//                if (isNeedFolderList) {
-//                    ArrayList<Directory> list = new ArrayList<>();
-//                    Directory all = new Directory();
-//                    all.setName(getResources().getString(R.string.vw_all));
-//                    list.add(all);
-//                    list.addAll(directories);
-//                    mFolderHelper.fillData(list);
-//                }
-//
-//                mAll = directories;
-//                refreshData(directories);
-//            }
-//        });
-//    }
 
     private void refreshData(List<Directory<VideoFile>> directories) {
         boolean tryToFindTaken = isTakenAutoSelected;

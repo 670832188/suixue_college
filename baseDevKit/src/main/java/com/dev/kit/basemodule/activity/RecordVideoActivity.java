@@ -1,11 +1,9 @@
 package com.dev.kit.basemodule.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -15,7 +13,6 @@ import com.daasuu.camerarecorder.CameraRecorderBuilder;
 import com.daasuu.camerarecorder.LensFacing;
 import com.dev.kit.basemodule.R;
 import com.dev.kit.basemodule.util.Config;
-import com.dev.kit.basemodule.util.ToastUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -83,24 +80,10 @@ public class RecordVideoActivity extends BaseActivity {
 
                     @Override
                     public void onRecordComplete() {
-                        ToastUtil.showToast(RecordVideoActivity.this, "视频录制完成");
-
-                        Handler handler = new Handler(getMainLooper());
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                                File file = new File(recordFilePath);
-                                Uri contentUri = Uri.fromFile(file);
-                                mediaScanIntent.setData(contentUri);
-                                sendBroadcast(mediaScanIntent);
-                                Intent intent = new Intent();
-                                intent.putExtra(RECODE_FILE_PATH, recordFilePath);
-                                setResult(RESULT_OK, intent);
-                                finish();
-                            }
-                        }, 1000);
-
+                        Intent intent = new Intent();
+                        intent.putExtra(RECODE_FILE_PATH, recordFilePath);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
 
                     @Override

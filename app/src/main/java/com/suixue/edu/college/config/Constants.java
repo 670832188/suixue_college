@@ -6,7 +6,7 @@ package com.suixue.edu.college.config;
  * Desc:
  */
 public class Constants {
-
+    public static final int REQUEST_CODE_CONVERT_GIF = 10086;
 
     public static final String IS_FIRST_IN = "isFirstIn";
     public static final String USER_INFO = "userInfo";

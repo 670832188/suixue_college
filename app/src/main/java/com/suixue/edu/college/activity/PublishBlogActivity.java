@@ -32,6 +32,7 @@ import com.dev.kit.basemodule.view.NetProgressDialog;
 import com.google.gson.Gson;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.PublishBlogAdapter;
+import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.config.TextStyleConfig;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.vincent.filepicker.Constant;
@@ -109,6 +110,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         setOnClickListener(R.id.iv_add_text_trigger, this);
         setOnClickListener(R.id.iv_add_img_trigger, this);
         setOnClickListener(R.id.iv_add_video_trigger, this);
+        setOnClickListener(R.id.iv_add_gif_trigger, this);
         registerTestStyleListener();
         registerDataObserver();
         progressDialog = NetProgressDialog.getInstance(this);
@@ -333,6 +335,11 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 startVideoSelect();
                 break;
             }
+            case R.id.iv_add_gif_trigger: {
+                textEditView.setVisibility(View.GONE);
+                startGifVideoSelect();
+                break;
+            }
         }
     }
 
@@ -358,7 +365,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private void startGifVideoSelect() {
         new VideoSelectBuilder(this, Constant.REQUEST_CODE_GIF_VIDEO)
                 .isTakenAutoSelected(true)
-                .needCamera(true)
+                .needCamera(false)
                 .onlyMp4(true)
                 .setMaxSelectNumber(1)
                 .setMinDuration(1)
@@ -366,23 +373,40 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 .start();
     }
 
-    private void startVideoToGif(String inputVideoPath) {
-        Intent intent = new Intent(this, VideoEditActivity.class);
-        intent.putExtra(VideoEditActivity.MAX_ENABLED_TIME, 3);
-        intent.putExtra(VideoEditActivity.CONVERT_TO_GIF, true);
-        intent.putExtra(VideoEditActivity.TARGET_VIDEO_PATH, inputVideoPath);
-        startActivity(intent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == Constant.REQUEST_CODE_PICK_IMAGE) {
-                List<ImageFile> imageFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
-                handleSelectedImage(imageFileList);
-            } else if (requestCode == Constant.REQUEST_CODE_PICK_VIDEO) {
-                ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
-                handleVideo(videoFileList.get(0));
+            switch (requestCode) {
+                case Constant.REQUEST_CODE_PICK_IMAGE: {
+                    List<ImageFile> imageFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
+                    handleSelectedImage(imageFileList);
+                    break;
+                }
+                case Constant.REQUEST_CODE_PICK_VIDEO: {
+                    ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
+                    handleVideo(videoFileList.get(0));
+                    break;
+                }
+                case Constant.REQUEST_CODE_GIF_VIDEO: {
+                    ArrayList<VideoFile> videoFileList = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
+                    Intent intent = new Intent(this, VideoEditActivity.class);
+                    intent.putExtra(VideoEditActivity.MAX_ENABLED_TIME, 3);
+                    intent.putExtra(VideoEditActivity.CONVERT_TO_GIF, true);
+                    intent.putExtra(VideoEditActivity.TARGET_VIDEO_PATH, videoFileList.get(0).getPath());
+                    startActivityForResult(intent, Constants.REQUEST_CODE_CONVERT_GIF);
+                    break;
+                }
+                case Constants.REQUEST_CODE_CONVERT_GIF: {
+                    String outputGifPath = data.getStringExtra(VideoEditActivity.OUTPUT_FILE_PATH);
+                    int width = data.getIntExtra(VideoEditActivity.WIDTH, 0);
+                    int height = data.getIntExtra(VideoEditActivity.HEIGHT, 0);
+                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_PICTURE, outputGifPath);
+                    info.setWidth(width);
+                    info.setHeight(height);
+                    adapter.appendItem(info, false);
+                    scrollBlogItem(adapter.getItemCount() - 1);
+                    break;
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -475,7 +499,8 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                adapter.appendItem(info, true);
+                adapter.appendItem(info, false);
+                scrollBlogItem(adapter.getItemCount() - 1);
             }
 
             @Override

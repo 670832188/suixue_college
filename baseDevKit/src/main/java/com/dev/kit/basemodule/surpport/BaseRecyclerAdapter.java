@@ -133,6 +133,9 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
                     notifyItemRemoved(itemPos);
                 }
             }
+            if (dataList.size() == 0) {
+                notifyDataSetChanged();
+            }
         }
     }
 

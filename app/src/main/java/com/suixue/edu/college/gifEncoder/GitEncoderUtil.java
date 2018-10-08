@@ -18,6 +18,8 @@ import java.util.List;
  */
 public class GitEncoderUtil {
 
+    private int width;
+    private int height;
     private int desiredFrameRate;
     private int frameIntervalUs;
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -44,8 +46,8 @@ public class GitEncoderUtil {
                 });
                 try {
                     List<Bitmap> bitmapList = generateBitmaps(videoPath, startTimePoint, clipTimeDuration);
-                    int width = bitmapList.get(0).getWidth();
-                    int height = bitmapList.get(0).getHeight();
+                    width = bitmapList.get(0).getWidth();
+                    height = bitmapList.get(0).getHeight();
                     GifEncoder gifEncoder = new GifEncoder();
                     gifEncoder.setFrameRate(desiredFrameRate);
                     gifEncoder.setSize(width, height);
@@ -57,7 +59,7 @@ public class GitEncoderUtil {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            listener.onSuccess(outputGifPath);
+                            listener.onSuccess(outputGifPath, width, height);
                         }
                     });
                 } catch (Exception e) {
@@ -99,7 +101,7 @@ public class GitEncoderUtil {
     public interface OnGifEncodeListener {
         void onStart();
 
-        void onSuccess(String gifPath);
+        void onSuccess(String gifPath, int width, int height);
 
         void onError(Throwable throwable);
     }

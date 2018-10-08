@@ -38,6 +38,8 @@ public class VideoEditActivity extends BaseActivity implements View.OnClickListe
     public static final String MAX_ENABLED_TIME = "maxEnabledTime";
     public static final String CONVERT_TO_GIF = "convertToGif";
     public static final String OUTPUT_FILE_PATH = "outputFilePath";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
     private String targetVideoPath;
     // 最大选取时长s
     private int maxEnabledTime;
@@ -198,7 +200,7 @@ public class VideoEditActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void convertGif() {
-        final NetProgressDialog progressDialog = NetProgressDialog.getInstance(this, getString(R.string.tip_video_loading));
+        final NetProgressDialog progressDialog = NetProgressDialog.getInstance(this, getString(R.string.tip_gif_making));
         progressDialog.setCancelable(false);
         String outputFilePath = Config.getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
         new GitEncoderUtil().generateGifByVideoPath(targetVideoPath, outputFilePath, 10, seekTimePoint, maxEnabledTime * 1000, new GitEncoderUtil.OnGifEncodeListener() {
@@ -208,11 +210,13 @@ public class VideoEditActivity extends BaseActivity implements View.OnClickListe
             }
 
             @Override
-            public void onSuccess(String gifPath) {
+            public void onSuccess(String gifPath, int width, int height) {
                 progressDialog.dismiss();
                 Intent intent = new Intent();
                 intent.putExtra(OUTPUT_FILE_PATH, gifPath);
                 intent.putExtra(CONVERT_TO_GIF, convertToGif);
+                intent.putExtra(WIDTH, width);
+                intent.putExtra(HEIGHT, height);
                 setResult(RESULT_OK, intent);
                 finish();
             }

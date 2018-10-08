@@ -168,6 +168,13 @@
             android:id="@+id/iv_add_video_trigger"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:src="@drawable/video" />
+
+        <ImageView
+            android:id="@+id/iv_add_gif_trigger"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:src="@drawable/video" />
     </LinearLayout>
 </LinearLayout>

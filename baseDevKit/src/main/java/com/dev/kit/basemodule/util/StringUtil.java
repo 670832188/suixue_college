@@ -2,6 +2,7 @@ package com.dev.kit.basemodule.util;
 
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 
 import java.math.BigDecimal;
@@ -39,5 +40,9 @@ public class StringUtil {
             e.printStackTrace();
             return Integer.MIN_VALUE;
         }
+    }
+
+    public static boolean isEmpty(String inStr) {
+        return TextUtils.isEmpty(inStr) || TextUtils.isEmpty(inStr.trim());
     }
 }

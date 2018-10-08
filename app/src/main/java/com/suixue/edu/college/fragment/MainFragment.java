@@ -311,6 +311,13 @@ public class MainFragment extends BaseStateFragment {
                     contentInfoList.add(contentInfo);
                 }
                 info.setBlogContentList(contentInfoList);
+                int tagSize = Math.abs(random.nextInt() %6);
+                String[] tags = new String[tagSize];
+                for (int k = 0; k < tagSize; k++) {
+                    tags[k] = "标签"+ k;
+                }
+                info.setTags(tags);
+                info.setSource("suixue.com");
                 dataList.add(info);
             }
         }

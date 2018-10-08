@@ -1,7 +1,6 @@
 package com.suixue.edu.college.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
-import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
-import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.GlideUtil;
+import com.dev.kit.basemodule.util.StringUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
+import com.dev.kit.basemodule.view.AutoLinkStyleTextView;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
@@ -89,8 +88,36 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
         RecyclerView rvContent = holder.getView(R.id.rv_blog_content);
         rvContent.setLayoutManager(new LinearLayoutManager(context));
-//        rvContent.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, context.getResources().getColor(R.color.transparent), DisplayUtil.dp2px(5)));
         rvContent.setAdapter(new BlogContentAdapter(context, info.getBlogContentList()));
+        AutoLinkStyleTextView tvSourceAndTags = holder.getView(R.id.tv_source_and_tags);
+        String blogSource = info.getSource();
+        if (StringUtil.isEmpty(blogSource)) {
+            blogSource = "";
+        } else {
+            blogSource = context.getString(R.string.blog_source) + blogSource;
+        }
+        StringBuilder sb = new StringBuilder(blogSource);
+        final String[] tags = info.getTags();
+        if (tags != null && tags.length > 0) {
+            for (int i = 0; i < tags.length; i++) {
+                tags[i] = "#" + tags[i];
+                sb.append("  ").append(tags[i]);
+            }
+        }
+        if (!StringUtil.isEmpty(sb.toString())) {
+            tvSourceAndTags.setVisibility(View.VISIBLE);
+            tvSourceAndTags.setText(sb.toString());
+            if (tags != null && tags.length > 0) {
+                tvSourceAndTags.setClickSpanTextValues(new AutoLinkStyleTextView.ClickCallBack() {
+                    @Override
+                    public void onClick(int position) {
+                        ToastUtil.showToast(context, tags[position]);
+                    }
+                }, tags);
+            }
+        } else {
+            tvSourceAndTags.setVisibility(View.GONE);
+        }
         holder.setText(R.id.tv_attention_level, "热度" + info.getAttentionLevel());
     }
 

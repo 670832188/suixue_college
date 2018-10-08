@@ -18,6 +18,8 @@ public class BlogInfo {
     private String source;
     // 关注度、热度
     private String attentionLevel;
+    // 博客标签
+    private String[] tags;
 
     public String getBloggerName() {
         return bloggerName;
@@ -47,6 +49,11 @@ public class BlogInfo {
         return attentionLevel;
     }
 
+    public String[] getTags() {
+        return tags;
+    }
+
+    //////////////////////////////////////
     public void setBloggerName(String bloggerName) {
         this.bloggerName = bloggerName;
     }
@@ -73,5 +80,9 @@ public class BlogInfo {
 
     public void setAttentionLevel(String attentionLevel) {
         this.attentionLevel = attentionLevel;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 }

@@ -165,7 +165,6 @@ public class FileLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor
         }
 
         while (data.moveToNext()) {
-            Log.e("mytag", "000000");
             //Create a File instance
             VideoFile video = new VideoFile();
             video.setId(data.getLong(data.getColumnIndexOrThrow(_ID)));

@@ -3,6 +3,7 @@ package com.suixue.edu.college.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,36 +12,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
+import com.dev.kit.basemodule.util.Config;
+import com.dev.kit.basemodule.view.NetProgressDialog;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.VideoFrameAdapter;
+import com.suixue.edu.college.gifEncoder.GitEncoderUtil;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Author: cuiyan
  * Date:   18/10/7 17:16
  * Desc:
  */
-public class VideoEditActivity extends BaseActivity {
+public class VideoEditActivity extends BaseActivity implements View.OnClickListener {
     public static final int FRAME_SHOW_COUNT = 7;
     public static final String TARGET_VIDEO_PATH = "targetVideoPath";
     public static final String MAX_ENABLED_TIME = "maxEnabledTime";
     public static final String CONVERT_TO_GIF = "convertToGif";
+    public static final String OUTPUT_FILE_PATH = "outputFilePath";
     private String targetVideoPath;
     // 最大选取时长s
     private int maxEnabledTime;
     private boolean convertToGif;
 
     private VideoView videoView;
-    private RecyclerView rvVideoFrame;
-    private TextView tvCancel;
-    private TextView tvConfirm;
-    private ImageView ivVideoPlay;
     private VideoFrameAdapter adapter;
+    private ImageView ivVideoPlay;
     private Handler handler = new Handler();
     // 视频帧选取时间间隔：单位纳秒
     private int frameInterval;
@@ -63,9 +68,10 @@ public class VideoEditActivity extends BaseActivity {
     }
 
     private void initView() {
-        tvCancel = findViewById(R.id.tv_cancel);
-        tvConfirm = findViewById(R.id.tv_confirm);
         ivVideoPlay = findViewById(R.id.iv_video_play);
+        setOnClickListener(R.id.tv_cancel, this);
+        setOnClickListener(R.id.tv_confirm, this);
+        setOnClickListener(R.id.iv_video_play, this);
         initVideoView();
         initRvFrame();
     }
@@ -73,12 +79,17 @@ public class VideoEditActivity extends BaseActivity {
     private void initVideoView() {
         videoView = findViewById(R.id.video_view);
         videoView.setVideoPath(targetVideoPath);
-        videoView.seekTo(50);
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                ivVideoPlay.setImageResource(R.drawable.ic_video_play);
+            }
+        });
     }
 
     private void initRvFrame() {
         adapter = new VideoFrameAdapter(this, maxEnabledTime, new ArrayList<Bitmap>());
-        rvVideoFrame = findViewById(R.id.rv_video_frame);
+        RecyclerView rvVideoFrame = findViewById(R.id.rv_video_frame);
         rvVideoFrame.setAdapter(adapter);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false);
         rvVideoFrame.setLayoutManager(layoutManager);
@@ -101,6 +112,9 @@ public class VideoEditActivity extends BaseActivity {
     }
 
     private void loadPreviewFrames() {
+        final NetProgressDialog progressDialog = NetProgressDialog.getInstance(this, getString(R.string.tip_video_loading));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -130,8 +144,87 @@ public class VideoEditActivity extends BaseActivity {
                         });
                     }
                 }
+                retriever.release();
+                progressDialog.dismiss();
             }
         }).start();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (videoView.isPlaying()) {
+            seekTimePoint = videoView.getCurrentPosition();
+            videoView.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.resume();
+        if (seekTimePoint == 0) {
+            seekTimePoint = 10;
+        }
+        videoView.seekTo(seekTimePoint);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_cancel: {
+                finish();
+                break;
+            }
+            case R.id.tv_confirm: {
+                if (convertToGif) {
+                    convertGif();
+                } else {
+                    clipVideo();
+                }
+                break;
+            }
+            case R.id.iv_video_play: {
+                if (videoView.isPlaying()) {
+                    videoView.pause();
+                    ivVideoPlay.setImageResource(R.drawable.ic_video_play);
+                } else {
+                    videoView.start();
+                    ivVideoPlay.setImageResource(R.drawable.ic_video_pause);
+                }
+                break;
+            }
+        }
+    }
+
+    private void convertGif() {
+        final NetProgressDialog progressDialog = NetProgressDialog.getInstance(this, getString(R.string.tip_video_loading));
+        progressDialog.setCancelable(false);
+        String outputFilePath = Config.getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
+        new GitEncoderUtil().generateGifByVideoPath(targetVideoPath, outputFilePath, 10, seekTimePoint, maxEnabledTime * 1000, new GitEncoderUtil.OnGifEncodeListener() {
+            @Override
+            public void onStart() {
+                progressDialog.show();
+            }
+
+            @Override
+            public void onSuccess(String gifPath) {
+                progressDialog.dismiss();
+                Intent intent = new Intent();
+                intent.putExtra(OUTPUT_FILE_PATH, gifPath);
+                intent.putExtra(CONVERT_TO_GIF, convertToGif);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private void clipVideo() {
+        showToast("视频剪切功能尚未实现");
+    }
 }

@@ -48,7 +48,7 @@ public class NetProgressDialog extends Dialog {
         if (!TextUtils.isEmpty(tipMsg)) {
             TextView tvTip = (TextView) findViewById(R.id.tv_tip);
             tvTip.setText(tipMsg);
-            tvTip.setVisibility(View.GONE);
+            tvTip.setVisibility(View.VISIBLE);
         }
 //        Window window = getWindow();
 //        WindowManager.LayoutParams params = window.getAttributes();

@@ -34,10 +34,8 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.PublishBlogAdapter;
 import com.suixue.edu.college.config.TextStyleConfig;
 import com.suixue.edu.college.entity.BlogContentInfo;
-import com.suixue.edu.college.gifEncoder.GitEncoderUtil;
 import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.ImagePickActivity;
-import com.vincent.filepicker.activity.VideoPickActivity;
 import com.vincent.filepicker.filter.entity.ImageFile;
 import com.vincent.filepicker.filter.entity.VideoFile;
 import com.vincent.filepicker.utils.VideoSelectBuilder;
@@ -357,6 +355,25 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 .start();
     }
 
+    private void startGifVideoSelect() {
+        new VideoSelectBuilder(this, Constant.REQUEST_CODE_GIF_VIDEO)
+                .isTakenAutoSelected(true)
+                .needCamera(true)
+                .onlyMp4(true)
+                .setMaxSelectNumber(1)
+                .setMinDuration(1)
+                .setMaxDuration(15)
+                .start();
+    }
+
+    private void startVideoToGif(String inputVideoPath) {
+        Intent intent = new Intent(this, VideoEditActivity.class);
+        intent.putExtra(VideoEditActivity.MAX_ENABLED_TIME, 3);
+        intent.putExtra(VideoEditActivity.CONVERT_TO_GIF, true);
+        intent.putExtra(VideoEditActivity.TARGET_VIDEO_PATH, inputVideoPath);
+        startActivity(intent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -425,14 +442,6 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     }
 
     private void handleVideo(VideoFile videoFile) {
-
-        Intent intent = new Intent(this, VideoEditActivity.class);
-        intent.putExtra(VideoEditActivity.MAX_ENABLED_TIME, 3);
-        intent.putExtra(VideoEditActivity.CONVERT_TO_GIF, true);
-        intent.putExtra(VideoEditActivity.TARGET_VIDEO_PATH, videoFile.getPath());
-        startActivity(intent);
-        if (true) return;
-        ////////////////以上测试代码//////////////
         String targetDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.VIDEO_CACHE_DIR_NAME;
         File dirFile = new File(targetDir);
         if (!dirFile.exists()) {
@@ -467,7 +476,6 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     e.printStackTrace();
                 }
                 adapter.appendItem(info, true);
-                gifTest(newPath);
             }
 
             @Override
@@ -479,27 +487,6 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             @Override
             public void onProgress(int percent) {
 
-            }
-        });
-    }
-
-    private void gifTest(String inputVideoPath) {
-        String outputFilePath = getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
-        new GitEncoderUtil().generateGifByVideoPath(inputVideoPath, outputFilePath, 5, new GitEncoderUtil.OnGifEncodeListener() {
-            @Override
-            public void onStart() {
-                progressDialog.show();
-            }
-
-            @Override
-            public void onSuccess(String gifPath) {
-                progressDialog.dismiss();
-                showToast("git创建成功");
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                progressDialog.dismiss();
             }
         });
     }
@@ -516,15 +503,4 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         return dirFile.getAbsolutePath();
     }
 
-    private String getOutputImgDirPath() {
-        String targetDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.IMG_CACHE_DIR_NAME;
-        File dirFile = new File(targetDir);
-        if (!dirFile.exists()) {
-            if (!dirFile.mkdirs()) {
-                showToast(R.string.tip_dir_make_failed);
-                return null;
-            }
-        }
-        return dirFile.getAbsolutePath();
-    }
 }

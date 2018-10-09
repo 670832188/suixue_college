@@ -44,7 +44,6 @@ import java.util.Random;
 import io.reactivex.Observable;
 import me.dkzwm.widget.srl.SmoothRefreshLayout;
 import me.dkzwm.widget.srl.extra.IRefreshView;
-import me.dkzwm.widget.srl.extra.footer.ClassicFooter;
 
 /**
  * Author: cuiyan
@@ -171,9 +170,7 @@ public class MainFragment extends BaseStateFragment {
         refreshLayout.getDefaultHeader().setProgressBarColor(getResources().getColor(R.color.color_main_bg));
         refreshLayout.getDefaultHeader().setTextColor(getResources().getColor(R.color.color_main_bg));
         refreshLayout.setDurationToClose(500);
-        ClassicFooter loadMoreFooter = new ClassicFooter(getContext());
-        loadMoreFooter.setTitleTextColor(getResources().getColor(R.color.color_common_white));
-        refreshLayout.setFooterView(loadMoreFooter);
+        refreshLayout.setEnableAutoLoadMore(true);
         refreshLayout.getDefaultHeader().setWaveColor(getResources().getColor(R.color.color_common_ashen));
         refreshLayout.getDefaultHeader().setBackgroundColor(getResources().getColor(R.color.color_main_bg));
         refreshLayout.getDefaultHeader().setStyle(IRefreshView.STYLE_PIN);

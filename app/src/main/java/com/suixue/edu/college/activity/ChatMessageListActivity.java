@@ -1,16 +1,24 @@
 package com.suixue.edu.college.activity;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.dev.kit.basemodule.util.LogUtil;
+import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.ChatMessageAdapter;
 import com.suixue.edu.college.entity.ChatMessageInfo;
@@ -32,6 +40,11 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
     private RecyclerView rvChatMessage;
     private SmoothRefreshLayout refreshLayout;
     private ChatMessageAdapter adapter;
+    private LinearLayout llEditContainer;
+    private EditText etContent;
+    private TextView tvSend;
+    private int rootViewBottom;
+    private View contentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +55,8 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
 
     @Override
     public View createContentView(LayoutInflater inflater, ViewGroup contentRoot) {
-        return inflater.inflate(R.layout.activity_chat_message_list, contentRoot, false);
+        contentView = inflater.inflate(R.layout.activity_chat_message_list, contentRoot, false);
+        return contentView;
     }
 
     private void init() {
@@ -56,6 +70,29 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
         rvChatMessage.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_transparent), DisplayUtil.dp2px(15)));
         adapter = new ChatMessageAdapter(this, new ArrayList<ChatMessageInfo>());
         rvChatMessage.setAdapter(adapter);
+        rvChatMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideKeyBoard();
+                etContent.clearFocus();
+                return false;
+            }
+        });
+        contentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (rootViewBottom == 0 && contentView.getHeight() > 0) {
+                    rootViewBottom = contentView.getBottom();
+                }
+                Rect rect = new Rect();
+                rvChatMessage.getGlobalVisibleRect(rect);
+                if (rootViewBottom - rect.bottom > 400) { // 认为软键盘弹起
+                    if (adapter.getItemCount() > 1) {
+                        rvChatMessage.smoothScrollToPosition(adapter.getItemCount() - 1);
+                    }
+                }
+            }
+        });
         refreshLayout.setHeaderView(new ClassicHeader(this));
         refreshLayout.setOnRefreshListener(new SmoothRefreshLayout.OnRefreshListener() {
             @Override
@@ -68,6 +105,19 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
 
             }
         });
+        llEditContainer = findViewById(R.id.ll_edit_container);
+        etContent = findViewById(R.id.et_content);
+        tvSend = findViewById(R.id.tv_send);
+        llEditContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int height = llEditContainer.getHeight();
+                if (height > 0) {
+                    tvSend.layout(tvSend.getLeft(), height - tvSend.getHeight() - llEditContainer.getPaddingBottom(), tvSend.getRight(), height - llEditContainer.getPaddingBottom());
+                }
+            }
+        });
+        tvSend.setOnClickListener(this);
         getChatMsg();
     }
 
@@ -93,6 +143,9 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
             msgList.add(info);
         }
         adapter.insertData(0, msgList);
+        if (!refreshLayout.isRefreshing()) {
+            rvChatMessage.smoothScrollToPosition(adapter.getItemCount() - 1);
+        }
         refreshLayout.refreshComplete();
     }
 
@@ -103,6 +156,23 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
                 finish();
                 break;
             }
+            case R.id.tv_send:{
+                senMsg();
+                break;
+            }
+        }
+    }
+
+    private void senMsg() {
+        if (!StringUtil.isEmpty(etContent.getText().toString())) {
+            ChatMessageInfo info = new ChatMessageInfo();
+            info.setAvatarUrl("http://img19.3lian.com/d/file/201803/05/fa6cf18ea93c86703344a2b95c437048.png");
+            info.setType(2);
+            info.setContent(etContent.getText().toString());
+            info.setCreatorName("我");
+            etContent.setText("");
+            adapter.appendItem(info, false);
+            rvChatMessage.smoothScrollToPosition(adapter.getItemCount() - 1);
         }
     }
 }

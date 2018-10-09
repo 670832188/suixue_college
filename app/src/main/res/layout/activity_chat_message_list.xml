@@ -27,24 +27,27 @@
         android:background="@color/color_common_light_gray" />
 
     <LinearLayout
+        android:id="@+id/ll_edit_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:orientation="horizontal"
         android:padding="@dimen/margin_normal">
 
         <EditText
-            android:theme="@style/CommonEditText"
+            android:id="@+id/et_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:layout_marginEnd="@dimen/margin_normal"
-            android:layout_weight="1.0" />
+            android:layout_weight="1.0"
+            android:maxLines="3"
+            android:theme="@style/CommonEditText" />
 
         <TextView
+            android:id="@+id/tv_send"
             style="@style/style_text_large_white"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:background="@drawable/bg_login_btn"
             android:gravity="center"
             android:paddingBottom="@dimen/margin_small"

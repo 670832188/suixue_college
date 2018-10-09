@@ -23,7 +23,7 @@ public class VideoFrameAdapter extends BaseRecyclerAdapter<Bitmap> {
 
     public VideoFrameAdapter(Context context, int maxEnabledTime, List<Bitmap> dataList) {
         super(context, dataList, R.layout.item_video_frame);
-        itemWidth = (int) ((DisplayUtil.getScreenWidth() - DisplayUtil.dp2px(70)) / (float) VideoEditActivity.FRAME_SHOW_COUNT);
+        itemWidth = (int) ((DisplayUtil.getScreenWidth() - 2 * context.getResources().getDimensionPixelSize(R.dimen.video_edit_frame_preview_margin)) / (float) VideoEditActivity.FRAME_SHOW_COUNT);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class VideoFrameAdapter extends BaseRecyclerAdapter<Bitmap> {
             layoutParams.width = itemWidth;
         }
         if (position == 0) {
-            layoutParams.setMargins(DisplayUtil.dp2px(35), 0, 0, 0);
+            layoutParams.setMargins(context.getResources().getDimensionPixelSize(R.dimen.video_edit_frame_preview_margin), 0, 0, 0);
         } else {
             layoutParams.setMargins(0, 0, 0, 0);
         }

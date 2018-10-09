@@ -7,4 +7,5 @@
     <dimen name="picture_default_height">360dp</dimen>
     <!--主页底部导航高度-->
     <dimen name="bottom_nav_height">50dp</dimen>
+    <dimen name="video_edit_frame_preview_margin">75dp</dimen>
 </resources>

@@ -25,8 +25,6 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.video.SampleCoverVideo;
 
-import java.io.File;
-import java.net.URI;
 import java.security.MessageDigest;
 import java.util.List;
 
@@ -167,12 +165,8 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         }
         GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
         final ImageView coverImage = gsyVideoPlayer.getCoverImage();
-        File file = new File(URI.create(info.getContent()));
-        if (file.exists()) {
-            LogUtil.e("mytag", "videoPath: " + file.getAbsolutePath());
-        } else {
-            LogUtil.e("mytag", "file not exist");
-        }
+//        Glide.with(context).load(info.getContent()).into(coverImage);
+        LogUtil.e("mytag", "pathhhh: " + info.getContent());
         GlideUtil.loadImageWithDisableDiskCache(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, coverImage, 1, new Transformation<Bitmap>() {
             @NonNull
             @Override

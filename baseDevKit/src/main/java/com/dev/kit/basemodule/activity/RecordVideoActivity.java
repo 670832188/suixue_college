@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -25,6 +26,8 @@ import java.util.Locale;
  */
 public class RecordVideoActivity extends BaseActivity {
     public static final String RECODE_FILE_PATH = "recordFilePath";
+    public static final String VIDEO_WIDTH = "videoWidth";
+    public static final String VIDEO_HEIGHT = "videoHeight";
     private CameraRecorder cameraRecorder;
     private String recordFilePath;
     private static final int videoWidth = 720;
@@ -80,10 +83,18 @@ public class RecordVideoActivity extends BaseActivity {
 
                     @Override
                     public void onRecordComplete() {
-                        Intent intent = new Intent();
-                        intent.putExtra(RECODE_FILE_PATH, recordFilePath);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent();
+                                intent.putExtra(RECODE_FILE_PATH, recordFilePath);
+                                intent.putExtra(VIDEO_WIDTH, videoWidth);
+                                intent.putExtra(VIDEO_HEIGHT, videoHeight);
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        }, 1000);
+
                     }
 
                     @Override

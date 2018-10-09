@@ -8,6 +8,8 @@ import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -17,10 +19,12 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
+import com.dev.kit.basemodule.activity.RecordVideoActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.Config;
 import com.dev.kit.basemodule.util.DisplayUtil;
@@ -35,6 +39,7 @@ import com.suixue.edu.college.adapter.PublishBlogAdapter;
 import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.config.TextStyleConfig;
 import com.suixue.edu.college.entity.BlogContentInfo;
+import com.suixue.edu.college.widget.BottomSelectorDialog;
 import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.filter.entity.ImageFile;
@@ -50,6 +55,10 @@ import java.util.Locale;
 
 import me.shaohui.advancedluban.OnMultiCompressListener;
 
+import static com.dev.kit.basemodule.activity.RecordVideoActivity.RECODE_FILE_PATH;
+import static com.dev.kit.basemodule.activity.RecordVideoActivity.VIDEO_HEIGHT;
+import static com.dev.kit.basemodule.activity.RecordVideoActivity.VIDEO_WIDTH;
+import static com.vincent.filepicker.Constant.REQUEST_CODE_TAKE_VIDEO;
 import static com.vincent.filepicker.activity.BaseActivity.IS_NEED_FOLDER_LIST;
 import static com.vincent.filepicker.activity.ImagePickActivity.IS_NEED_CAMERA;
 
@@ -71,6 +80,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private LinearLayoutManager layoutManager;
     private RecyclerView.AdapterDataObserver dataObserver;
     private NetProgressDialog progressDialog;
+    private BottomSheetDialog videoSelectorDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +124,29 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         registerTestStyleListener();
         registerDataObserver();
         progressDialog = NetProgressDialog.getInstance(this);
+        videoSelectorDialog = new BottomSelectorDialog(this) {
+            @NonNull
+            @Override
+            public View createRealContentView(FrameLayout rootContainer) {
+                View contentView = LayoutInflater.from(PublishBlogActivity.this).inflate(R.layout.video_source_selector, rootContainer, false);
+                contentView.findViewById(R.id.tv_select_by_camera).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        videoSelectorDialog.dismiss();
+                        Intent intent = new Intent(PublishBlogActivity.this, RecordVideoActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_TAKE_VIDEO);
+                    }
+                });
+                contentView.findViewById(R.id.tv_select_by_gallery).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        videoSelectorDialog.dismiss();
+                        startVideoSelect();
+                    }
+                });
+                return contentView;
+            }
+        };
     }
 
     private void registerDataObserver() {
@@ -332,7 +365,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     showToast(R.string.tip_video_publish_size_limit);
                     return;
                 }
-                startVideoSelect();
+                videoSelectorDialog.show();
                 break;
             }
             case R.id.iv_add_gif_trigger: {
@@ -354,7 +387,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private void startVideoSelect() {
         new VideoSelectBuilder(this, Constant.REQUEST_CODE_PICK_VIDEO)
                 .isTakenAutoSelected(true)
-                .needCamera(true)
+                .needCamera(false)
                 .onlyMp4(true)
                 .setMaxSelectNumber(1)
                 .setMinDuration(1)
@@ -404,8 +437,19 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     info.setWidth(width);
                     info.setHeight(height);
                     adapter.appendItem(info, false);
-                    scrollBlogItem(adapter.getItemCount() - 1);
+//                    scrollBlogItem(adapter.getItemCount() - 1);
                     break;
+                }
+                case REQUEST_CODE_TAKE_VIDEO: {
+                    String videoPath = data.getStringExtra(RECODE_FILE_PATH);
+                    int width = data.getIntExtra(VIDEO_WIDTH, 0);
+                    int height = data.getIntExtra(VIDEO_HEIGHT, 0);
+                    LogUtil.e("mytag", "path: " + videoPath + " " + width + " " + height);
+                    BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, videoPath);
+                    info.setWidth(width);
+                    info.setHeight(height);
+                    adapter.appendItem(info, false);
+                    scrollBlogItem(adapter.getItemCount() - 1);
                 }
             }
         }
@@ -485,8 +529,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             @Override
             public void onSuccess(String sourcePath, String newPath) {
                 progressDialog.dismiss();
-                String videoUri = android.net.Uri.fromFile(new File(newPath)).toString();
-                BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, videoUri);
+                BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_VIDEO, newPath);
                 try {
                     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                     retriever.setDataSource(newPath);

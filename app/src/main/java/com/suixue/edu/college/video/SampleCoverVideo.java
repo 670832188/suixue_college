@@ -1,6 +1,8 @@
 package com.suixue.edu.college.video;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.Surface;
@@ -11,9 +13,13 @@ import android.widget.SeekBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.suixue.edu.college.R;
+
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
  * 带封面
@@ -172,5 +178,34 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
 
     public ImageView getCoverImage() {
         return mCoverImage;
+    }
+
+    @Override
+    public void showWifiDialog() {
+        if (!NetworkUtils.isAvailable(mContext)) {
+            //Toast.makeText(mContext, getResources().getString(R.string.no_net), Toast.LENGTH_LONG).show();
+            startPlayLogic();
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivityContext());
+        builder.setMessage(getResources().getString(com.shuyu.gsyvideoplayer.R.string.tips_not_wifi));
+        builder.setPositiveButton(getResources().getString(com.shuyu.gsyvideoplayer.R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                startPlayLogic();
+            }
+        });
+        builder.setNegativeButton(getResources().getString(com.shuyu.gsyvideoplayer.R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+        dialog.getButton(BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.color_common_blue));
+        dialog.getButton(BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.color_common_gray));
     }
 }

@@ -186,7 +186,7 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
                         super.onPrepared(url, objects);
                         if (!gsyVideoPlayer.isIfCurrentIsFullscreen()) {
                             //静音
-                            GSYVideoManager.instance().setNeedMute(true);
+                            GSYVideoManager.instance().setNeedMute(false);
                         }
 
                     }
@@ -195,7 +195,7 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
                         //全屏不静音
-                        GSYVideoManager.instance().setNeedMute(true);
+                        GSYVideoManager.instance().setNeedMute(false);
                     }
 
                     @Override

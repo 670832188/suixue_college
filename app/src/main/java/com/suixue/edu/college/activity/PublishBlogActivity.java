@@ -294,6 +294,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
 
     private String getHtmlString() {
         String content = etContent.getText().toString();
+        content = content.replace("\n", "<br>");
         String startTag;
         String endTag = "</p>";
         switch (rgFontAlign.getCheckedRadioButtonId()) {
@@ -328,6 +329,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         }
         String htmlStr = startTag + content + endTag;
         LogUtil.e("mytag", "htmlString: " + htmlStr);
+        LogUtil.e("mytag", "content: " + content);
         etContent.setText("");
         return htmlStr;
     }

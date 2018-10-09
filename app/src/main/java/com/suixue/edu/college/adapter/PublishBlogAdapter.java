@@ -165,8 +165,6 @@ public class PublishBlogAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
         }
         GSYVideoOptionBuilder gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
         final ImageView coverImage = gsyVideoPlayer.getCoverImage();
-//        Glide.with(context).load(info.getContent()).into(coverImage);
-        LogUtil.e("mytag", "pathhhh: " + info.getContent());
         GlideUtil.loadImageWithDisableDiskCache(context, info.getContent(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, coverImage, 1, new Transformation<Bitmap>() {
             @NonNull
             @Override

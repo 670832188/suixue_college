@@ -73,7 +73,7 @@ public class MessageFragment extends BaseFragment implements FragmentAdapter.Fra
         if (position == 0) {
             fragment = new DynamicFragment();
         } else {
-            fragment = new ChatFragment();
+            fragment = new ChatSessionListFragment();
         }
         return fragment;
     }

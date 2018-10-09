@@ -1,15 +1,14 @@
-package com.suixue.edu.college.fragment;
+package com.suixue.edu.college.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 
-import com.dev.kit.basemodule.fragment.BaseStateFragment;
+import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.suixue.edu.college.R;
@@ -21,36 +20,54 @@ import java.util.List;
 import java.util.Random;
 
 import me.dkzwm.widget.srl.SmoothRefreshLayout;
+import me.dkzwm.widget.srl.extra.header.ClassicHeader;
 
 /**
  * Created by cuiyan on 2018/10/9.
  */
-public class ChatFragment extends BaseStateFragment {
-    private View contentView;
+public class ChatMessageListActivity extends BaseStateViewActivity implements View.OnClickListener {
+    public static final String SESSION_ID = "sessionId";
+    public static final String COMMUNICATOR_NAME = "communicatorName";
+    private String sessionId;
     private RecyclerView rvChatMessage;
     private SmoothRefreshLayout refreshLayout;
     private ChatMessageAdapter adapter;
 
-    @NonNull
     @Override
-    public View createContentView(LayoutInflater inflater, FrameLayout flRootContainer) {
-        contentView = inflater.inflate(R.layout.frg_chat, flRootContainer, false);
-        return contentView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        showContent(true);
+        super.onCreate(savedInstanceState);
         init();
     }
 
+    @Override
+    public View createContentView(LayoutInflater inflater, ViewGroup contentRoot) {
+        return inflater.inflate(R.layout.activity_chat_message_list, contentRoot, false);
+    }
+
     private void init() {
-        refreshLayout = contentView.findViewById(R.id.refresh_layout);
-        rvChatMessage = contentView.findViewById(R.id.rv_chat_msg);
-        rvChatMessage.setLayoutManager(new LinearLayoutManager(getContext()));
+        Intent intent = getIntent();
+        sessionId = intent.getStringExtra(SESSION_ID);
+        setText(R.id.tv_title, intent.getStringExtra(COMMUNICATOR_NAME));
+        setOnClickListener(R.id.iv_left, this);
+        refreshLayout = findViewById(R.id.refresh_layout);
+        rvChatMessage = findViewById(R.id.rv_chat_msg);
+        rvChatMessage.setLayoutManager(new LinearLayoutManager(this));
         rvChatMessage.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_transparent), DisplayUtil.dp2px(15)));
-        adapter = new ChatMessageAdapter(getContext(), new ArrayList<ChatMessageInfo>());
+        adapter = new ChatMessageAdapter(this, new ArrayList<ChatMessageInfo>());
         rvChatMessage.setAdapter(adapter);
+        refreshLayout.setHeaderView(new ClassicHeader(this));
+        refreshLayout.setOnRefreshListener(new SmoothRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefreshBegin(boolean isRefresh) {
+                getChatMsg();
+            }
+
+            @Override
+            public void onRefreshComplete(boolean isSuccessful) {
+
+            }
+        });
         getChatMsg();
     }
 
@@ -76,5 +93,16 @@ public class ChatFragment extends BaseStateFragment {
             msgList.add(info);
         }
         adapter.insertData(0, msgList);
+        refreshLayout.refreshComplete();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_left: {
+                finish();
+                break;
+            }
+        }
     }
 }

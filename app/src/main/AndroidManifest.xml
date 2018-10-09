@@ -47,6 +47,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.dev.kit.basemodule.activity.RecordVideoActivity"/>
         <activity android:name=".activity.VideoEditActivity"/>
+        <activity android:name=".activity.ChatMessageListActivity"/>
     </application>
 
 </manifest>

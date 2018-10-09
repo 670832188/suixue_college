@@ -9,6 +9,8 @@
         android:id="@+id/tv_text_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/margin_normal"
+        android:paddingStart="@dimen/margin_normal"
         android:visibility="gone" />
 
     <ImageView

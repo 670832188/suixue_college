@@ -56,14 +56,14 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         }
     }
 
-    private void fillBlogData(RecyclerViewHolder holder, BlogInfo info) {
+    private void fillBlogData(RecyclerViewHolder holder, final BlogInfo info) {
         ImageView ivBloggerAvatar = holder.getView(R.id.iv_blogger_avatar);
         GlideUtil.loadImage(context, info.getBloggerAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivBloggerAvatar, 1);
         holder.setText(R.id.tv_blogger_name, info.getBloggerName());
         holder.setOnClickListener(R.id.iv_delete, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.showToast(context, "您对这个帖子不感兴趣");
+                removeItem(info, true);
             }
         });
 
@@ -100,7 +100,9 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         final String[] tags = info.getTags();
         if (tags != null && tags.length > 0) {
             for (int i = 0; i < tags.length; i++) {
-                tags[i] = "#" + tags[i];
+                if (!tags[i].startsWith("#")) {
+                    tags[i] = "#" + tags[i];
+                }
                 sb.append("  ").append(tags[i]);
             }
         }

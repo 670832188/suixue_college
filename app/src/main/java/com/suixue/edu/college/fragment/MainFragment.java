@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
@@ -25,7 +24,6 @@ import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
-import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.view.WaveSmoothRefreshLayout;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
@@ -154,7 +152,6 @@ public class MainFragment extends BaseStateFragment {
         rvBlog.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                LogUtil.e("mytag", "newState: " + newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && !showTriggerAnimator.isRunning()) {
                     if (hideTriggerAnimator.isRunning()) {
                         hideTriggerAnimator.cancel();
@@ -165,7 +162,6 @@ public class MainFragment extends BaseStateFragment {
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                LogUtil.e("mytag", "is refreshing: " + (refreshLayout.isRefreshing() || refreshLayout.isLoadingMore()));
                 if (!hideTriggerAnimator.isRunning() && fbPublishTrigger.getVisibility() == View.VISIBLE && !(refreshLayout.isRefreshing() || refreshLayout.isLoadingMore())) {
                     hideTriggerAnimator.start();
                 }
@@ -311,10 +307,10 @@ public class MainFragment extends BaseStateFragment {
                     contentInfoList.add(contentInfo);
                 }
                 info.setBlogContentList(contentInfoList);
-                int tagSize = Math.abs(random.nextInt() %6);
+                int tagSize = Math.abs(random.nextInt() % 6);
                 String[] tags = new String[tagSize];
                 for (int k = 0; k < tagSize; k++) {
-                    tags[k] = "标签"+ k;
+                    tags[k] = "标签" + k;
                 }
                 info.setTags(tags);
                 info.setSource("suixue.com");

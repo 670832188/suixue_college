@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by cuiyan on 2018/9/29.
  */
-public class GitEncoderUtil {
+public class GifEncoderUtil {
 
     private int width;
     private int height;

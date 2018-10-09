@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class VideoFrameAdapter extends BaseRecyclerAdapter<Bitmap> {
     private int itemWidth;
+    private boolean loadComplete;
 
     public VideoFrameAdapter(Context context, int maxEnabledTime, List<Bitmap> dataList) {
         super(context, dataList, R.layout.item_video_frame);
@@ -38,9 +39,18 @@ public class VideoFrameAdapter extends BaseRecyclerAdapter<Bitmap> {
         }
         if (position == 0) {
             layoutParams.setMargins(context.getResources().getDimensionPixelSize(R.dimen.video_edit_frame_preview_margin), 0, 0, 0);
+        } else if ((position == getItemCount() - 1) && loadComplete) {
+            layoutParams.setMargins(0, 0, context.getResources().getDimensionPixelSize(R.dimen.video_edit_frame_preview_margin), 0);
         } else {
             layoutParams.setMargins(0, 0, 0, 0);
         }
         ivFrame.setImageBitmap(getItem(position));
+    }
+
+    public void setLoadComplete(boolean loadComplete) {
+        this.loadComplete = loadComplete;
+        if (loadComplete) {
+            notifyDataSetChanged();
+        }
     }
 }

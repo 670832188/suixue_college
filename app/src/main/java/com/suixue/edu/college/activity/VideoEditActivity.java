@@ -19,7 +19,7 @@ import com.dev.kit.basemodule.util.Config;
 import com.dev.kit.basemodule.view.NetProgressDialog;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.VideoFrameAdapter;
-import com.suixue.edu.college.gifEncoder.GitEncoderUtil;
+import com.suixue.edu.college.gifEncoder.GifEncoderUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -126,25 +126,6 @@ public class VideoEditActivity extends BaseActivity implements View.OnClickListe
                 frameInterval = (int) (maxEnabledTime * 1000 * 1000 / (float) (FRAME_SHOW_COUNT - 1));
                 for (long timePointUs = 0; timePointUs < durationUs; timePointUs += frameInterval) {
                     final Bitmap bitmap = retriever.getFrameAtTime(timePointUs, MediaMetadataRetriever.OPTION_CLOSEST);
-//                    if (bitmap != null) {
-//                        final Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 2, bitmap.getHeight() / 2, false);
-//                        if (bitmap != previewBitmap) {
-//                            bitmap.recycle();
-//                        }
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                adapter.appendItem(previewBitmap, false);
-//                            }
-//                        });
-//                    } else {
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                adapter.appendItem(bitmap, false);
-//                            }
-//                        });
-//                    }
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -152,6 +133,12 @@ public class VideoEditActivity extends BaseActivity implements View.OnClickListe
                         }
                     });
                 }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.setLoadComplete(true);
+                    }
+                });
                 retriever.release();
                 progressDialog.dismiss();
             }
@@ -209,7 +196,7 @@ public class VideoEditActivity extends BaseActivity implements View.OnClickListe
         final NetProgressDialog progressDialog = NetProgressDialog.getInstance(this, getString(R.string.tip_gif_making));
         progressDialog.setCancelable(false);
         String outputFilePath = Config.getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
-        new GitEncoderUtil().generateGifByVideoPath(targetVideoPath, outputFilePath, 5, seekTimePoint, maxEnabledTime * 1000, new GitEncoderUtil.OnGifEncodeListener() {
+        new GifEncoderUtil().generateGifByVideoPath(targetVideoPath, outputFilePath, 5, seekTimePoint, maxEnabledTime * 1000, new GifEncoderUtil.OnGifEncodeListener() {
             @Override
             public void onStart() {
                 progressDialog.show();

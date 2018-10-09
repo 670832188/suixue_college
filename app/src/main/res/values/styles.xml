@@ -74,4 +74,9 @@
         <item name="android:textSize">@dimen/text_size_super</item>
         <item name="android:textColor">@color/color_common_ashen</item>
     </style>
+    <style name="CommonEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/color_common_light_gray</item>
+        <item name="colorControlActivated">#54B87C</item>
+    </style>
+
 </resources>

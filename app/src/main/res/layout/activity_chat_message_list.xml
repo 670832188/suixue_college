@@ -1,15 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<me.dkzwm.widget.srl.SmoothRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:sr_enableLoadMore="false"
-    app:sr_enableOverScroll="false">
+    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_chat_msg"
+    <me.dkzwm.widget.srl.SmoothRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_large" />
-</me.dkzwm.widget.srl.SmoothRefreshLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        app:sr_enableLoadMore="false"
+        app:sr_enableOverScroll="false">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_chat_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_large" />
+
+    </me.dkzwm.widget.srl.SmoothRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_normal">
+
+        <EditText
+            android:theme="@style/CommonEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_weight="1.0" />
+
+        <TextView
+            style="@style/style_text_large_white"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_login_btn"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_small"
+            android:text="@string/action_send" />
+    </LinearLayout>
+</LinearLayout>

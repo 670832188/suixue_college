@@ -61,4 +61,5 @@
         <item>动态</item>
         <item>消息</item>
     </string-array>
+    <string name="action_send">发送</string>
 </resources>

@@ -47,11 +47,8 @@ import com.vincent.filepicker.filter.entity.VideoFile;
 import com.vincent.filepicker.utils.VideoSelectBuilder;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import me.shaohui.advancedluban.OnMultiCompressListener;
 
@@ -518,9 +515,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 return;
             }
         }
-        String videoPath = videoFile.getPath();
-        String videoFileName = "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + videoPath.substring(videoPath.lastIndexOf("."));
-        VideoCompressUtil.compressVideo(videoFile.getPath(), targetDir + File.separator + videoFileName, new IVideoCompress() {
+        VideoCompressUtil.compressVideo(videoFile.getPath(), Config.getOutputVideoPath(), new IVideoCompress() {
             @Override
             public void onPrePared() {
                 progressDialog.show();
@@ -558,17 +553,4 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             }
         });
     }
-
-    private String getOutputVideoDirPath() {
-        String targetDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.VIDEO_CACHE_DIR_NAME;
-        File dirFile = new File(targetDir);
-        if (!dirFile.exists()) {
-            if (!dirFile.mkdirs()) {
-                showToast(R.string.tip_dir_make_failed);
-                return null;
-            }
-        }
-        return dirFile.getAbsolutePath();
-    }
-
 }

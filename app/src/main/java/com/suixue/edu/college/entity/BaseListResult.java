@@ -8,7 +8,6 @@ import java.util.List;
 public class BaseListResult<T> {
     private List<T> dataList;
     private boolean hasMoreData;
-    private int currentPageIndex;
 
     public List<T> getDataList() {
         return dataList;
@@ -16,9 +15,5 @@ public class BaseListResult<T> {
 
     public boolean isHasMoreData() {
         return hasMoreData;
-    }
-
-    public int getCurrentPageIndex() {
-        return currentPageIndex;
     }
 }

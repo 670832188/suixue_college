@@ -176,29 +176,34 @@ public class SearchFragment extends BaseFragment {
         NetRequestSubscriber<BaseResult<BaseListResult<Object>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BaseListResult<Object>>>() {
             @Override
             public void onSuccess(@NonNull BaseResult<BaseListResult<Object>> result) {
+                refreshLayout.refreshComplete();
                 if (result.getData() != null && result.getData().getDataList() != null) {
                     List<Object> dataList = result.getData().getDataList();
                     if (dataList.size() > 0) {
-                        if (result.getData().getCurrentPageIndex() == 1) {
+                        if (pageIndex == 1) {
                             blogAdapter.updateDataList(dataList);
                         } else {
                             blogAdapter.appendDataAndRefreshLocal(dataList);
                         }
                     } else {
-
+                        showToast(R.string.data_empty);
                     }
-
+                    refreshLayout.setEnableNoMoreData(!result.getData().isHasMoreData());
                 } else {
-
+                    showToast(R.string.data_empty);
                 }
             }
 
             @Override
             public void onResultNull() {
+                refreshLayout.refreshComplete();
+                showToast(R.string.data_empty);
             }
 
             @Override
             public void onError(Throwable throwable) {
+                refreshLayout.refreshComplete();
+                showToast(R.string.error_net_request_failed);
             }
         }, getContext());
         Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).searchBlogList(keyWord, pageIndex);

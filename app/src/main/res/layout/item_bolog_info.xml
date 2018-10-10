@@ -55,7 +55,6 @@
         android:layout_marginTop="@dimen/margin_normal"
         android:textColor="@color/color_common_text"
         android:textSize="@dimen/text_size_normal"
-        android:visibility="gone"
         app:AutoLinkStyleTextView_default_color="@color/color_common_gray" />
 
     <LinearLayout

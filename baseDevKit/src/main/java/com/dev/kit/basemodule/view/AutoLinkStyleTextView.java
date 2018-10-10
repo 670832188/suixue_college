@@ -25,6 +25,7 @@ import com.dev.kit.basemodule.R;
  */
 public class AutoLinkStyleTextView extends AppCompatTextView {
 
+    private String[] values;
     private static final String CLICK_SPAN_TEXT_SEPARATOR = "&&";
     private static final int TYPE_START_IMAGE = 0;
     private static final int TYPE_CONTENT_TEXT = 1;
@@ -65,9 +66,8 @@ public class AutoLinkStyleTextView extends AppCompatTextView {
      * 部分文字链接的通过xml设置静态渲染
      */
     private void addStyle() {
-        if (!TextUtils.isEmpty(getText()) && !TextUtils.isEmpty(defaultTextValue) && defaultTextValue.contains(CLICK_SPAN_TEXT_SEPARATOR)) {
-            String[] values = defaultTextValue.split(CLICK_SPAN_TEXT_SEPARATOR);
-            SpannableString spannableString = new SpannableString(getText().toString().trim());
+        if (!TextUtils.isEmpty(getText()) && values != null && values.length > 0) {
+            SpannableString spannableString = new SpannableString(getText());
             for (int i = 0; i < values.length; i++) {
                 final int position = i;
                 spannableString.setSpan(new ClickableSpan() {
@@ -81,7 +81,7 @@ public class AutoLinkStyleTextView extends AppCompatTextView {
                         ds.setColor(defaultColor);
                         ds.setUnderlineText(hasUnderLine);
                     }
-                }, getText().toString().trim().indexOf(values[i]), getText().toString().trim().indexOf(values[i]) + values[i].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, getText().toString().indexOf(values[i]), getText().toString().indexOf(values[i]) + values[i].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             setText(spannableString);
             setMovementMethod(LinkMovementMethod.getInstance());
@@ -90,12 +90,12 @@ public class AutoLinkStyleTextView extends AppCompatTextView {
 
     public void setClickSpanTextValues(ClickCallBack clickCallBack, String... values) {
         if (values != null && values.length > 0) {
+            this.values = values;
             this.mClickCallBack = clickCallBack;
             StringBuilder sb = new StringBuilder();
             for (String value : values) {
-                sb.append(value).append(CLICK_SPAN_TEXT_SEPARATOR);
+                sb.append(CLICK_SPAN_TEXT_SEPARATOR).append(value);
             }
-            sb.delete(sb.lastIndexOf(CLICK_SPAN_TEXT_SEPARATOR), sb.length());
             defaultTextValue = sb.toString();
             addStyle();
         }

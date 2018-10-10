@@ -27,9 +27,9 @@ public class StringUtil {
         return spannableString;
     }
 
-    public static SpannableString getSpannableString(String src, int startIndex, int color) {
+    public static SpannableString getSpannableString(String src, int startIndex, int endIndex, int color) {
         SpannableString spannableString = new SpannableString(src);
-        spannableString.setSpan(new ForegroundColorSpan(color), startIndex, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(color), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
 

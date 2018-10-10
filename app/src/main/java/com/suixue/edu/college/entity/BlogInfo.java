@@ -7,6 +7,8 @@ import java.util.List;
  * Created by cuiyan on 2018/8/30.
  */
 public class BlogInfo {
+    public static final String SOURCE_TYPE_SEARCH = "1";
+    public static final String SOURCE_TYPE_RECOMMENDED = "2";
     private String bloggerName;
     private String bloggerId;
     private String bloggerAvatarUrl;
@@ -14,8 +16,8 @@ public class BlogInfo {
     private boolean isConcerned;
     // 帖子内容数据列表
     private List<BlogContentInfo> blogContentList;
-    // 帖子来源：推荐/搜索 等
-    private String source;
+    // 帖子来源：1：搜索；2：推荐
+    private String sourceType;
     // 关注度、热度
     private String attentionLevel;
     // 博客标签
@@ -41,8 +43,8 @@ public class BlogInfo {
         return blogContentList;
     }
 
-    public String getSource() {
-        return source;
+    public String getSourceType() {
+        return sourceType;
     }
 
     public String getAttentionLevel() {
@@ -74,8 +76,8 @@ public class BlogInfo {
         this.blogContentList = blogContentList;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public void setAttentionLevel(String attentionLevel) {

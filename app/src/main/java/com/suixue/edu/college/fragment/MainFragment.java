@@ -287,7 +287,7 @@ public class MainFragment extends BaseStateFragment {
                 info.setBloggerName("张三" + (i + 1));
                 info.setAttentionLevel(String.valueOf(random.nextInt(100) + 10));
                 info.setBloggerAvatarUrl(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
-                int contentItemSize = random.nextInt(5) + 3;
+                int contentItemSize = Math.abs(random.nextInt()) % 5 + 1;
                 List<BlogContentInfo> contentInfoList = new ArrayList<>();
                 boolean isVideoAdded = false;
                 for (int j = 0; j < contentItemSize; j++) {
@@ -312,7 +312,11 @@ public class MainFragment extends BaseStateFragment {
                     tags[k] = "标签" + k;
                 }
                 info.setTags(tags);
-                info.setSource("suixue.com");
+                if (Math.abs(random.nextInt()) % 2 == 0) {
+                    info.setSourceType(BlogInfo.SOURCE_TYPE_SEARCH);
+                } else {
+                    info.setSourceType(BlogInfo.SOURCE_TYPE_RECOMMENDED);
+                }
                 dataList.add(info);
             }
         }

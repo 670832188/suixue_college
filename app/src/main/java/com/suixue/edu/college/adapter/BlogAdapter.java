@@ -1,6 +1,8 @@
 package com.suixue.edu.college.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
+import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.GlideUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
@@ -96,11 +99,20 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         rvContent.setLayoutManager(new LinearLayoutManager(context));
         rvContent.setAdapter(new BlogContentAdapter(context, info.getBlogContentList()));
         AutoLinkStyleTextView tvSourceAndTags = holder.getView(R.id.tv_source_and_tags);
-        String blogSource = info.getSource();
-        if (StringUtil.isEmpty(blogSource)) {
-            blogSource = "";
+        String blogSourceType = info.getSourceType();
+        String blogSource;
+        if (StringUtil.isEmpty(blogSourceType) || blogSourceType.trim().equals(BlogInfo.SOURCE_TYPE_RECOMMENDED)) {
+            tvSourceAndTags.setCompoundDrawables(null, null, null, null);
+            blogSource = context.getString(R.string.blog_source_recommended);
         } else {
-            blogSource = context.getString(R.string.blog_source) + blogSource;
+            Drawable drawable = context.getDrawable(R.mipmap.ic_search_source);
+            if (drawable != null) {
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                tvSourceAndTags.setCompoundDrawables(drawable, null, null, null);
+                tvSourceAndTags.setCompoundDrawablePadding(DisplayUtil.dp2px(5));
+            }
+
+            blogSource = context.getString(R.string.blog_source_search);
         }
         StringBuilder sb = new StringBuilder(blogSource);
         final String[] tags = info.getTags();
@@ -112,21 +124,16 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                 sb.append("  ").append(tags[i]);
             }
         }
-        if (!StringUtil.isEmpty(sb.toString())) {
-            tvSourceAndTags.setVisibility(View.VISIBLE);
-            tvSourceAndTags.setText(sb.toString());
-            if (tags != null && tags.length > 0) {
-                tvSourceAndTags.setClickSpanTextValues(new AutoLinkStyleTextView.ClickCallBack() {
-                    @Override
-                    public void onClick(int position) {
-                        if (onBlogTagClickListener != null) {
-                            onBlogTagClickListener.onTagClick(tags[position].substring(1));
-                        }
+        tvSourceAndTags.setText(StringUtil.getSpannableString(sb.toString(), 0, blogSource.length(), Color.parseColor("#54B87C")));
+        if (tags != null && tags.length > 0) {
+            tvSourceAndTags.setClickSpanTextValues(new AutoLinkStyleTextView.ClickCallBack() {
+                @Override
+                public void onClick(int position) {
+                    if (onBlogTagClickListener != null) {
+                        onBlogTagClickListener.onTagClick(tags[position].substring(1));
                     }
-                }, tags);
-            }
-        } else {
-            tvSourceAndTags.setVisibility(View.GONE);
+                }
+            }, tags);
         }
         holder.setText(R.id.tv_attention_level, "热度" + info.getAttentionLevel());
     }

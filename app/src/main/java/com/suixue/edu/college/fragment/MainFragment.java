@@ -294,7 +294,8 @@ public class MainFragment extends BaseStateFragment {
         baseListResult.setDataList(dataList);
         result.setCode("1");
         result.setMsg("success");
-        LogUtil.writeException2File(new Gson().toJson(result));
+        result.setData(baseListResult);
+        LogUtil.e(new Gson().toJson(result));
         return dataList;
     }
 

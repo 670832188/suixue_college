@@ -157,4 +157,10 @@ public class SearchFragment extends BaseFragment {
             }
         }, getContext());
     }
+
+    public void searchBlog(String keyWord){
+        pageIndex = 1;
+        this.keyWord = keyWord;
+        getBlog();
+    }
 }

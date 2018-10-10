@@ -15,6 +15,7 @@ import com.dev.kit.basemodule.util.StringUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
 import com.dev.kit.basemodule.view.AutoLinkStyleTextView;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
 
@@ -26,6 +27,7 @@ import java.util.List;
 public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     private static final int VIEW_TYPE_BLOG = 1;
     private static final int VIEW_TYPE_RECOMMENDED_BLOGGER = 2;
+    private MainActivity.OnBlogTagClickListener onBlogTagClickListener;
 
     public BlogAdapter(Context context, List<Object> dataList) {
         super(context, dataList);
@@ -33,6 +35,10 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
     public BlogAdapter(Context context, List<Object> dataList, int itemViewLayoutId) {
         super(context, dataList, itemViewLayoutId);
+    }
+
+    public void setOnBlogTagClickListener(MainActivity.OnBlogTagClickListener listener) {
+        onBlogTagClickListener = listener;
     }
 
     @NonNull
@@ -113,7 +119,9 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                 tvSourceAndTags.setClickSpanTextValues(new AutoLinkStyleTextView.ClickCallBack() {
                     @Override
                     public void onClick(int position) {
-                        ToastUtil.showToast(context, tags[position]);
+                        if (onBlogTagClickListener != null) {
+                            onBlogTagClickListener.onTagClick(tags[position].substring(1));
+                        }
                     }
                 }, tags);
             }

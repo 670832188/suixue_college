@@ -19,6 +19,10 @@ import com.suixue.edu.college.fragment.SearchFragment;
  * Created by cuiyan on 2018/9/12.
  */
 public class MainActivity extends BaseActivity implements FragmentAdapter.FragmentFactory {
+    private ViewPager vpFrg;
+    private FragmentAdapter fragmentAdapter;
+    private OnBlogTagClickListener onBlogTagClickListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,11 +31,19 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
     }
 
     private void init() {
+        onBlogTagClickListener = new OnBlogTagClickListener() {
+            @Override
+            public void onTagClick(String blogTag) {
+                vpFrg.setCurrentItem(1, false);
+                SearchFragment searchFragment = (SearchFragment) fragmentAdapter.getItem(1);
+                searchFragment.searchBlog(blogTag);
+            }
+        };
         final RadioButton rbHome = findViewById(R.id.rb_home);
         final RadioButton rbSearch = findViewById(R.id.rb_search);
         final RadioButton rbMsg = findViewById(R.id.rb_msg);
         final RadioButton rbPersonal = findViewById(R.id.rb_me);
-        final ViewPager vpFrg = findViewById(R.id.vp_frg);
+        vpFrg = findViewById(R.id.vp_frg);
         vpFrg.setOffscreenPageLimit(3);
         final RadioGroup rgNav = findViewById(R.id.rg_nav);
         vpFrg.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -68,7 +80,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
 
             }
         });
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), this);
+        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), this);
         vpFrg.setAdapter(fragmentAdapter);
         rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -102,6 +114,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
         switch (position) {
             case 0: {
                 fragment = new MainFragment();
+                ((MainFragment) fragment).setOnBlogTagClickListener(onBlogTagClickListener);
                 break;
             }
             case 1: {
@@ -149,5 +162,9 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
     public void onDestroy() {
         super.onDestroy();
         GSYVideoManager.releaseAllVideos();
+    }
+
+    public interface OnBlogTagClickListener {
+        void onTagClick(String blogTag);
     }
 }

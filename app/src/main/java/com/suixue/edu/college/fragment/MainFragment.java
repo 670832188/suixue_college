@@ -27,6 +27,7 @@ import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.view.WaveSmoothRefreshLayout;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.activity.PublishBlogActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.adapter.BlogAdapter;
@@ -147,6 +148,7 @@ public class MainFragment extends BaseStateFragment {
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
         blogAdapter = new BlogAdapter(getContext(), new ArrayList<>());
+        blogAdapter.setOnBlogTagClickListener(onBlogTagClickListener);
         rvBlog.setAdapter(blogAdapter);
         rvBlog.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -363,5 +365,10 @@ public class MainFragment extends BaseStateFragment {
             showToast("发布博客");
             startActivity(new Intent(getContext(), PublishBlogActivity.class));
         }
+    }
+
+    private MainActivity.OnBlogTagClickListener onBlogTagClickListener;
+    public void setOnBlogTagClickListener(MainActivity.OnBlogTagClickListener listener) {
+        onBlogTagClickListener = listener;
     }
 }

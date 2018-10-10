@@ -22,9 +22,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_normal"
             android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_normal"
             android:orientation="horizontal">
 
             <TextView
@@ -57,9 +57,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginEnd="@dimen/margin_normal"
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_normal"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
@@ -70,43 +70,47 @@
         style="@style/style_text_large_white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_normal"
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
         android:gravity="center"
-        android:paddingBottom="@dimen/margin_small"
         android:paddingTop="@dimen/margin_small"
+        android:paddingBottom="@dimen/margin_small"
         android:text="@string/action_concern" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/margin_normal"
         android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
         android:layout_weight="1.0"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/iv_pic1"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginEnd="@dimen/margin_small"
-            android:background="@drawable/bg_left_corner_light_gray"
             android:scaleType="centerCrop"
+            android:src="@drawable/bg_default_pic_thumb"
             app:sriv_left_bottom_corner_radius="5dp"
             app:sriv_left_top_corner_radius="5dp" />
 
         <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/iv_pic2"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginEnd="@dimen/margin_small"
-            android:background="@color/color_common_light_gray" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_default_pic_thumb" />
 
         <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/iv_pic3"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/bg_right_corner_light_gray"
             android:scaleType="centerCrop"
+            android:src="@drawable/bg_default_pic_thumb"
             app:sriv_right_bottom_corner_radius="5dp"
             app:sriv_right_top_corner_radius="5dp" />
     </LinearLayout>

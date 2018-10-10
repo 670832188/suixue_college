@@ -15,12 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
+import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.util.StringUtil;
+import com.google.gson.Gson;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.ChatMessageAdapter;
+import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.ChatMessageInfo;
 
 import java.util.ArrayList;
@@ -127,7 +130,7 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
 
     private void generateTestData() {
         List<ChatMessageInfo> msgList = new ArrayList<>();
-        int size = 15;
+        int size = 5;
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             ChatMessageInfo info = new ChatMessageInfo();
@@ -147,6 +150,15 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
             rvChatMessage.smoothScrollToPosition(adapter.getItemCount() - 1);
         }
         refreshLayout.refreshComplete();
+        BaseResult<BaseListResult<ChatMessageInfo>> baseResult = new BaseResult<>();
+        BaseListResult<ChatMessageInfo> baseListResult = new BaseListResult<>();
+        baseListResult.setDataList(msgList);
+        baseListResult.setCurrentPageIndex(11);
+        baseListResult.setHasMoreData(true);
+        baseResult.setData(baseListResult);
+        baseResult.setMsg("success");
+        baseResult.setCode("1");
+        LogUtil.e("mytag", new Gson().toJson(baseResult));
     }
 
     @Override

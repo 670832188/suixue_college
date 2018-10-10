@@ -115,7 +115,7 @@ public class RecommendedBloggerAdapter extends BaseRecyclerAdapter<RecommendedBl
         } else {
             subscriber.cancelRequest();
         }
-        Observable<BaseResult> observable = BaseServiceUtil.createService(ApiService.class).concernBlogger(bloggerId, concern ? "1" : "0");
+        Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).concernBlogger(bloggerId, concern ? "1" : "0");
         BaseController.sendRequest(subscriber, observable);
     }
 }

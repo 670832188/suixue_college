@@ -37,5 +37,11 @@ public interface ApiService {
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
     Observable<BaseResult<BaseListResult<Object>>> searchBlogList(@Field("keyWord") String keyWord, @Field("pageIndex") int pageIndex);
 
+    // 关注或取消关注博主
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
+    Observable<BaseResult> concernBlogger(@Field("bloggerId") String bloggerId, @Field("concernFlag") String concernFlag);
+
+
 
 }

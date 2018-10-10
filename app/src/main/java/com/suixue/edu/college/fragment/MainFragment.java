@@ -182,12 +182,6 @@ public class MainFragment extends BaseStateFragment {
             @Override
             public void onSuccess(@NonNull BaseResult<BaseListResult<Object>> result) {
                 refreshLayout.refreshComplete();
-                if (BuildConfig.DEBUG) {
-                    blogAdapter.appendData(generateTestData());
-                    pageIndex++;
-                    refreshLayout.setDisableLoadMore(false);
-                    return;
-                }
                 if (result.getData() == null) {
                     showToast(R.string.data_empty);
                     return;
@@ -219,6 +213,11 @@ public class MainFragment extends BaseStateFragment {
             public void onError(Throwable throwable) {
                 refreshLayout.refreshComplete();
                 showToast(R.string.error_net_request_failed);
+                if (BuildConfig.DEBUG) {
+                    blogAdapter.appendData(generateTestData());
+                    pageIndex++;
+                    refreshLayout.setDisableLoadMore(false);
+                }
             }
         }, getContext());
         Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).getBlogList(String.valueOf(pageIndex));

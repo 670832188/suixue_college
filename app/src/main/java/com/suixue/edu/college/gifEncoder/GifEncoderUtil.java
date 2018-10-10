@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by cuiyan on 2018/9/29.
  */
-public class GitEncoderUtil {
+public class GifEncoderUtil {
 
     private int width;
     private int height;
@@ -34,7 +34,7 @@ public class GitEncoderUtil {
             throw new RuntimeException("input video file not found: " + videoPath);
         }
         desiredFrameRate = frameRate == 0 ? 10 : frameRate;
-        frameIntervalUs = 1000 * 1000 / desiredFrameRate;
+        frameIntervalUs = (int) (1000 * 1000f / desiredFrameRate);
         new Thread(new Runnable() {
             @Override
             public void run() {

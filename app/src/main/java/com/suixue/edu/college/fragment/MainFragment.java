@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
 import com.dev.kit.basemodule.fragment.BaseStateFragment;
@@ -24,7 +23,6 @@ import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
-import com.dev.kit.basemodule.view.WaveSmoothRefreshLayout;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
@@ -37,6 +35,7 @@ import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
 import com.suixue.edu.college.util.PreferenceUtil;
+import com.suixue.edu.college.util.RefreshUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,6 @@ import java.util.Random;
 
 import io.reactivex.Observable;
 import me.dkzwm.widget.srl.SmoothRefreshLayout;
-import me.dkzwm.widget.srl.extra.IRefreshView;
 
 /**
  * Author: cuiyan
@@ -56,7 +54,7 @@ public class MainFragment extends BaseStateFragment {
     private int pageIndex = 1;
     private final int loadCount = 20;
     private View rootView;
-    private WaveSmoothRefreshLayout refreshLayout;
+    private SmoothRefreshLayout refreshLayout;
     private FloatingActionButton fbPublishTrigger;
     private BlogAdapter blogAdapter;
     private final ValueAnimator hideTriggerAnimator = ValueAnimator.ofFloat(1, 0).setDuration(300);
@@ -169,15 +167,8 @@ public class MainFragment extends BaseStateFragment {
             }
         });
         refreshLayout = rootView.findViewById(R.id.refresh_layout);
-        refreshLayout.getDefaultHeader().setProgressBarColor(getResources().getColor(R.color.color_main_bg));
-        refreshLayout.getDefaultHeader().setTextColor(getResources().getColor(R.color.color_main_bg));
-        refreshLayout.setDurationToClose(500);
+        RefreshUtil.initMaterialRefreshLayout(refreshLayout);
         refreshLayout.setEnableAutoLoadMore(true);
-        refreshLayout.getDefaultHeader().setWaveColor(getResources().getColor(R.color.color_common_ashen));
-        refreshLayout.getDefaultHeader().setBackgroundColor(getResources().getColor(R.color.color_main_bg));
-        refreshLayout.getDefaultHeader().setStyle(IRefreshView.STYLE_PIN);
-        //自动刷新
-        refreshLayout.setAutomaticSpringInterpolator(new OvershootInterpolator(3f));
 
         refreshLayout.setOnRefreshListener(new SmoothRefreshLayout.OnRefreshListener() {
             @Override
@@ -372,6 +363,7 @@ public class MainFragment extends BaseStateFragment {
     }
 
     private MainActivity.OnBlogTagClickListener onBlogTagClickListener;
+
     public void setOnBlogTagClickListener(MainActivity.OnBlogTagClickListener listener) {
         onBlogTagClickListener = listener;
     }

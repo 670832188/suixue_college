@@ -7,7 +7,7 @@
     android:descendantFocusability="blocksDescendants"
     android:focusable="true">
 
-    <com.dev.kit.basemodule.view.WaveSmoothRefreshLayout
+    <me.dkzwm.widget.srl.SmoothRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,7 +20,7 @@
             android:descendantFocusability="blocksDescendants"
             android:overScrollMode="never" />
 
-    </com.dev.kit.basemodule.view.WaveSmoothRefreshLayout>
+    </me.dkzwm.widget.srl.SmoothRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fb_publish_trigger"

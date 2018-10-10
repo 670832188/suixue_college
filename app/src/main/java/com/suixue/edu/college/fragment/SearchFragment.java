@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,21 +16,30 @@ import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.fragment.BaseFragment;
+import com.dev.kit.basemodule.netRequest.model.BaseController;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
+import com.suixue.edu.college.config.ApiService;
+import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
+import com.suixue.edu.college.util.RefreshUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.Observable;
+import me.dkzwm.widget.srl.SmoothRefreshLayout;
 
 import static com.suixue.edu.college.fragment.MainFragment.avatarUrl;
 import static com.suixue.edu.college.fragment.MainFragment.thumbList;
@@ -44,6 +52,7 @@ public class SearchFragment extends BaseFragment {
     private String keyWord;
     private int pageIndex;
     private View rootView;
+    private SmoothRefreshLayout refreshLayout;
     private BlogAdapter blogAdapter;
 
     @Nullable
@@ -60,6 +69,25 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void init() {
+        refreshLayout = rootView.findViewById(R.id.refresh_layout);
+        RefreshUtil.initMaterialRefreshLayout(refreshLayout);
+        refreshLayout.setEnableAutoLoadMore(true);
+        refreshLayout.setOnRefreshListener(new SmoothRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefreshBegin(boolean isRefresh) {
+                if (isRefresh) {
+                    pageIndex = 1;
+                } else {
+                    pageIndex++;
+                }
+                searchBlogList(keyWord);
+            }
+
+            @Override
+            public void onRefreshComplete(boolean isSuccessful) {
+
+            }
+        });
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
         rvBlog.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -75,10 +103,9 @@ public class SearchFragment extends BaseFragment {
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                String key = etSearch.getText().toString();
-                if (actionId == EditorInfo.IME_ACTION_SEARCH && !TextUtils.isEmpty(key)) {
-                    showToast("尝试搜索");
-                    generateTestData();
+                String keyWord = etSearch.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_SEARCH && !StringUtil.isEmpty(keyWord)) {
+                    searchBlogList(keyWord);
                     return true;
                 }
                 return false;
@@ -141,11 +168,29 @@ public class SearchFragment extends BaseFragment {
         rvBlog.setAdapter(blogAdapter);
     }
 
-    private void getBlog() {
-        NetRequestSubscriber<BaseResult<List<Object>>> subscriber = new NetRequestSubscriber<BaseResult<List<Object>>>(new NetRequestCallback<BaseResult<List<Object>>>(){
+    public void searchBlogList(String keyWord) {
+        if (StringUtil.isEmpty(keyWord) || !keyWord.equals(this.keyWord)) {
+            pageIndex = 1;
+        }
+        this.keyWord = keyWord;
+        NetRequestSubscriber<BaseResult<BaseListResult<Object>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BaseListResult<Object>>>() {
             @Override
-            public void onSuccess(@NonNull BaseResult<List<Object>> listBaseResult) {
+            public void onSuccess(@NonNull BaseResult<BaseListResult<Object>> result) {
+                if (result.getData() != null && result.getData().getDataList() != null) {
+                    List<Object> dataList = result.getData().getDataList();
+                    if (dataList.size() > 0) {
+                        if (result.getData().getCurrentPageIndex() == 1) {
+                            blogAdapter.updateDataList(dataList);
+                        } else {
+                            blogAdapter.appendDataAndRefreshLocal(dataList);
+                        }
+                    } else {
 
+                    }
+
+                } else {
+
+                }
             }
 
             @Override
@@ -156,11 +201,7 @@ public class SearchFragment extends BaseFragment {
             public void onError(Throwable throwable) {
             }
         }, getContext());
-    }
-
-    public void searchBlog(String keyWord){
-        pageIndex = 1;
-        this.keyWord = keyWord;
-        getBlog();
+        Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).searchBlogList(keyWord, pageIndex);
+        BaseController.sendRequest(this, subscriber, observable);
     }
 }

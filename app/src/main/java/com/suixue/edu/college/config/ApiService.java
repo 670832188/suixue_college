@@ -1,6 +1,7 @@
 package com.suixue.edu.college.config;
 
 import com.dev.kit.basemodule.result.BaseResult;
+import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.UserInfo;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
-    Observable<BaseResult<List<Object>>> getBlogListBySearch(@Field("pageIndex") String pageIndex, @Field("keyWord") String keyWord);
+    Observable<BaseResult<BaseListResult<Object>>> searchBlogList(@Field("keyWord") String keyWord, @Field("pageIndex") int pageIndex);
 
 
 }

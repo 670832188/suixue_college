@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
             public void onTagClick(String blogTag) {
                 vpFrg.setCurrentItem(1, false);
                 SearchFragment searchFragment = (SearchFragment) fragmentAdapter.getItem(1);
-                searchFragment.searchBlog(blogTag);
+                searchFragment.searchBlogList(blogTag);
             }
         };
         final RadioButton rbHome = findViewById(R.id.rb_home);

@@ -4,7 +4,6 @@ import com.dev.kit.basemodule.result.BaseResult;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.UserInfo;
 
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -32,7 +31,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_API)
-    Observable<BaseResult<List<Object>>> getBlogList(@Field("pageIndex") String pageIndex);
+    Observable<BaseResult<BaseListResult<Object>>> getBlogList(@Field("pageIndex") String pageIndex);
 
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)

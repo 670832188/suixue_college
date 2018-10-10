@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.dev.kit.basemodule.fragment.BaseStateFragment;
-import com.dev.kit.basemodule.netRequest.Configs.Config;
 import com.dev.kit.basemodule.netRequest.model.BaseController;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
@@ -30,6 +29,7 @@ import com.suixue.edu.college.activity.PublishBlogActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.config.ApiService;
+import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
@@ -50,9 +50,7 @@ import me.dkzwm.widget.srl.SmoothRefreshLayout;
  * Desc:
  */
 public class MainFragment extends BaseStateFragment {
-    private static final int refreshDelayDurationToChangeState = 800;
     private int pageIndex = 1;
-    private final int loadCount = 20;
     private View rootView;
     private SmoothRefreshLayout refreshLayout;
     private FloatingActionButton fbPublishTrigger;
@@ -122,18 +120,6 @@ public class MainFragment extends BaseStateFragment {
     }
 
     private void init() {
-        setOnEmptyViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshLayout.autoRefresh();
-            }
-        });
-        setOnErrorViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshLayout.autoRefresh();
-            }
-        });
         fbPublishTrigger = rootView.findViewById(R.id.fb_publish_trigger);
         fbPublishTrigger.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +161,8 @@ public class MainFragment extends BaseStateFragment {
             public void onRefreshBegin(boolean isRefresh) {
                 if (isRefresh) {
                     pageIndex = 1;
+                } else {
+                    pageIndex++;
                 }
                 getBlogList();
             }
@@ -183,70 +171,57 @@ public class MainFragment extends BaseStateFragment {
             public void onRefreshComplete(boolean isSuccessful) {
             }
         });
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.autoRefresh();
-            }
-        }, 100);
+        refreshLayout.autoRefresh();
     }
 
     private void getBlogList() {
-        NetRequestSubscriber<BaseResult<List<Object>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<List<Object>>>() {
+        if (pageIndex == 1) {
+            refreshLayout.setEnableNoMoreData(false);
+        }
+        NetRequestSubscriber<BaseResult<BaseListResult<Object>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BaseListResult<Object>>>() {
             @Override
-            public void onSuccess(@NonNull BaseResult<List<Object>> result) {
-                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    if (result.getData() != null && result.getData().size() == 0) {
-                        if (pageIndex == 1) {
-                            setContentState(STATE_EMPTY);
-                        } else {
-                            refreshLayout.setEnableNoMoreData(true);
-                        }
-                    } else {
-                        if (pageIndex == 1) {
-                            blogAdapter.updateDataList(generateTestData());
-                        } else {
-                            blogAdapter.appendData(generateTestData());
-                        }
-                        if (result.getData().size() < loadCount) {
-                            refreshLayout.setEnableNoMoreData(true);
-                        } else {
-                            pageIndex++;
-                        }
-                    }
-                } else {
-                    showToast(result.getMessage());
-                }
-                refreshLayout.refreshComplete(refreshDelayDurationToChangeState);
-            }
-
-            @Override
-            public void onResultNull() {
-                refreshLayout.refreshComplete(refreshDelayDurationToChangeState);
-                if (pageIndex == 1) {
-                    setContentState(STATE_EMPTY);
-                } else {
-                    showToast(R.string.data_empty);
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                refreshLayout.refreshComplete(refreshDelayDurationToChangeState);
+            public void onSuccess(@NonNull BaseResult<BaseListResult<Object>> result) {
+                refreshLayout.refreshComplete();
                 if (BuildConfig.DEBUG) {
                     blogAdapter.appendData(generateTestData());
                     pageIndex++;
                     refreshLayout.setDisableLoadMore(false);
                     return;
                 }
-                if (pageIndex == 1) {
-                    setContentState(STATE_ERROR);
-                } else {
-                    showToast(R.string.error_net_request_failed);
+                if (result.getData() == null) {
+                    showToast(R.string.data_empty);
+                    return;
                 }
+                if (result.getData().getDataList() != null) {
+                    List<Object> dataList = result.getData().getDataList();
+                    if (dataList.size() > 0) {
+                        if (pageIndex == 1) {
+                            blogAdapter.updateDataList(dataList);
+                        } else {
+                            blogAdapter.appendDataAndRefreshLocal(dataList);
+                        }
+                    } else {
+                        showToast(R.string.data_empty);
+                    }
+                } else {
+                    showToast(R.string.data_empty);
+                }
+                refreshLayout.setEnableNoMoreData(!result.getData().isHasMoreData());
+            }
+
+            @Override
+            public void onResultNull() {
+                refreshLayout.refreshComplete();
+                showToast(R.string.data_empty);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                refreshLayout.refreshComplete();
+                showToast(R.string.error_net_request_failed);
             }
         }, getContext());
-        Observable<BaseResult<List<Object>>> observable = BaseServiceUtil.createService(ApiService.class).getBlogList(String.valueOf(pageIndex));
+        Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).getBlogList(String.valueOf(pageIndex));
         BaseController.sendRequest(this, subscriber, observable);
     }
 

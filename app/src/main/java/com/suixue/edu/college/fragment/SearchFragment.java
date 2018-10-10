@@ -172,12 +172,19 @@ public class SearchFragment extends BaseFragment {
         if (StringUtil.isEmpty(keyWord) || !keyWord.equals(this.keyWord)) {
             pageIndex = 1;
         }
+        if (pageIndex == 1) {
+            refreshLayout.setEnableNoMoreData(false);
+        }
         this.keyWord = keyWord;
         NetRequestSubscriber<BaseResult<BaseListResult<Object>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BaseListResult<Object>>>() {
             @Override
             public void onSuccess(@NonNull BaseResult<BaseListResult<Object>> result) {
                 refreshLayout.refreshComplete();
-                if (result.getData() != null && result.getData().getDataList() != null) {
+                if (result.getData() == null) {
+                    showToast(R.string.data_empty);
+                    return;
+                }
+                if (result.getData().getDataList() != null) {
                     List<Object> dataList = result.getData().getDataList();
                     if (dataList.size() > 0) {
                         if (pageIndex == 1) {
@@ -188,10 +195,10 @@ public class SearchFragment extends BaseFragment {
                     } else {
                         showToast(R.string.data_empty);
                     }
-                    refreshLayout.setEnableNoMoreData(!result.getData().isHasMoreData());
                 } else {
                     showToast(R.string.data_empty);
                 }
+                refreshLayout.setEnableNoMoreData(!result.getData().isHasMoreData());
             }
 
             @Override

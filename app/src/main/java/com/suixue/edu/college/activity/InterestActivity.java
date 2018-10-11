@@ -139,6 +139,13 @@ public class InterestActivity extends BaseStateViewActivity {
             titleInfo.setCategoryName(getString(R.string.interest_major));
             titleInfo.setLocalCategoryTitle(true);
             dataList.add(titleInfo);
+            for (InterestInfo info : majorInterestList) {
+                if (!isListEmpty(info.getSubCategoryList())) {
+                    for (InterestInfo childInfo : info.getSubCategoryList()) {
+                        childInfo.setChildCategory(true); // 标记为子类
+                    }
+                }
+            }
             dataList.addAll(majorInterestList);
         }
         if (!isListEmpty(lifeInterestList)) {
@@ -146,6 +153,13 @@ public class InterestActivity extends BaseStateViewActivity {
             titleInfo.setCategoryName(getString(R.string.interest_life));
             titleInfo.setLocalCategoryTitle(true);
             dataList.add(titleInfo);
+            for (InterestInfo info : lifeInterestList) {
+                if (!isListEmpty(info.getSubCategoryList())) {
+                    for (InterestInfo childInfo : info.getSubCategoryList()) {
+                        childInfo.setChildCategory(true);
+                    }
+                }
+            }
             dataList.addAll(lifeInterestList);
         }
         interestAdapter.updateDataList(dataList);
@@ -154,7 +168,6 @@ public class InterestActivity extends BaseStateViewActivity {
 
 
     private void generateTestData() {
-        Log.e("mytag", "111111111111111");
         List<InterestInfo> majorInterestList = new ArrayList<>();
         List<InterestInfo> lifeInterestList = new ArrayList<>();
         Random random = new Random();
@@ -175,7 +188,6 @@ public class InterestActivity extends BaseStateViewActivity {
                     child.setCategoryName("专业类" + k);
                     child.setCategoryId(String.valueOf(k));
                     child.setBgColor(itemBgColors[i % 5]);
-                    child.setChildCategory(true);
                     childList.add(child);
                 }
                 info.setSubCategoryList(childList);
@@ -198,7 +210,6 @@ public class InterestActivity extends BaseStateViewActivity {
                     child.setCategoryName("生活类" + k);
                     child.setCategoryId(String.valueOf(k));
                     child.setBgColor(itemBgColors[i % 5]);
-                    child.setChildCategory(true);
                     childList.add(child);
                 }
                 info.setSubCategoryList(childList);

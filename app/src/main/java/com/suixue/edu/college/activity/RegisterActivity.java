@@ -33,6 +33,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 
 /**
+ * 注册页面
  * Created by cuiyan on 2018/9/3.
  */
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
@@ -60,8 +61,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setOnClickListener(R.id.iv_left, this);
         setOnClickListener(R.id.tv_right, this);
 
-        registerMode = getIntent().getStringExtra(Constants.REGISTER_MODE);
-        if (Constants.REGISTER_MODE_VISITOR.equals(registerMode)) {  // 游客模式
+        registerMode = getIntent().getStringExtra(Constants.KEY_REGISTER_MODE);
+        if (Constants.VALUE_REGISTER_MODE_VISITOR.equals(registerMode)) {  // 游客模式
             setVisibility(R.id.ll_visitor_register, View.VISIBLE);
             AutoLinkStyleTextView tvProtocolTip = findViewById(R.id.tv_protocol_tip);
             final String[] protocolName = getResources().getStringArray(R.array.protocol_name_array);
@@ -100,7 +101,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
             case R.id.tv_right: {
-                if (Constants.REGISTER_MODE_VISITOR.equals(registerMode)) {
+                if (Constants.VALUE_REGISTER_MODE_VISITOR.equals(registerMode)) {
                     registerByVisitorMode();
                 } else {
                     register();
@@ -119,6 +120,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    // 游客模式注册
     private void registerByVisitorMode() {
         String yearOfBirth = etYearOfBirth.getText().toString().trim();
         if (TextUtils.isEmpty(yearOfBirth)) {
@@ -132,10 +134,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             showToast(R.string.tip_year_of_birth_error);
             return;
         }
-        PreferenceUtil.setStringValue(Constants.YEAR_OF_BIRTH, yearOfBirth);
+        PreferenceUtil.setVisitorYearOfBirth(yearOfBirth);
         startActivity(new Intent(this, InterestActivity.class));
     }
 
+    // 获取短信验证码
     private void getSecurityCode() {
         String mobileNumber = etMobile.getText().toString().trim();
         if (TextUtils.isEmpty(mobileNumber)) {
@@ -161,7 +164,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 LogUtil.e(throwable);
             }
         }, this, true, null);
-        Observable<BaseResult<UserInfo>> observable = BaseServiceUtil.createService(ApiService.class).getSecurityCode(mobileNumber);
+        Observable<BaseResult> observable = BaseServiceUtil.createService(ApiService.class).getSecurityCode(mobileNumber);
         BaseController.sendRequest(this, subscriber, observable);
     }
 
@@ -214,9 +217,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onSuccess(@NonNull BaseResult<UserInfo> result) {
                 if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    PreferenceUtil.saveUserInfo(result.getData());
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    finish();
+                    if (result.getData() != null) {
+                        PreferenceUtil.saveUserInfo(result.getData());
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        showToast(R.string.error_net_request_failed);
+                    }
                 }
             }
 

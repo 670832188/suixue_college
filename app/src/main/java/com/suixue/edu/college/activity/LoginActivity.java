@@ -85,7 +85,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 LogUtil.e(throwable);
             }
         }, this, true, null);
-        Observable<BaseResult<UserInfo>> observable = BaseServiceUtil.createService(ApiService.class).getSecurityCode(mobileNumber);
+        Observable<BaseResult> observable = BaseServiceUtil.createService(ApiService.class).getSecurityCode(mobileNumber);
         BaseController.sendRequest(this, subscriber, observable);
     }
 

@@ -8,18 +8,20 @@ package com.suixue.edu.college.config;
 public class Constants {
     public static final int REQUEST_CODE_CONVERT_GIF = 10086;
 
-    public static final String IS_FIRST_IN = "isFirstIn";
-    public static final String USER_INFO = "userInfo";
-    public static final String YEAR_OF_BIRTH = "yearOfBirth";
+    public static final String KEY_IS_FIRST_IN = "isFirstIn";
+    // 访客出生年份
+    public static final String KEY_VISITOR_YEAR_OF_BIRTH = "visitorYearOfBirth";
+    // 访客兴趣爱好
+    public static final String KEY_VISITOR_INTEREST = "visitorInterest";
 
+    public static final String KEY_USER_INFO = "userInfo";
+    public static final String KEY_REGISTER_MODE = "registerMode";
     ////////////////////////////////////////////////////////////////////////////////
 
-    // 登录模式
-    public static final String REGISTER_MODE = "registerMode";
     // 游客模式
-    public static final String REGISTER_MODE_VISITOR = "registerModeVisitor";
+    public static final String VALUE_REGISTER_MODE_VISITOR = "1";
     // 用户模式
-    public static final String REGISTER_MODE_USER = "registerModeRegister";
+    public static final String VALUE_REGISTER_MODE_USER = "2";
 
     /////////////////////////////////////////////////////////////////////////////////
 }

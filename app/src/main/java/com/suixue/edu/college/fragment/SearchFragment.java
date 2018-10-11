@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.fragment.BaseFragment;
+import com.dev.kit.basemodule.netRequest.Configs.Config;
 import com.dev.kit.basemodule.netRequest.model.BaseController;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
@@ -180,6 +181,9 @@ public class SearchFragment extends BaseFragment {
             @Override
             public void onSuccess(@NonNull BaseResult<BaseListResult<Object>> result) {
                 refreshLayout.refreshComplete();
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    return;
+                }
                 if (result.getData() == null) {
                     showToast(R.string.data_empty);
                     return;

@@ -60,7 +60,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.bt_login: {
                 Intent intent = new Intent(this, RegisterActivity.class);
-                intent.putExtra(Constants.REGISTER_MODE, Constants.REGISTER_MODE_USER);
+                intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
                 startActivity(intent);
                 finish();
                 break;
@@ -68,9 +68,9 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
             case R.id.bt_start_browse: {
                 Intent intent = new Intent(this, RegisterActivity.class);
-                intent.putExtra(Constants.REGISTER_MODE, Constants.REGISTER_MODE_VISITOR);
+                intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_VISITOR);
                 startActivity(intent);
-//                finish();
+                finish();
                 break;
             }
         }

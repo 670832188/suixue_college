@@ -19,7 +19,7 @@ public class TransferActivity extends BaseActivity {
     }
 
     private void init() {
-        if (PreferenceUtil.getBooleanValue(Constants.IS_FIRST_IN, true)) {
+        if (PreferenceUtil.getBooleanValue(Constants.KEY_IS_FIRST_IN, true)) {
             startActivity(new Intent(this, SplashActivity.class));
         } else {
             startActivity(new Intent(this, MainActivity.class));

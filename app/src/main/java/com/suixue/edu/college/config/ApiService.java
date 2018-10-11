@@ -17,9 +17,10 @@ import retrofit2.http.POST;
  */
 public interface ApiService {
 
+    // 获取短信验证码
     @FormUrlEncoded
     @POST(ApiConstants.GET_SECURITY_CODE_API)
-    Observable<BaseResult<UserInfo>> getSecurityCode(@Field("mobile") String mobile);
+    Observable<BaseResult> getSecurityCode(@Field("mobile") String mobile);
 
     @FormUrlEncoded
     @POST(ApiConstants.REGISTER_API)

@@ -3,24 +3,31 @@ package com.suixue.edu.college.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
+import com.dev.kit.basemodule.netRequest.Configs.Config;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.InterestAdapter;
 import com.suixue.edu.college.entity.InterestInfo;
+import com.suixue.edu.college.entity.InterestResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
- * 游客模式用户在此页面选择感兴趣的消息分类
+ * 兴趣爱好
  * Created by cuiyan on 2018/9/5.
  */
 public class InterestActivity extends BaseStateViewActivity {
@@ -40,7 +47,6 @@ public class InterestActivity extends BaseStateViewActivity {
     }
 
     private void init() {
-        generateTestData();
         setVisibility(R.id.tv_right, View.VISIBLE);
         setText(R.id.tv_right, R.string.action_next_step);
         setOnClickListener(R.id.tv_right, new View.OnClickListener() {
@@ -64,6 +70,7 @@ public class InterestActivity extends BaseStateViewActivity {
             }
         });
         rvInterest.setLayoutManager(layoutManager);
+        interestAdapter = new InterestAdapter(this, new ArrayList<InterestInfo>());
         interestAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
@@ -95,14 +102,61 @@ public class InterestActivity extends BaseStateViewActivity {
             }
         });
         rvInterest.setAdapter(interestAdapter);
+        generateTestData();
     }
 
-    private void generateTestData() {
+    private void getInterestList() {
+        NetRequestSubscriber<BaseResult<InterestResult>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<InterestResult>>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult<InterestResult> result) {
+                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    handleInterestList(result.getData());
+                }
+            }
+
+            @Override
+            public void onResultNull() {
+                super.onResultNull();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                super.onError(throwable);
+            }
+        }, this, true, "");
+    }
+
+    private void handleInterestList(InterestResult result) {
+        if (result == null || (isListEmpty(result.getLifeInterestList()) && isListEmpty(result.getMajorInterestList()))) {
+            showToast(R.string.data_empty);
+            return;
+        }
         List<InterestInfo> dataList = new ArrayList<>();
-        InterestInfo titleInfo = new InterestInfo();
-        titleInfo.setCategoryName("专业类");
-        titleInfo.setLocalCategoryTitle(true);
-        dataList.add(titleInfo);
+        List<InterestInfo> majorInterestList = result.getMajorInterestList();
+        List<InterestInfo> lifeInterestList = result.getLifeInterestList();
+        if (!isListEmpty(majorInterestList)) {
+            InterestInfo titleInfo = new InterestInfo();
+            titleInfo.setCategoryName(getString(R.string.interest_major));
+            titleInfo.setLocalCategoryTitle(true);
+            dataList.add(titleInfo);
+            dataList.addAll(majorInterestList);
+        }
+        if (!isListEmpty(lifeInterestList)) {
+            InterestInfo titleInfo = new InterestInfo();
+            titleInfo.setCategoryName(getString(R.string.interest_life));
+            titleInfo.setLocalCategoryTitle(true);
+            dataList.add(titleInfo);
+            dataList.addAll(lifeInterestList);
+        }
+        interestAdapter.updateDataList(dataList);
+
+    }
+
+
+    private void generateTestData() {
+        Log.e("mytag", "111111111111111");
+        List<InterestInfo> majorInterestList = new ArrayList<>();
+        List<InterestInfo> lifeInterestList = new ArrayList<>();
         Random random = new Random();
         int size = random.nextInt(10) + 5;
         int k = 0;
@@ -126,13 +180,8 @@ public class InterestActivity extends BaseStateViewActivity {
                 }
                 info.setSubCategoryList(childList);
             }
-            dataList.add(info);
+            majorInterestList.add(info);
         }
-
-        titleInfo = new InterestInfo();
-        titleInfo.setCategoryName("生活类");
-        titleInfo.setLocalCategoryTitle(true);
-        dataList.add(titleInfo);
         size = random.nextInt(10) + 5;
         for (int i = 0; i < size; i++) {
             k++;
@@ -154,8 +203,11 @@ public class InterestActivity extends BaseStateViewActivity {
                 }
                 info.setSubCategoryList(childList);
             }
-            dataList.add(info);
+            lifeInterestList.add(info);
         }
-        interestAdapter = new InterestAdapter(this, dataList);
+        InterestResult interestResult = new InterestResult();
+        interestResult.setMajorInterestList(majorInterestList);
+        interestResult.setLifeInterestList(lifeInterestList);
+        handleInterestList(interestResult);
     }
 }

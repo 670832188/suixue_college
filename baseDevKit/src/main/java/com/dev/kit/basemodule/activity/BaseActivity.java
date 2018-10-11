@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.dev.kit.basemodule.util.PermissionRequestUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
 
+import java.util.List;
+
 public class BaseActivity extends RxActivity {
 
     private OnBackPressedListener onBackPressedListener;
@@ -114,5 +116,9 @@ public class BaseActivity extends RxActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionRequestUtil.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public <T> boolean isListEmpty(List<T> dataList) {
+        return dataList == null || dataList.size() == 0;
     }
 }

@@ -4,6 +4,7 @@ import com.dev.kit.basemodule.result.BaseResult;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.ChatMessageInfo;
 import com.suixue.edu.college.entity.ChatSessionInfo;
+import com.suixue.edu.college.entity.InterestResult;
 import com.suixue.edu.college.entity.UserInfo;
 
 import java.util.List;
@@ -32,6 +33,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiConstants.LOGIN_API)
     Observable<BaseResult<UserInfo>> login(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.LOGIN_API)
+    Observable<BaseResult<InterestResult>> getInterestList();
 
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_API)

@@ -126,9 +126,6 @@ public class SearchFragment extends BaseFragment {
                     RecommendedBloggerInfo info = new RecommendedBloggerInfo();
                     info.setBloggerAvatarUrl(avatarUrl[Math.abs(random.nextInt() % avatarUrl.length)]);
                     info.setBloggerCoverUrl(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
-                    if (random.nextInt() % 2 == 0) {
-                        info.setBloggerCoverDesc("李四" + (j + 1) + "的博客");
-                    }
                     info.setBloggerDesc("风拂二月柳~");
                     info.setBloggerId(String.valueOf(i * 10 + j));
                     info.setBloggerName("李四" + String.valueOf(i * 10 + j));

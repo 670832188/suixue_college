@@ -23,6 +23,8 @@ import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
+import com.dev.kit.basemodule.util.LogUtil;
+import com.google.gson.Gson;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
@@ -231,21 +233,23 @@ public class MainFragment extends BaseStateFragment {
     private List<Object> generateTestData() {
         List<Object> dataList = new ArrayList<>();
         Random random = new Random();
-        int size = random.nextInt(5) + 5;
+        int size = 3;
         for (int i = 0; i < size; i++) {
-            if (i % 5 == 0) {
+            if (i == 2) {
                 RecommendedBloggerResult recommendedBloggerResult = new RecommendedBloggerResult();
                 List<RecommendedBloggerInfo> recommendedBloggerInfoList = new ArrayList<>();
                 for (int j = 0; j < 5; j++) {
                     RecommendedBloggerInfo info = new RecommendedBloggerInfo();
                     info.setBloggerAvatarUrl(avatarUrl[Math.abs(random.nextInt() % avatarUrl.length)]);
                     info.setBloggerCoverUrl(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
-                    if (random.nextInt() % 2 == 0) {
-                        info.setBloggerCoverDesc("李四" + (j + 1) + "的博客");
-                    }
                     info.setBloggerDesc("风拂二月柳~");
                     info.setBloggerId(String.valueOf(i * 10 + j));
                     info.setBloggerName("李四" + String.valueOf(i * 10 + j));
+                    List<String> latestPictures = new ArrayList<>();
+                    for (int k = 0; k < 3; k++) {
+                        latestPictures.add(thumbList[Math.abs(random.nextInt() % 9)]);
+                    }
+                    info.setLatestPictures(latestPictures);
                     recommendedBloggerInfoList.add(info);
                 }
                 recommendedBloggerResult.setRecommendedBloggerInfoList(recommendedBloggerInfoList);
@@ -256,7 +260,7 @@ public class MainFragment extends BaseStateFragment {
                 info.setBloggerName("张三" + (i + 1));
                 info.setAttentionLevel(String.valueOf(random.nextInt(100) + 10));
                 info.setBloggerAvatarUrl(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
-                int contentItemSize = Math.abs(random.nextInt()) % 5 + 1;
+                int contentItemSize = Math.abs(random.nextInt()) % 4 + 1;
                 List<BlogContentInfo> contentInfoList = new ArrayList<>();
                 boolean isVideoAdded = false;
                 for (int j = 0; j < contentItemSize; j++) {
@@ -289,6 +293,13 @@ public class MainFragment extends BaseStateFragment {
                 dataList.add(info);
             }
         }
+        BaseResult<BaseListResult<Object>> result = new BaseResult<>();
+        BaseListResult<Object> baseListResult = new BaseListResult<>();
+        baseListResult.setDataList(dataList);
+        result.setCode("1");
+        result.setMsg("success");
+        result.setData(baseListResult);
+        LogUtil.e(new Gson().toJson(result));
         return dataList;
     }
 

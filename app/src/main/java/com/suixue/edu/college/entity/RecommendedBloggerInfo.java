@@ -1,5 +1,7 @@
 package com.suixue.edu.college.entity;
 
+import java.util.List;
+
 /**
  * Created by cuiyan on 2018/9/10.
  */
@@ -9,12 +11,12 @@ public class RecommendedBloggerInfo {
     private String bloggerName;
     // 博主博客封面图片url
     private String bloggerCoverUrl;
-    // 博主博客封面描述
-    private String bloggerCoverDesc;
     // 博主博客描述
     private String bloggerDesc;
     // 是否被用户关注：客户端本地使用
     private boolean isConcerned;
+    // 最近发布的图片url，取三张
+    private List<String> latestPictures;
 
     public String getBloggerId() {
         return bloggerId;
@@ -36,13 +38,15 @@ public class RecommendedBloggerInfo {
         return bloggerCoverUrl;
     }
 
-    public String getBloggerCoverDesc() {
-        return bloggerCoverDesc;
-    }
 
     public String getBloggerDesc() {
         return bloggerDesc;
     }
+
+    public List<String> getLatestPictures() {
+        return latestPictures;
+    }
+
     //////////////////////////////////////////////
 
     public void setBloggerId(String bloggerId) {
@@ -69,7 +73,7 @@ public class RecommendedBloggerInfo {
         this.bloggerDesc = bloggerDesc;
     }
 
-    public void setBloggerCoverDesc(String bloggerCoverDesc) {
-        this.bloggerCoverDesc = bloggerCoverDesc;
+    public void setLatestPictures(List<String> latestPictures) {
+        this.latestPictures = latestPictures;
     }
 }

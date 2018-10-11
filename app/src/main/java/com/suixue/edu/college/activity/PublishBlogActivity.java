@@ -436,7 +436,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                     info.setWidth(width);
                     info.setHeight(height);
                     adapter.appendItem(info, false);
-//                    scrollBlogItem(adapter.getItemCount() - 1);
+                    scrollBlogItem(adapter.getItemCount() - 1);
                     break;
                 }
                 case REQUEST_CODE_TAKE_VIDEO: {

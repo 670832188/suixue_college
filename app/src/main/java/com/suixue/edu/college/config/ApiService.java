@@ -2,6 +2,7 @@ package com.suixue.edu.college.config;
 
 import com.dev.kit.basemodule.result.BaseResult;
 import com.suixue.edu.college.entity.BaseListResult;
+import com.suixue.edu.college.entity.ChatMessageInfo;
 import com.suixue.edu.college.entity.ChatSessionInfo;
 import com.suixue.edu.college.entity.UserInfo;
 
@@ -55,9 +56,8 @@ public interface ApiService {
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
     Observable<BaseResult<List<ChatSessionInfo>>> getSessionList();
 
-
     // 消息列表
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
-    Observable<BaseResult<String>> getMsgList(@Field("sessionId") String sessionId, @Field("pageIndex") int pageIndex);
+    Observable<BaseResult<BaseListResult<ChatMessageInfo>>> getMsgList(@Field("sessionId") String sessionId, @Field("pageIndex") int pageIndex);
 }

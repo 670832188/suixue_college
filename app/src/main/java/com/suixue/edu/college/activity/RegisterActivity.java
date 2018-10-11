@@ -218,6 +218,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             public void onSuccess(@NonNull BaseResult<UserInfo> result) {
                 if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
                     if (result.getData() != null) {
+                        PreferenceUtil.clearVisitorData();
                         PreferenceUtil.saveUserInfo(result.getData());
                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                         finish();

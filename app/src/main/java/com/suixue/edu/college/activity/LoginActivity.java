@@ -132,9 +132,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onSuccess(@NonNull BaseResult<UserInfo> result) {
                 if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    PreferenceUtil.saveUserInfo(result.getData());
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
+                    if (result.getData() != null) {
+                        PreferenceUtil.clearVisitorData();
+                        PreferenceUtil.saveUserInfo(result.getData());
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    }
+                } else {
+                    showToast(R.string.error_net_request_failed);
                 }
             }
 

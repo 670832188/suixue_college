@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import com.dev.kit.basemodule.util.LogUtil;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -87,7 +85,13 @@ public class GifEncoderUtil {
             Bitmap bitmap = retriever.getFrameAtTime(timePointUs, MediaMetadataRetriever.OPTION_CLOSEST);
             if (bitmap != null) {
                 // 压缩
-                Bitmap dst = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 2, bitmap.getHeight() / 2, false);
+                int width = bitmap.getWidth();
+                int height = bitmap.getHeight();
+                if (width > 720) {
+                    width = 720;
+                    height = (int) (height * 720f / width);
+                }
+                Bitmap dst = Bitmap.createScaledBitmap(bitmap, width, height, false);
                 if (bitmap != dst) {
                     bitmap.recycle();
                 }

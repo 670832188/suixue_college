@@ -33,7 +33,7 @@ import java.util.Locale;
  * Desc:
  */
 public class VideoEditActivity extends BaseActivity implements View.OnClickListener {
-    public static final int FRAME_SHOW_COUNT = 4;
+    public static final int FRAME_SHOW_COUNT = 3;
     public static final String TARGET_VIDEO_PATH = "targetVideoPath";
     public static final String MAX_ENABLED_TIME = "maxEnabledTime";
     public static final String CONVERT_TO_GIF = "convertToGif";

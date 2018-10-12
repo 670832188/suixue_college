@@ -26,6 +26,7 @@ import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.StringUtil;
+import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.InterestActivity;
 import com.suixue.edu.college.adapter.BlogAdapter;
@@ -134,14 +135,15 @@ public class SearchFragment extends BaseFragment {
             }
         });
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
+        blogAdapter = new BlogAdapter(getContext(), new ArrayList<>());
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvBlog.setAdapter(blogAdapter);
         getInterests();
-        searchBlogList("");
-        generateTestData();
+        refreshLayout.autoRefresh();
     }
 
-    private void generateTestData() {
+    private List<Object> generateTestData() {
         List<Object> dataList = new ArrayList<>();
         Random random = new Random();
         int size = random.nextInt(10) + 10;
@@ -188,9 +190,7 @@ public class SearchFragment extends BaseFragment {
                 dataList.add(info);
             }
         }
-        blogAdapter = new BlogAdapter(getContext(), dataList);
-        RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
-        rvBlog.setAdapter(blogAdapter);
+        return dataList;
     }
 
     public void searchBlogList(String keyWord) {
@@ -239,6 +239,11 @@ public class SearchFragment extends BaseFragment {
             public void onError(Throwable throwable) {
                 refreshLayout.refreshComplete();
                 showToast(R.string.error_net_request_failed);
+                if (BuildConfig.DEBUG) {
+                    blogAdapter.appendData(generateTestData());
+                    pageIndex++;
+                    refreshLayout.setDisableLoadMore(false);
+                }
             }
         }, getContext());
         Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).searchBlogList(keyWord, pageIndex);

@@ -26,7 +26,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginBottom="@dimen/margin_small"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -56,7 +56,7 @@
             android:id="@+id/rv_blog"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="false"
+            android:descendantFocusability="blocksDescendants"
             android:overScrollMode="never" />
     </me.dkzwm.widget.srl.SmoothRefreshLayout>
 </LinearLayout>

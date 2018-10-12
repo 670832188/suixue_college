@@ -235,7 +235,7 @@ public class MainFragment extends BaseStateFragment {
         Random random = new Random();
         int size = 3;
         for (int i = 0; i < size; i++) {
-            if (i == 2) {
+            if (i == 0) {
                 RecommendedBloggerResult recommendedBloggerResult = new RecommendedBloggerResult();
                 List<RecommendedBloggerInfo> recommendedBloggerInfoList = new ArrayList<>();
                 for (int j = 0; j < 5; j++) {

@@ -12,12 +12,16 @@ import android.view.ViewGroup;
 
 import com.dev.kit.basemodule.activity.BaseStateViewActivity;
 import com.dev.kit.basemodule.netRequest.Configs.Config;
+import com.dev.kit.basemodule.netRequest.model.BaseController;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.InterestAdapter;
+import com.suixue.edu.college.config.ApiService;
+import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.InterestInfo;
 import com.suixue.edu.college.entity.InterestResult;
 import com.suixue.edu.college.util.PreferenceUtil;
@@ -26,6 +30,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.Observable;
 
 /**
  * 兴趣爱好
@@ -253,7 +259,44 @@ public class InterestActivity extends BaseStateViewActivity {
             intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) currentSelectedInterestList);
             setResult(RESULT_OK, intent);
         } else {
-            // ToDo 用户模式，发送兴趣列表值服务端
+            sendInterestsToServer();
         }
+    }
+
+    private void sendInterestsToServer() {
+        String interestIds = "";
+        int size = currentSelectedInterestList == null ? 0 : currentSelectedInterestList.size();
+        for (int i = 0; i < size; i++) {
+            InterestInfo info = currentSelectedInterestList.get(i);
+            interestIds += info.getCategoryId();
+            if (i != size - 1) {
+                interestIds += Constants.INTEREST_ID_SEPARATOR;
+            }
+        }
+
+        NetRequestSubscriber<BaseResult> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult result) {
+                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    Intent intent = new Intent();
+                    intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) currentSelectedInterestList);
+                    setResult(RESULT_OK, intent);
+                } else {
+                    showToast(result.getMessage());
+                }
+            }
+
+            @Override
+            public void onResultNull() {
+                showToast(R.string.error_net_request_failed);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                showToast(R.string.error_net_request_failed);
+            }
+        }, this, true, "");
+        Observable<BaseResult> observable = BaseServiceUtil.createService(ApiService.class).sendUserInterestsToServer(interestIds);
+        BaseController.sendRequest(this, subscriber, observable);
     }
 }

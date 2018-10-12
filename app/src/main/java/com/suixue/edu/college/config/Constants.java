@@ -24,4 +24,5 @@ public class Constants {
     public static final String VALUE_REGISTER_MODE_USER = "2";
 
     /////////////////////////////////////////////////////////////////////////////////
+    public static final String INTEREST_ID_SEPARATOR = "#";
 }

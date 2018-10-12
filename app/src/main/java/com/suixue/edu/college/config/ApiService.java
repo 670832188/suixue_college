@@ -4,6 +4,7 @@ import com.dev.kit.basemodule.result.BaseResult;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.ChatMessageInfo;
 import com.suixue.edu.college.entity.ChatSessionInfo;
+import com.suixue.edu.college.entity.InterestInfo;
 import com.suixue.edu.college.entity.InterestResult;
 import com.suixue.edu.college.entity.UserInfo;
 
@@ -34,9 +35,20 @@ public interface ApiService {
     @POST(ApiConstants.LOGIN_API)
     Observable<BaseResult<UserInfo>> login(@FieldMap Map<String, String> params);
 
+    // 获取全部兴趣列表
     @FormUrlEncoded
     @POST(ApiConstants.LOGIN_API)
     Observable<BaseResult<InterestResult>> getInterestList();
+
+    // 获取用户已选兴趣列表
+    @FormUrlEncoded
+    @POST(ApiConstants.LOGIN_API)
+    Observable<BaseResult<List<InterestInfo>>> getUserInterestList();
+
+    // 发送用户兴趣列表至服务器
+    @FormUrlEncoded
+    @POST(ApiConstants.LOGIN_API)
+    Observable<BaseResult> sendUserInterestsToServer(@Field("interestIds") String interestIds);
 
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_API)

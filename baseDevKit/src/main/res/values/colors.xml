@@ -5,4 +5,5 @@
     <color name="color_common_text">#CC202332</color>
     <color name="color_blue">#506EE0</color>
     <color name="color_main_status_bar">#465C96</color>
+    <color name="color_main_bg">#465C96</color>
 </resources>

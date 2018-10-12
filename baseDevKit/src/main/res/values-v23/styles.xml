@@ -13,12 +13,16 @@
         <item name="colorAccent">@color/color_common_white</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
         <item name="android:statusBarColor">@color/color_main_status_bar</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="BaseTheme.TranslucentStatusTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="BaseTheme.TranslucentStatusTheme.Transfer" >
+        <item name="android:windowBackground">@color/color_main_bg</item>
     </style>
 </resources>

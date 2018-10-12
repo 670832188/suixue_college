@@ -14,6 +14,10 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="BaseTheme.TranslucentStatusTheme.Transfer">
+        <item name="android:windowBackground">@color/color_main_bg</item>
+    </style>
+
     <style name="BaseDialogTheme" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>

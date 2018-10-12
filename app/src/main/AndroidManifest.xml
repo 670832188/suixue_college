@@ -2,12 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.suixue.edu.college">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:name="MainApplication"
         android:allowBackup="true"
@@ -17,7 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/BaseTheme.BaseAppTheme"
         tools:replace="android:theme">
-        <activity android:name=".activity.TransferActivity">
+        <activity
+            android:name=".activity.TransferActivity"
+            android:theme="@style/BaseTheme.TranslucentStatusTheme.Transfer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,9 +49,9 @@
         <activity
             android:name=".activity.PublishBlogActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="com.dev.kit.basemodule.activity.RecordVideoActivity"/>
-        <activity android:name=".activity.VideoEditActivity"/>
-        <activity android:name=".activity.ChatMessageListActivity"/>
+        <activity android:name="com.dev.kit.basemodule.activity.RecordVideoActivity" />
+        <activity android:name=".activity.VideoEditActivity" />
+        <activity android:name=".activity.ChatMessageListActivity" />
     </application>
 
 </manifest>

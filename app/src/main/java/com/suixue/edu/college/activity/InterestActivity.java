@@ -49,6 +49,7 @@ public class InterestActivity extends BaseStateViewActivity {
     private InterestAdapter interestAdapter;
     private static final int[] itemBgColors = {Color.parseColor("#f04e2e"), Color.parseColor("#af62e3"), Color.parseColor("#E64fc6be"), Color.parseColor("#6d9eeb"), Color.parseColor("#ff9900")};
     private List<InterestInfo> currentSelectedInterestList;
+    public static InterestResult interestResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class InterestActivity extends BaseStateViewActivity {
 
     @SuppressWarnings("unchecked")
     private void init() {
-        Intent intent = new Intent();
+        Intent intent = getIntent();
         callerSource = intent.getStringExtra(KEY_CALLER_SOURCE);
         currentSelectedInterestList = (List<InterestInfo>) intent.getSerializableExtra(CURRENT_SELECTED_INTEREST);
         setVisibility(R.id.tv_right, View.VISIBLE);
@@ -130,7 +131,11 @@ public class InterestActivity extends BaseStateViewActivity {
             }
         });
         rvInterest.setAdapter(interestAdapter);
-        generateTestData();
+        if (interestResult == null) {
+            generateTestData();
+        } else {
+            handleInterestList(interestResult);
+        }
     }
 
     private void getInterestList() {
@@ -170,32 +175,72 @@ public class InterestActivity extends BaseStateViewActivity {
             dataList.add(titleInfo);
             for (InterestInfo info : majorInterestList) {
                 info.setBgColor(itemBgColors[bgIndex % 5]);
+                boolean isParentOrChildSelected = false;
+                if (currentSelectedInterestList != null) {
+                    for (InterestInfo interestInfo : currentSelectedInterestList) {
+                        if (info.getCategoryId().equals(interestInfo.getCategoryId())) {
+                            info.setChecked(true);
+                            isParentOrChildSelected = true;
+                        }
+                    }
+                }
+                dataList.add(info);
                 if (!isListEmpty(info.getSubCategoryList())) {
                     for (InterestInfo childInfo : info.getSubCategoryList()) {
                         childInfo.setChildCategory(true); // 标记为子类
                         childInfo.setBgColor(itemBgColors[bgIndex % 5]);
+                        if (currentSelectedInterestList != null) {
+                            for (InterestInfo interestInfo : currentSelectedInterestList) {
+                                if (childInfo.getCategoryId().equals(interestInfo.getCategoryId())) {
+                                    isParentOrChildSelected = true;
+                                    childInfo.setChecked(true);
+                                }
+                            }
+                        }
+                    }
+                    if (isParentOrChildSelected) {
+                        dataList.addAll(info.getSubCategoryList());
                     }
                 }
                 bgIndex++;
             }
-            dataList.addAll(majorInterestList);
         }
         if (!isListEmpty(lifeInterestList)) {
             InterestInfo titleInfo = new InterestInfo();
-            titleInfo.setCategoryName(getString(R.string.interest_life));
-            titleInfo.setLocalCategoryTitle(true);
+            titleInfo.setCategoryName(getString(R.string.interest_major));
+            titleInfo.setLocalCategoryTitle(true); // 标题
             dataList.add(titleInfo);
             for (InterestInfo info : lifeInterestList) {
                 info.setBgColor(itemBgColors[bgIndex % 5]);
+                boolean isParentOrChildSelected = false;
+                if (currentSelectedInterestList != null) {
+                    for (InterestInfo interestInfo : currentSelectedInterestList) {
+                        if (info.getCategoryId().equals(interestInfo.getCategoryId())) {
+                            info.setChecked(true);
+                            isParentOrChildSelected = true;
+                        }
+                    }
+                }
+                dataList.add(info);
                 if (!isListEmpty(info.getSubCategoryList())) {
                     for (InterestInfo childInfo : info.getSubCategoryList()) {
-                        childInfo.setChildCategory(true);
+                        childInfo.setChildCategory(true); // 标记为子类
                         childInfo.setBgColor(itemBgColors[bgIndex % 5]);
+                        if (currentSelectedInterestList != null) {
+                            for (InterestInfo interestInfo : currentSelectedInterestList) {
+                                if (childInfo.getCategoryId().equals(interestInfo.getCategoryId())) {
+                                    isParentOrChildSelected = true;
+                                    childInfo.setChecked(true);
+                                }
+                            }
+                        }
+                    }
+                    if (isParentOrChildSelected) {
+                        dataList.addAll(info.getSubCategoryList());
                     }
                 }
                 bgIndex++;
             }
-            dataList.addAll(lifeInterestList);
         }
         interestAdapter.updateDataList(dataList);
 
@@ -247,7 +292,7 @@ public class InterestActivity extends BaseStateViewActivity {
             }
             lifeInterestList.add(info);
         }
-        InterestResult interestResult = new InterestResult();
+        interestResult = new InterestResult();
         interestResult.setMajorInterestList(majorInterestList);
         interestResult.setLifeInterestList(lifeInterestList);
         handleInterestList(interestResult);

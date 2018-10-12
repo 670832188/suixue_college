@@ -301,6 +301,7 @@ public class InterestActivity extends BaseStateViewActivity {
             PreferenceUtil.setVisitorInterest(currentSelectedInterestList);
             startActivity(new Intent(InterestActivity.this, MainActivity.class));
         } else if (PreferenceUtil.isVisitorMode()) {
+            PreferenceUtil.setVisitorInterest(currentSelectedInterestList);
             Intent intent = new Intent();
             intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) currentSelectedInterestList);
             setResult(RESULT_OK, intent);

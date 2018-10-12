@@ -138,6 +138,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         Intent intent = new Intent(this, InterestActivity.class);
         intent.putExtra(InterestActivity.KEY_CALLER_SOURCE, InterestActivity.VALUE_CALLER_SOURCE_REGISTER);
         startActivity(intent);
+        finish();
     }
 
     // 获取短信验证码

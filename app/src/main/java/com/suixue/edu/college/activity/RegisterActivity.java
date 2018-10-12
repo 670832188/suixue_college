@@ -135,7 +135,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             return;
         }
         PreferenceUtil.setVisitorYearOfBirth(yearOfBirth);
-        startActivity(new Intent(this, InterestActivity.class));
+        Intent intent = new Intent(this, InterestActivity.class);
+        intent.putExtra(InterestActivity.KEY_CALLER_SOURCE, InterestActivity.VALUE_CALLER_SOURCE_REGISTER);
+        startActivity(intent);
     }
 
     // 获取短信验证码

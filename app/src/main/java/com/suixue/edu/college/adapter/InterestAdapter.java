@@ -11,6 +11,7 @@ import com.dev.kit.basemodule.util.DisplayUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.entity.InterestInfo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,7 @@ import java.util.Set;
  */
 public class InterestAdapter extends BaseRecyclerAdapter<InterestInfo> {
 
-    private Set<InterestInfo> selectedItemSet = new HashSet<>();
+    private List<InterestInfo> selectedItemList = new ArrayList<>();
     public InterestAdapter(Context context, List<InterestInfo> dataList) {
         super(context, dataList, R.layout.item_interest);
     }
@@ -52,18 +53,18 @@ public class InterestAdapter extends BaseRecyclerAdapter<InterestInfo> {
     }
 
     public void addSelectedItem(InterestInfo info) {
-        selectedItemSet.add(info);
+        selectedItemList.add(info);
     }
 
     public void removeSelectedItem(InterestInfo info) {
-        selectedItemSet.remove(info);
+        selectedItemList.remove(info);
     }
 
     public int getSelectedItemCount() {
-        return selectedItemSet.size();
+        return selectedItemList.size();
     }
 
-    public Set<InterestInfo> getSelectedItemSet() {
-        return selectedItemSet;
+    public List<InterestInfo> getSelectedItemList() {
+        return selectedItemList;
     }
 }

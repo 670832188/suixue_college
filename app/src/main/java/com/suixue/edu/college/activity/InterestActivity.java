@@ -20,7 +20,9 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.InterestAdapter;
 import com.suixue.edu.college.entity.InterestInfo;
 import com.suixue.edu.college.entity.InterestResult;
+import com.suixue.edu.college.util.PreferenceUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,11 +32,17 @@ import java.util.Random;
  * Created by cuiyan on 2018/9/5.
  */
 public class InterestActivity extends BaseStateViewActivity {
+    public static final String CURRENT_SELECTED_INTEREST = "currentSelectedInterestList";
+    public static final String KEY_CALLER_SOURCE = "callerSource";
+    // 启动来源：注册页面
+    public static final String VALUE_CALLER_SOURCE_REGISTER = "register";
+    // 启动来源：搜索页面
+    public static final String VALUE_CALLER_SOURCE_SEARCH = "search";
+    private String callerSource;
     private static final int maxSelectCount = 5;
     private InterestAdapter interestAdapter;
     private static final int[] itemBgColors = {Color.parseColor("#f04e2e"), Color.parseColor("#af62e3"), Color.parseColor("#E64fc6be"), Color.parseColor("#6d9eeb"), Color.parseColor("#ff9900")};
     private List<InterestInfo> currentSelectedInterestList;
-    private List<InterestInfo> previousSelectedInterestList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +56,23 @@ public class InterestActivity extends BaseStateViewActivity {
         return inflater.inflate(R.layout.activity_interest, contentRoot, false);
     }
 
+    @SuppressWarnings("unchecked")
     private void init() {
+        Intent intent = new Intent();
+        callerSource = intent.getStringExtra(KEY_CALLER_SOURCE);
+        currentSelectedInterestList = (List<InterestInfo>) intent.getSerializableExtra(CURRENT_SELECTED_INTEREST);
         setVisibility(R.id.tv_right, View.VISIBLE);
         setText(R.id.tv_right, R.string.action_next_step);
         setOnClickListener(R.id.tv_right, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(InterestActivity.this, MainActivity.class));
+                if (VALUE_CALLER_SOURCE_REGISTER.equals(callerSource)) {
+                    PreferenceUtil.setVisitorInterest(currentSelectedInterestList);
+                    startActivity(new Intent(InterestActivity.this, MainActivity.class));
+                } else {
+                    handleSelectedInterest();
+                }
+                finish();
             }
         });
         RecyclerView rvInterest = findViewById(R.id.rv_interest);
@@ -100,6 +118,7 @@ public class InterestActivity extends BaseStateViewActivity {
                             interestAdapter.notifyItemRangeChanged(position + 1, interestAdapter.getDataList().size());
                         }
                     }
+                    currentSelectedInterestList = interestAdapter.getSelectedItemList();
                     setText(R.id.tv_right, String.format(getString(R.string.interest_next_step), interestAdapter.getSelectedItemCount(), maxSelectCount));
                 }
             }
@@ -226,5 +245,15 @@ public class InterestActivity extends BaseStateViewActivity {
         interestResult.setMajorInterestList(majorInterestList);
         interestResult.setLifeInterestList(lifeInterestList);
         handleInterestList(interestResult);
+    }
+
+    private void handleSelectedInterest() {
+        if (PreferenceUtil.isVisitorMode()) {
+            Intent intent = new Intent();
+            intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) currentSelectedInterestList);
+            setResult(RESULT_OK, intent);
+        } else {
+            // ToDo 用户模式，发送兴趣列表值服务端
+        }
     }
 }

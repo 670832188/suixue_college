@@ -150,9 +150,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         NetRequestSubscriber<BaseResult> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult>() {
             @Override
             public void onSuccess(@NonNull BaseResult result) {
-                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    startCountDown();
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    return;
                 }
+                startCountDown();
             }
 
             @Override
@@ -218,15 +219,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         NetRequestSubscriber<BaseResult<UserInfo>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<UserInfo>>() {
             @Override
             public void onSuccess(@NonNull BaseResult<UserInfo> result) {
-                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    if (result.getData() != null) {
-                        PreferenceUtil.clearVisitorData();
-                        PreferenceUtil.saveUserInfo(result.getData());
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        finish();
-                    } else {
-                        showToast(R.string.error_net_request_failed);
-                    }
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    return;
+                }
+                if (result.getData() != null) {
+                    PreferenceUtil.clearVisitorData();
+                    PreferenceUtil.saveUserInfo(result.getData());
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    showToast(R.string.error_net_request_failed);
                 }
             }
 

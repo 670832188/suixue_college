@@ -133,6 +133,7 @@ public class InterestActivity extends BaseStateViewActivity {
         rvInterest.setAdapter(interestAdapter);
         if (interestResult == null) {
             generateTestData();
+            getInterestList();
         } else {
             handleInterestList(interestResult);
         }
@@ -142,9 +143,10 @@ public class InterestActivity extends BaseStateViewActivity {
         NetRequestSubscriber<BaseResult<InterestResult>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<InterestResult>>() {
             @Override
             public void onSuccess(@NonNull BaseResult<InterestResult> result) {
-                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    handleInterestList(result.getData());
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    return;
                 }
+                handleInterestList(result.getData());
             }
 
             @Override
@@ -157,6 +159,8 @@ public class InterestActivity extends BaseStateViewActivity {
                 super.onError(throwable);
             }
         }, this, true, "");
+        Observable<BaseResult<InterestResult>> observable = BaseServiceUtil.createService(ApiService.class).getInterestList();
+        BaseController.sendRequest(this, subscriber, observable);
     }
 
     private void handleInterestList(InterestResult result) {
@@ -322,13 +326,12 @@ public class InterestActivity extends BaseStateViewActivity {
         NetRequestSubscriber<BaseResult> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult>() {
             @Override
             public void onSuccess(@NonNull BaseResult result) {
-                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    Intent intent = new Intent();
-                    intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) currentSelectedInterestList);
-                    setResult(RESULT_OK, intent);
-                } else {
-                    showToast(result.getMessage());
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    return;
                 }
+                Intent intent = new Intent();
+                intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) currentSelectedInterestList);
+                setResult(RESULT_OK, intent);
             }
 
             @Override

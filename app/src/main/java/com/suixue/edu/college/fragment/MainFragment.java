@@ -212,7 +212,7 @@ public class MainFragment extends BaseStateFragment {
             @Override
             public void onResultNull() {
                 refreshLayout.refreshComplete();
-                showToast(R.string.data_empty);
+                showToast(R.string.error_net_request_failed);
             }
 
             @Override

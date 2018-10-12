@@ -9,14 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.fragment.BaseFragment;
 import com.dev.kit.basemodule.netRequest.Configs.Config;
 import com.dev.kit.basemodule.netRequest.model.BaseController;
@@ -136,13 +134,6 @@ public class SearchFragment extends BaseFragment {
             }
         });
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
-        rvBlog.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ((BaseActivity) getActivity()).hideKeyBoard();
-                return false;
-            }
-        });
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
         getInterests();

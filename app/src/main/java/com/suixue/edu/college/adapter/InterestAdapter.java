@@ -12,16 +12,13 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.entity.InterestInfo;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by cuiyan on 2018/9/6.
  */
 public class InterestAdapter extends BaseRecyclerAdapter<InterestInfo> {
 
-    private List<InterestInfo> selectedItemList = new ArrayList<>();
     public InterestAdapter(Context context, List<InterestInfo> dataList) {
         super(context, dataList, R.layout.item_interest);
     }
@@ -52,19 +49,23 @@ public class InterestAdapter extends BaseRecyclerAdapter<InterestInfo> {
         }
     }
 
-    public void addSelectedItem(InterestInfo info) {
-        selectedItemList.add(info);
-    }
-
-    public void removeSelectedItem(InterestInfo info) {
-        selectedItemList.remove(info);
-    }
-
     public int getSelectedItemCount() {
-        return selectedItemList.size();
+        int count = 0;
+        for (InterestInfo info : getDataList()) {
+            if (info.isChecked()) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public List<InterestInfo> getSelectedItemList() {
+        List<InterestInfo> selectedItemList = new ArrayList<>();
+        for (InterestInfo info : getDataList()) {
+            if (info.isChecked()) {
+                selectedItemList.add(info.createRealInterest());
+            }
+        }
         return selectedItemList;
     }
 }

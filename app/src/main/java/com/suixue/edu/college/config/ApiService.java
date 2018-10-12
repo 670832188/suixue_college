@@ -35,15 +35,21 @@ public interface ApiService {
     @POST(ApiConstants.LOGIN_API)
     Observable<BaseResult<UserInfo>> login(@FieldMap Map<String, String> params);
 
-    // 获取全部兴趣列表
+    /**
+     * 获取全部兴趣列表
+     * @param params 传递空map即可
+     */
     @FormUrlEncoded
     @POST(ApiConstants.LOGIN_API)
-    Observable<BaseResult<InterestResult>> getInterestList();
+    Observable<BaseResult<InterestResult>> getInterestList(@FieldMap Map<String, String> params);
 
-    // 获取用户已选兴趣列表
+    /**
+     * 获取用户已选兴趣列表
+     * @param params 传递空map即可
+     */
     @FormUrlEncoded
     @POST(ApiConstants.LOGIN_API)
-    Observable<BaseResult<List<InterestInfo>>> getUserInterestList();
+    Observable<BaseResult<List<InterestInfo>>> getUserInterestList(@FieldMap Map<String, String> params);
 
     // 发送用户兴趣列表至服务器
     @FormUrlEncoded

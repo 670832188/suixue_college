@@ -7,6 +7,7 @@ package com.suixue.edu.college.config;
  */
 public class Constants {
     public static final int REQUEST_CODE_CONVERT_GIF = 10086;
+    public static final int REQUEST_CODE_SELECT_INTEREST = 10087;
 
     public static final String KEY_IS_FIRST_IN = "isFirstIn";
     // 访客出生年份

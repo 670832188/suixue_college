@@ -1,5 +1,7 @@
 package com.suixue.edu.college.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,19 +24,25 @@ import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
 import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
+import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.activity.InterestActivity;
 import com.suixue.edu.college.adapter.BlogAdapter;
+import com.suixue.edu.college.adapter.SelectedInterestAdapter;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.entity.BlogInfo;
+import com.suixue.edu.college.entity.InterestInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
+import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.util.RefreshUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -42,6 +50,8 @@ import java.util.Random;
 import io.reactivex.Observable;
 import me.dkzwm.widget.srl.SmoothRefreshLayout;
 
+import static com.suixue.edu.college.activity.InterestActivity.CURRENT_SELECTED_INTEREST;
+import static com.suixue.edu.college.config.Constants.REQUEST_CODE_SELECT_INTEREST;
 import static com.suixue.edu.college.fragment.MainFragment.avatarUrl;
 import static com.suixue.edu.college.fragment.MainFragment.thumbList;
 import static com.suixue.edu.college.fragment.MainFragment.videoUrls;
@@ -55,6 +65,7 @@ public class SearchFragment extends BaseFragment {
     private View rootView;
     private SmoothRefreshLayout refreshLayout;
     private BlogAdapter blogAdapter;
+    private SelectedInterestAdapter interestAdapter;
 
     @Nullable
     @Override
@@ -70,6 +81,41 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void init() {
+        final EditText etSearch = rootView.findViewById(R.id.et_search);
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                String keyWord = etSearch.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_SEARCH && !StringUtil.isEmpty(keyWord)) {
+                    SearchFragment.this.keyWord = keyWord;
+                    refreshLayout.autoRefresh();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        rootView.findViewById(R.id.iv_add_interest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), InterestActivity.class);
+                intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) interestAdapter.getDataList());
+                startActivityForResult(intent, REQUEST_CODE_SELECT_INTEREST);
+            }
+        });
+        RecyclerView rvInterest = rootView.findViewById(R.id.rv_selected_interest);
+        rvInterest.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_VERTICAL, getResources().getColor(R.color.color_transparent), DisplayUtil.dp2px(10)));
+        rvInterest.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        interestAdapter = new SelectedInterestAdapter(getContext(), new ArrayList<InterestInfo>());
+        interestAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                keyWord = interestAdapter.getItem(position).getCategoryName();
+                refreshLayout.autoRefresh();
+            }
+        });
+        rvInterest.setAdapter(interestAdapter);
+
         refreshLayout = rootView.findViewById(R.id.refresh_layout);
         RefreshUtil.initMaterialRefreshLayout(refreshLayout);
         refreshLayout.setEnableAutoLoadMore(true);
@@ -99,19 +145,9 @@ public class SearchFragment extends BaseFragment {
         });
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
+        getInterests();
+        searchBlogList("");
         generateTestData();
-        final EditText etSearch = rootView.findViewById(R.id.et_search);
-        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                String keyWord = etSearch.getText().toString();
-                if (actionId == EditorInfo.IME_ACTION_SEARCH && !StringUtil.isEmpty(keyWord)) {
-                    searchBlogList(keyWord);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     private void generateTestData() {
@@ -216,5 +252,32 @@ public class SearchFragment extends BaseFragment {
         }, getContext());
         Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).searchBlogList(keyWord, pageIndex);
         BaseController.sendRequest(this, subscriber, observable);
+    }
+
+
+    private void getInterests() {
+        if (PreferenceUtil.isVisitorMode()) {
+            List<InterestInfo> interestInfoList = PreferenceUtil.getVisitorInterest();
+            interestAdapter.updateDataList(interestInfoList == null ? new ArrayList<InterestInfo>() : interestInfoList);
+        } else {
+            getUserInterests();
+        }
+    }
+
+    // 登录用户使用，加载已选择的兴趣列表
+    private void getUserInterests() {
+
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_SELECT_INTEREST) {
+                List<InterestInfo> interestInfoList = (List<InterestInfo>) data.getSerializableExtra(CURRENT_SELECTED_INTEREST);
+                interestAdapter.updateDataList(interestInfoList == null ? new ArrayList<InterestInfo>() : interestInfoList);
+            }
+        }
     }
 }

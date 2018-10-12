@@ -28,6 +28,7 @@ import com.suixue.edu.college.util.PreferenceUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -73,12 +74,7 @@ public class InterestActivity extends BaseStateViewActivity {
         setOnClickListener(R.id.tv_right, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (VALUE_CALLER_SOURCE_REGISTER.equals(callerSource)) {
-                    PreferenceUtil.setVisitorInterest(currentSelectedInterestList);
-                    startActivity(new Intent(InterestActivity.this, MainActivity.class));
-                } else {
-                    handleSelectedInterest();
-                }
+                handleSelectedInterest();
                 finish();
             }
         });
@@ -105,12 +101,10 @@ public class InterestActivity extends BaseStateViewActivity {
                 if (!info.isLocalCategoryTitle()) {
                     if (info.isChecked()) {
                         info.setChecked(false);
-                        interestAdapter.removeSelectedItem(info);
                         interestAdapter.notifyItemChanged(position);
                     } else {
                         if (interestAdapter.getSelectedItemCount() < maxSelectCount) {
                             info.setChecked(true);
-                            interestAdapter.addSelectedItem(info);
                             interestAdapter.notifyItemChanged(position);
                         } else {
                             showToast(String.format(getString(R.string.tip_selected_interest_reach_limit), maxSelectCount));
@@ -159,7 +153,7 @@ public class InterestActivity extends BaseStateViewActivity {
                 super.onError(throwable);
             }
         }, this, true, "");
-        Observable<BaseResult<InterestResult>> observable = BaseServiceUtil.createService(ApiService.class).getInterestList();
+        Observable<BaseResult<InterestResult>> observable = BaseServiceUtil.createService(ApiService.class).getInterestList(new HashMap<String, String>());
         BaseController.sendRequest(this, subscriber, observable);
     }
 
@@ -211,7 +205,7 @@ public class InterestActivity extends BaseStateViewActivity {
         }
         if (!isListEmpty(lifeInterestList)) {
             InterestInfo titleInfo = new InterestInfo();
-            titleInfo.setCategoryName(getString(R.string.interest_major));
+            titleInfo.setCategoryName(getString(R.string.interest_life));
             titleInfo.setLocalCategoryTitle(true); // 标题
             dataList.add(titleInfo);
             for (InterestInfo info : lifeInterestList) {
@@ -303,7 +297,10 @@ public class InterestActivity extends BaseStateViewActivity {
     }
 
     private void handleSelectedInterest() {
-        if (PreferenceUtil.isVisitorMode()) {
+        if (VALUE_CALLER_SOURCE_REGISTER.equals(callerSource)) {
+            PreferenceUtil.setVisitorInterest(currentSelectedInterestList);
+            startActivity(new Intent(InterestActivity.this, MainActivity.class));
+        } else if (PreferenceUtil.isVisitorMode()) {
             Intent intent = new Intent();
             intent.putExtra(CURRENT_SELECTED_INTEREST, (Serializable) currentSelectedInterestList);
             setResult(RESULT_OK, intent);

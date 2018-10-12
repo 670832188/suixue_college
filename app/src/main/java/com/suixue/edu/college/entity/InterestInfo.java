@@ -1,12 +1,13 @@
 package com.suixue.edu.college.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 兴趣爱好页面使用
  * Created by cuiyan on 2018/9/6.
  */
-public class InterestInfo {
+public class InterestInfo implements Serializable{
     private String categoryId;
     private String categoryName;
     private List<InterestInfo> subCategoryList;
@@ -84,5 +85,12 @@ public class InterestInfo {
 
     public void setChildAdded(boolean childAdded) {
         isChildAdded = childAdded;
+    }
+
+    public InterestInfo createRealInterest() {
+        InterestInfo info = new InterestInfo();
+        info.categoryName = this.categoryName;
+        info.categoryId = this.categoryId;
+        return info;
     }
 }

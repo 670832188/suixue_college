@@ -29,6 +29,7 @@ import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.InterestActivity;
+import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.adapter.SelectedInterestAdapter;
 import com.suixue.edu.college.config.ApiService;
@@ -136,6 +137,13 @@ public class SearchFragment extends BaseFragment {
         });
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
         blogAdapter = new BlogAdapter(getContext(), new ArrayList<>());
+        blogAdapter.setOnBlogTagClickListener(new MainActivity.OnBlogTagClickListener() {
+            @Override
+            public void onTagClick(String blogTag) {
+                keyWord = blogTag;
+                refreshLayout.autoRefresh();
+            }
+        });
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
         rvBlog.setAdapter(blogAdapter);

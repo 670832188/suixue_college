@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +30,11 @@ import java.util.Random;
  * Created by cuiyan on 2018/9/5.
  */
 public class InterestActivity extends BaseStateViewActivity {
+    private static final int maxSelectCount = 5;
     private InterestAdapter interestAdapter;
     private static final int[] itemBgColors = {Color.parseColor("#f04e2e"), Color.parseColor("#af62e3"), Color.parseColor("#E64fc6be"), Color.parseColor("#6d9eeb"), Color.parseColor("#ff9900")};
+    private List<InterestInfo> currentSelectedInterestList;
+    private List<InterestInfo> previousSelectedInterestList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +83,12 @@ public class InterestActivity extends BaseStateViewActivity {
                         interestAdapter.removeSelectedItem(info);
                         interestAdapter.notifyItemChanged(position);
                     } else {
-                        if (interestAdapter.getSelectedItemCount() < 5) {
+                        if (interestAdapter.getSelectedItemCount() < maxSelectCount) {
                             info.setChecked(true);
                             interestAdapter.addSelectedItem(info);
                             interestAdapter.notifyItemChanged(position);
                         } else {
-                            showToast(R.string.tip_selected_interest_reach_limit);
+                            showToast(String.format(getString(R.string.tip_selected_interest_reach_limit), maxSelectCount));
                         }
                     }
 
@@ -98,6 +100,7 @@ public class InterestActivity extends BaseStateViewActivity {
                             interestAdapter.notifyItemRangeChanged(position + 1, interestAdapter.getDataList().size());
                         }
                     }
+                    setText(R.id.tv_right, String.format(getString(R.string.interest_next_step), interestAdapter.getSelectedItemCount(), maxSelectCount));
                 }
             }
         });
@@ -134,17 +137,21 @@ public class InterestActivity extends BaseStateViewActivity {
         List<InterestInfo> dataList = new ArrayList<>();
         List<InterestInfo> majorInterestList = result.getMajorInterestList();
         List<InterestInfo> lifeInterestList = result.getLifeInterestList();
+        int bgIndex = 0;
         if (!isListEmpty(majorInterestList)) {
             InterestInfo titleInfo = new InterestInfo();
             titleInfo.setCategoryName(getString(R.string.interest_major));
-            titleInfo.setLocalCategoryTitle(true);
+            titleInfo.setLocalCategoryTitle(true); // 标题
             dataList.add(titleInfo);
             for (InterestInfo info : majorInterestList) {
+                info.setBgColor(itemBgColors[bgIndex % 5]);
                 if (!isListEmpty(info.getSubCategoryList())) {
                     for (InterestInfo childInfo : info.getSubCategoryList()) {
                         childInfo.setChildCategory(true); // 标记为子类
+                        childInfo.setBgColor(itemBgColors[bgIndex % 5]);
                     }
                 }
+                bgIndex++;
             }
             dataList.addAll(majorInterestList);
         }
@@ -154,11 +161,14 @@ public class InterestActivity extends BaseStateViewActivity {
             titleInfo.setLocalCategoryTitle(true);
             dataList.add(titleInfo);
             for (InterestInfo info : lifeInterestList) {
+                info.setBgColor(itemBgColors[bgIndex % 5]);
                 if (!isListEmpty(info.getSubCategoryList())) {
                     for (InterestInfo childInfo : info.getSubCategoryList()) {
                         childInfo.setChildCategory(true);
+                        childInfo.setBgColor(itemBgColors[bgIndex % 5]);
                     }
                 }
+                bgIndex++;
             }
             dataList.addAll(lifeInterestList);
         }
@@ -178,7 +188,6 @@ public class InterestActivity extends BaseStateViewActivity {
             InterestInfo info = new InterestInfo();
             info.setCategoryId(String.valueOf(k));
             info.setCategoryName("专业类" + k);
-            info.setBgColor(itemBgColors[i % 5]);
             if (random.nextInt() % 2 == 0) {
                 List<InterestInfo> childList = new ArrayList<>();
                 int childSize = random.nextInt(5) + 5;
@@ -187,7 +196,6 @@ public class InterestActivity extends BaseStateViewActivity {
                     InterestInfo child = new InterestInfo();
                     child.setCategoryName("专业类" + k);
                     child.setCategoryId(String.valueOf(k));
-                    child.setBgColor(itemBgColors[i % 5]);
                     childList.add(child);
                 }
                 info.setSubCategoryList(childList);
@@ -200,7 +208,6 @@ public class InterestActivity extends BaseStateViewActivity {
             InterestInfo info = new InterestInfo();
             info.setCategoryId(String.valueOf(k));
             info.setCategoryName("生活类" + k);
-            info.setBgColor(itemBgColors[i % 5]);
             if (random.nextInt() % 2 == 0) {
                 List<InterestInfo> childList = new ArrayList<>();
                 int childSize = random.nextInt(5) + 5;
@@ -209,7 +216,6 @@ public class InterestActivity extends BaseStateViewActivity {
                     InterestInfo child = new InterestInfo();
                     child.setCategoryName("生活类" + k);
                     child.setCategoryId(String.valueOf(k));
-                    child.setBgColor(itemBgColors[i % 5]);
                     childList.add(child);
                 }
                 info.setSubCategoryList(childList);

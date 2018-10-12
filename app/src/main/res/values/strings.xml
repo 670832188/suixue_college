@@ -34,7 +34,8 @@
     <string name="action_complete">完成</string>
     <string name="interest_life">生活类</string>
     <string name="interest_major">专业类</string>
-    <string name="tip_selected_interest_reach_limit">您最多可以选择5个兴趣爱好</string>
+    <string name="interest_next_step">(%1$d/%2$d)下一步</string>
+    <string name="tip_selected_interest_reach_limit">您最多可以选择%d个兴趣爱好</string>
 
 
     <string name="tab_home">主页</string>

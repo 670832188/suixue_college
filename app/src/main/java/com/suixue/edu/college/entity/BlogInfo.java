@@ -13,7 +13,7 @@ public class BlogInfo {
     private String bloggerId;
     private String bloggerAvatarUrl;
     // 是否被用户关注
-    private boolean isConcerned;
+    private boolean isPraised;
     // 帖子内容数据列表
     private List<BlogContentInfo> blogContentList;
     // 帖子来源：1：搜索；2：推荐
@@ -35,8 +35,8 @@ public class BlogInfo {
         return bloggerAvatarUrl;
     }
 
-    public boolean isConcerned() {
-        return isConcerned;
+    public boolean isPraised() {
+        return isPraised;
     }
 
     public List<BlogContentInfo> getBlogContentList() {
@@ -68,8 +68,8 @@ public class BlogInfo {
         this.bloggerAvatarUrl = bloggerAvatarUrl;
     }
 
-    public void setConcerned(boolean concerned) {
-        isConcerned = concerned;
+    public void setPraised(boolean isPraised) {
+        this.isPraised = isPraised;
     }
 
     public void setBlogContentList(List<BlogContentInfo> blogContentList) {

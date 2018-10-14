@@ -1,5 +1,6 @@
 package com.suixue.edu.college.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,8 @@ import com.dev.kit.basemodule.util.GlideUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
 import com.dev.kit.basemodule.view.AutoLinkStyleTextView;
+import com.plattysoft.leonids.ParticleSystem;
+import com.plattysoft.leonids.modifiers.ScaleModifier;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.entity.BlogInfo;
@@ -88,13 +91,14 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                 ToastUtil.showToast(context, "您分享了这个帖子");
             }
         });
-        holder.setOnClickListener(R.id.iv_like, new View.OnClickListener() {
+        final ImageView ivPraiseTrigger = holder.getView(R.id.iv_praise);
+        ivPraiseTrigger.setImageResource(info.isPraised() ? R.mipmap.ic_praised : R.mipmap.ic_unpraised);
+        ivPraiseTrigger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.showToast(context, "您喜欢了这个帖子");
+                praiseBlog(info, ivPraiseTrigger);
             }
         });
-
         RecyclerView rvContent = holder.getView(R.id.rv_blog_content);
         rvContent.setLayoutManager(new LinearLayoutManager(context));
         rvContent.setAdapter(new BlogContentAdapter(context, info.getBlogContentList()));
@@ -142,5 +146,23 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         RecyclerView rvRecommendBlogger = holder.getView(R.id.rv_recommended_blogger);
         rvRecommendBlogger.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         rvRecommendBlogger.setAdapter(new RecommendedBloggerAdapter(context, recommendedBloggerResult.getRecommendedBloggerInfoList()));
+    }
+
+    private void praiseBlog(BlogInfo info, ImageView ivTrigger) {
+        if (!info.isPraised()) {
+            ivTrigger.setImageResource(R.mipmap.ic_praised);
+            new ParticleSystem((Activity) context, 10, R.mipmap.ic_praised, 3000)
+                    .setSpeedByComponentsRange(-0.1f, 0.1f, -0.1f, 0.02f)
+                    .setAcceleration(0.000003f, 90)
+                    .setInitialRotationRange(0, 360)
+                    .setRotationSpeed(120)
+                    .setFadeOut(2000)
+                    .addModifier(new ScaleModifier(0f, 1.5f, 0, 1500))
+                    .oneShot(ivTrigger, 10);
+        } else {
+            ivTrigger.setImageResource(R.mipmap.ic_unpraised);
+        }
+        info.setPraised(!info.isPraised());
+        // ToDo 点赞或取消点赞
     }
 }

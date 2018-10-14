@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
@@ -153,16 +154,23 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     private void praiseBlog(BlogInfo info, ImageView ivTrigger) {
         if (!info.isPraised()) {
             ivTrigger.setImageResource(R.mipmap.ic_praised);
-            new ParticleSystem((Activity) context, 10, R.mipmap.ic_praised, 3000)
+            new ParticleSystem((Activity) context, 10, R.mipmap.ic_praised, 1500)
                     .setSpeedByComponentsRange(-0.1f, 0.1f, -0.1f, 0.02f)
                     .setAcceleration(0.000003f, 90)
                     .setInitialRotationRange(0, 360)
                     .setRotationSpeed(120)
-                    .setFadeOut(2000)
+                    .setFadeOut(500)
                     .addModifier(new ScaleModifier(0f, 1.5f, 0, 1500))
                     .oneShot(ivTrigger, 10);
         } else {
             ivTrigger.setImageResource(R.mipmap.ic_unpraised);
+            new ParticleSystem((Activity) context, 100, R.mipmap.ic_unpraised, 1500)
+                    .setScaleRange(0.7f, 1.3f)
+                    .setSpeedModuleAndAngleRange(0.07f, 0.16f, 45, 135)
+                    .setRotationSpeedRange(90, 180)
+                    .setAcceleration(0.00013f, 90)
+                    .setFadeOut(200, new AccelerateInterpolator())
+                    .oneShot(ivTrigger, 5);
         }
         info.setPraised(!info.isPraised());
         // ToDo 点赞或取消点赞

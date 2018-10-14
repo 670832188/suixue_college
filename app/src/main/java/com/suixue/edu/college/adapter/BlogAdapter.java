@@ -24,6 +24,7 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
+import com.suixue.edu.college.util.ViewClickUtil;
 
 import java.util.List;
 
@@ -93,12 +94,13 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         });
         final ImageView ivPraiseTrigger = holder.getView(R.id.iv_praise);
         ivPraiseTrigger.setImageResource(info.isPraised() ? R.mipmap.ic_praised : R.mipmap.ic_unpraised);
-        ivPraiseTrigger.setOnClickListener(new View.OnClickListener() {
+        ViewClickUtil.onViewClick(ivPraiseTrigger, 1500, new ViewClickUtil.OnClickCallBack() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 praiseBlog(info, ivPraiseTrigger);
             }
         });
+
         RecyclerView rvContent = holder.getView(R.id.rv_blog_content);
         rvContent.setLayoutManager(new LinearLayoutManager(context));
         rvContent.setAdapter(new BlogContentAdapter(context, info.getBlogContentList()));

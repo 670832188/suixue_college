@@ -1,5 +1,6 @@
 package com.suixue.edu.college.config;
 
+import com.dev.kit.basemodule.netRequest.Configs.ApiConstants;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.ChatMessageInfo;
@@ -40,7 +41,7 @@ public interface ApiService {
      * @param params 传递空map即可
      */
     @FormUrlEncoded
-    @POST(ApiConstants.LOGIN_API)
+    @POST(ApiConstants.GET_ALL_INTEREST_API)
     Observable<BaseResult<InterestResult>> getInterestList(@FieldMap Map<String, String> params);
 
     /**
@@ -48,39 +49,41 @@ public interface ApiService {
      * @param params 传递空map即可
      */
     @FormUrlEncoded
-    @POST(ApiConstants.LOGIN_API)
+    @POST(ApiConstants.GET_USER_SELECTED_INTEREST_API)
     Observable<BaseResult<List<InterestInfo>>> getUserInterestList(@FieldMap Map<String, String> params);
 
     // 发送用户兴趣列表至服务器
     @FormUrlEncoded
-    @POST(ApiConstants.LOGIN_API)
+    @POST(ApiConstants.SAVE_USER_INTEREST_API)
     Observable<BaseResult> sendUserInterestsToServer(@Field("interestIds") String interestIds);
 
+    // 获取博客列表
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_API)
     Observable<BaseResult<BaseListResult<Object>>> getBlogList(@Field("pageIndex") String pageIndex);
 
+    // 搜索博客列表
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
     Observable<BaseResult<BaseListResult<Object>>> searchBlogList(@Field("keyWord") String keyWord, @Field("pageIndex") int pageIndex);
 
     // 关注或取消关注博主
     @FormUrlEncoded
-    @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
+    @POST(ApiConstants.CONCERN_BLOGGER_API)
     Observable<BaseResult<String>> concernBlogger(@Field("bloggerId") String bloggerId, @Field("concernFlag") String concernFlag);
 
     // 赞或取消赞博客
     @FormUrlEncoded
-    @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
+    @POST(ApiConstants.PRAISE_BLOG_API)
     Observable<BaseResult<String>> praiseBlog(@Field("blogId") String blogId, @Field("praiseFlag") String praiseFlag);
 
     // 消息session列表
     @FormUrlEncoded
-    @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
+    @POST(ApiConstants.GET_CHAT_SESSION_LIST_API)
     Observable<BaseResult<List<ChatSessionInfo>>> getSessionList();
 
     // 消息列表
     @FormUrlEncoded
-    @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
+    @POST(ApiConstants.GET_CHAT_MSG_LIST_API)
     Observable<BaseResult<BaseListResult<ChatMessageInfo>>> getMsgList(@Field("sessionId") String sessionId, @Field("pageIndex") int pageIndex);
 }

@@ -305,13 +305,12 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             style += TextStyleConfig.FontBold.KEY_STYLE_UNDERLINE;//下划线
         }
         String htmlStr = "<p style='" + style + "' >" + content + "</p>";
-        LogUtil.e("mytag", "getHtmlData: " + htmlStr);
         return htmlStr;
     }
 
     private String getHtmlString() {
         int color = etContent.getCurrentTextColor();
-        String textColor = "#" + String.format("%06X", (0xFFFFFF & color));
+        String textColor = String.format("#%06X", (0xFFFFFF & color));;
         String content = etContent.getText().toString();
         content = content.replace("\n", "<br>");
         String startTag;
@@ -348,7 +347,6 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             endTag = "</u>" + endTag;
         }
         String htmlStr = startTag + content + endTag;
-        LogUtil.e("mytag", "htmlStr: " + htmlStr);
         etContent.setText("");
         return htmlStr;
     }
@@ -438,7 +436,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         ColorPickerDialog pickerDialog = new ColorPickerDialog(
                 this,
                 etContent.getCurrentTextColor(),
-                true,
+                false,
                 new OnColorPickerListener() {
                     @Override
                     public void onColorCancel(ColorPickerDialog dialog) {
@@ -452,7 +450,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
 
                     @Override
                     public void onColorConfirm(ColorPickerDialog dialog, int color) {
-                        etContent.setTextColor(Color.parseColor("#" + Integer.toHexString(color)));
+                        etContent.setTextColor(color);
                         GradientDrawable drawable = new GradientDrawable();
                         drawable.setColor(etContent.getCurrentTextColor());
                         drawable.setCornerRadius(DisplayUtil.dp2px(5));

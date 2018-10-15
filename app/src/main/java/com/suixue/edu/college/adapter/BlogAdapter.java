@@ -12,6 +12,12 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
+import com.dev.kit.basemodule.netRequest.Configs.Config;
+import com.dev.kit.basemodule.netRequest.model.BaseController;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
+import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerViewHolder;
 import com.dev.kit.basemodule.util.DisplayUtil;
@@ -23,11 +29,14 @@ import com.plattysoft.leonids.ParticleSystem;
 import com.plattysoft.leonids.modifiers.ScaleModifier;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
+import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
 import com.suixue.edu.college.util.ViewClickUtil;
 
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by cuiyan on 2018/9/10.
@@ -151,8 +160,10 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         rvRecommendBlogger.setAdapter(new RecommendedBloggerAdapter(context, recommendedBloggerResult.getRecommendedBloggerInfoList()));
     }
 
-    private void praiseBlog(BlogInfo info, ImageView ivTrigger) {
+    private void praiseBlog(final BlogInfo info, ImageView ivTrigger) {
+        String praiseFlag;
         if (!info.isPraised()) {
+            praiseFlag = "1";
             ivTrigger.setImageResource(R.mipmap.ic_praised);
             new ParticleSystem((Activity) context, 10, R.mipmap.ic_praised, 1500)
                     .setSpeedByComponentsRange(-0.1f, 0.1f, -0.1f, 0.02f)
@@ -163,6 +174,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                     .addModifier(new ScaleModifier(0f, 1.5f, 0, 1500))
                     .oneShot(ivTrigger, 10);
         } else {
+            praiseFlag = "0";
             ivTrigger.setImageResource(R.mipmap.ic_unpraised);
             new ParticleSystem((Activity) context, 100, R.mipmap.ic_unpraised, 1500)
                     .setScaleRange(0.7f, 1.3f)
@@ -172,7 +184,25 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                     .setFadeOut(200, new AccelerateInterpolator())
                     .oneShot(ivTrigger, 5);
         }
-        info.setPraised(!info.isPraised());
-        // ToDo 点赞或取消点赞
+        NetRequestSubscriber<BaseResult<String>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<String>>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult<String> result) {
+                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    info.setPraised("1".equals(result.getData()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFinish() {
+                notifyDataSetChanged();
+            }
+        }, context, true, "");
+        Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).praiseBlog(info.getBlogId(), praiseFlag);
+        BaseController.sendRequest(subscriber, observable);
     }
 }

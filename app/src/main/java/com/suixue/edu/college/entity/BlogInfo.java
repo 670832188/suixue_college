@@ -11,6 +11,7 @@ public class BlogInfo {
     public static final String SOURCE_TYPE_RECOMMENDED = "2";
     private String bloggerName;
     private String bloggerId;
+    private String blogId;
     private String bloggerAvatarUrl;
     // 是否被用户关注
     private boolean isPraised;
@@ -29,6 +30,10 @@ public class BlogInfo {
 
     public String getBloggerId() {
         return bloggerId;
+    }
+
+    public String getBlogId() {
+        return blogId;
     }
 
     public String getBloggerAvatarUrl() {
@@ -62,6 +67,10 @@ public class BlogInfo {
 
     public void setBloggerId(String bloggerId) {
         this.bloggerId = bloggerId;
+    }
+
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
     }
 
     public void setBloggerAvatarUrl(String bloggerAvatarUrl) {

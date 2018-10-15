@@ -59,6 +59,7 @@
     <string name="tip_video_handle_failed">视频处理失败</string>
     <string name="tip_video_loading">视频加载中&#8230;</string>
     <string name="tip_gif_making">Gif 制作中&#8230;</string>
+    <string name="tip_select_color">颜色选择</string>
 
     <!--消息-->
     <string-array name="msg_tab_title">

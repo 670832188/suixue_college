@@ -1,25 +1,31 @@
 package com.suixue.edu.college.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -33,6 +39,8 @@ import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.videoCompress.IVideoCompress;
 import com.dev.kit.basemodule.videoCompress.VideoCompressUtil;
 import com.dev.kit.basemodule.view.NetProgressDialog;
+import com.dingmouren.colorpicker.ColorPickerDialog;
+import com.dingmouren.colorpicker.OnColorPickerListener;
 import com.google.gson.Gson;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.PublishBlogAdapter;
@@ -52,6 +60,8 @@ import java.util.List;
 
 import me.shaohui.advancedluban.OnMultiCompressListener;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static com.dev.kit.basemodule.activity.RecordVideoActivity.RECODE_FILE_PATH;
 import static com.dev.kit.basemodule.activity.RecordVideoActivity.VIDEO_HEIGHT;
 import static com.dev.kit.basemodule.activity.RecordVideoActivity.VIDEO_WIDTH;
@@ -78,6 +88,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     private RecyclerView.AdapterDataObserver dataObserver;
     private NetProgressDialog progressDialog;
     private BottomSheetDialog videoSelectorDialog;
+    private ImageView ivColorPickTrigger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +116,11 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
         ckbFontBold = findViewById(R.id.ckb_font_bold);
         ckbFontItalic = findViewById(R.id.ckb_font_italic);
         ckbFontUnderline = findViewById(R.id.ckb_font_underline);
+        ivColorPickTrigger = findViewById(R.id.iv_color_pick_trigger);
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(etContent.getCurrentTextColor());
+        drawable.setCornerRadius(DisplayUtil.dp2px(5));
+        ivColorPickTrigger.setBackground(drawable);
         textEditView = findViewById(R.id.ll_text_edit);
         tvPublishTrigger = findViewById(R.id.tv_right);
         tvPublishTrigger.setText(R.string.action_publish);
@@ -251,6 +267,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 }
             }
         });
+        ivColorPickTrigger.setOnClickListener(this);
     }
 
 
@@ -293,10 +310,12 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
     }
 
     private String getHtmlString() {
+        int color = etContent.getCurrentTextColor();
+        String textColor = "#" + String.format("%06X", (0xFFFFFF & color));
         String content = etContent.getText().toString();
         content = content.replace("\n", "<br>");
         String startTag;
-        String endTag = "</p>";
+        String endTag = "</font></p>";
         switch (rgFontAlign.getCheckedRadioButtonId()) {
             case R.id.rb_font_align_left: {
                 startTag = "<p style='text-align: start;'>";
@@ -315,6 +334,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 break;
             }
         }
+        startTag += "<font color=" + "\'" + textColor + "\'>";
         if (ckbFontBold.isChecked()) {
             startTag += "<b>";
             endTag = "</b>" + endTag;
@@ -328,8 +348,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             endTag = "</u>" + endTag;
         }
         String htmlStr = startTag + content + endTag;
-        LogUtil.e("mytag", "htmlString: " + htmlStr);
-        LogUtil.e("mytag", "content: " + content);
+        LogUtil.e("mytag", "htmlStr: " + htmlStr);
         etContent.setText("");
         return htmlStr;
     }
@@ -344,13 +363,19 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             case R.id.btn_add_text: {
                 BlogContentInfo info = new BlogContentInfo(BlogContentInfo.CONTENT_TYPE_TEXT, getHtmlString());
                 adapter.appendItem(info, true);
-//                layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - 1, 0);
                 scrollBlogItem(adapter.getItemCount() - 1);
                 setVisibility(R.id.ll_text_edit, View.GONE);
                 break;
             }
             case R.id.iv_add_text_trigger: {
                 textEditView.setVisibility(textEditView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                if (textEditView.getVisibility() == View.VISIBLE) {
+                    etContent.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.showSoftInput(etContent, 0);
+                    }
+                }
                 break;
             }
             case R.id.iv_add_img_trigger: {
@@ -370,6 +395,10 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
             case R.id.iv_add_gif_trigger: {
                 textEditView.setVisibility(View.GONE);
                 startGifVideoSelect();
+                break;
+            }
+            case R.id.iv_color_pick_trigger: {
+                startTextColorPick();
                 break;
             }
         }
@@ -403,6 +432,40 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 .setMinDuration(1)
                 .setMaxDuration(15)
                 .start();
+    }
+
+    private void startTextColorPick() {
+        ColorPickerDialog pickerDialog = new ColorPickerDialog(
+                this,
+                etContent.getCurrentTextColor(),
+                true,
+                new OnColorPickerListener() {
+                    @Override
+                    public void onColorCancel(ColorPickerDialog dialog) {
+
+                    }
+
+                    @Override
+                    public void onColorChange(ColorPickerDialog dialog, int color) {
+
+                    }
+
+                    @Override
+                    public void onColorConfirm(ColorPickerDialog dialog, int color) {
+                        etContent.setTextColor(Color.parseColor("#" + Integer.toHexString(color)));
+                        GradientDrawable drawable = new GradientDrawable();
+                        drawable.setColor(etContent.getCurrentTextColor());
+                        drawable.setCornerRadius(DisplayUtil.dp2px(5));
+                        ivColorPickTrigger.setBackground(drawable);
+                    }
+                }
+        ).show();
+        AlertDialog dialog = pickerDialog.getDialog();
+        if (dialog != null) {
+            dialog.setTitle(R.string.tip_select_color);
+            dialog.getButton(BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.color_common_blue));
+            dialog.getButton(BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.color_common_gray));
+        }
     }
 
     @Override

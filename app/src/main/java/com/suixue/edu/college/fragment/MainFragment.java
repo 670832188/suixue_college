@@ -220,7 +220,7 @@ public class MainFragment extends BaseStateFragment {
                 refreshLayout.refreshComplete();
                 showToast(R.string.error_net_request_failed);
                 if (BuildConfig.DEBUG) {
-                    blogAdapter.appendData(generateTestData());
+                    blogAdapter.appendDataAndRefreshLocal(generateTestData());
                     pageIndex++;
                     refreshLayout.setDisableLoadMore(false);
                 }

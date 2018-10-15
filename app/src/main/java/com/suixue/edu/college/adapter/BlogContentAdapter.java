@@ -180,6 +180,7 @@ public class BlogContentAdapter extends BaseRecyclerAdapter<BlogContentInfo> {
                 .setShowFullAnimation(true)
                 .setNeedLockFull(true)
                 .setPlayPosition(position)
+                .setLooping(true)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {

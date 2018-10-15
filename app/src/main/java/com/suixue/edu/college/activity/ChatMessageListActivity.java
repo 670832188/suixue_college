@@ -96,7 +96,11 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
                 }
             }
         });
-        refreshLayout.setHeaderView(new ClassicHeader(this));
+        ClassicHeader header = new ClassicHeader(this);
+        header.setReleaseToRefreshRes(R.string.tip_release_to_load_more);
+        header.setRefreshingRes(R.string.tip_loading);
+        header.setRefreshSuccessfulRes(R.string.tip_loading_complete);
+        refreshLayout.setHeaderView(header);
         refreshLayout.setOnRefreshListener(new SmoothRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefreshBegin(boolean isRefresh) {
@@ -168,7 +172,7 @@ public class ChatMessageListActivity extends BaseStateViewActivity implements Vi
                 finish();
                 break;
             }
-            case R.id.tv_send:{
+            case R.id.tv_send: {
                 senMsg();
                 break;
             }

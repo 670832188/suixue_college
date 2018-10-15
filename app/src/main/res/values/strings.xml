@@ -66,4 +66,7 @@
         <item>消息</item>
     </string-array>
     <string name="action_send">发送</string>
+    <string name="tip_release_to_load_more">释放加载更多</string>
+    <string name="tip_loading">正在加载</string>
+    <string name="tip_loading_complete">加载完成</string>
 </resources>

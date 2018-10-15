@@ -163,7 +163,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         rvRecommendBlogger.setAdapter(new RecommendedBloggerAdapter(context, recommendedBloggerResult.getRecommendedBloggerInfoList()));
     }
 
-    private void praiseBlog(final BlogInfo info, ImageView ivTrigger) {
+    private void praiseBlog(final BlogInfo info, final ImageView ivTrigger) {
         String praiseFlag;
         final long startTime = System.currentTimeMillis();
         final long duration = 1500;
@@ -210,11 +210,19 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            notifyDataSetChanged();
+                            if (info.isPraised()) {
+                                ivTrigger.setImageResource(R.mipmap.ic_praised);
+                            } else {
+                                ivTrigger.setImageResource(R.mipmap.ic_unpraised);
+                            }
                         }
                     }, delayTime);
                 } else {
-                    notifyDataSetChanged();
+                    if (info.isPraised()) {
+                        ivTrigger.setImageResource(R.mipmap.ic_praised);
+                    } else {
+                        ivTrigger.setImageResource(R.mipmap.ic_unpraised);
+                    }
                 }
             }
         }, context, true, "");

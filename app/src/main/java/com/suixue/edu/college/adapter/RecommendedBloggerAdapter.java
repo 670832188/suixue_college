@@ -1,7 +1,10 @@
 package com.suixue.edu.college.adapter;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,10 +24,9 @@ import com.joooonho.SelectableRoundedImageView;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
+import com.suixue.edu.college.util.ViewClickUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observable;
 
@@ -32,6 +34,7 @@ import io.reactivex.Observable;
  * Created by cuiyan on 2018/9/11.
  */
 public class RecommendedBloggerAdapter extends BaseRecyclerAdapter<RecommendedBloggerInfo> {
+    private Handler handler = new Handler(Looper.getMainLooper());
     private static final int[] bgColor = {R.color.color_common_red, R.color.color_common_blue, R.color.color_common_orange, R.color.color_common_purple, R.color.color_common_green};
 
     public RecommendedBloggerAdapter(Context context, List<RecommendedBloggerInfo> dataList) {
@@ -39,8 +42,8 @@ public class RecommendedBloggerAdapter extends BaseRecyclerAdapter<RecommendedBl
     }
 
     @Override
-    public void fillData(RecyclerViewHolder holder, int position) {
-        final RecommendedBloggerInfo info = getItem(position);
+    public void fillData(RecyclerViewHolder holder, final int position) {
+        RecommendedBloggerInfo info = getItem(position);
         ImageView ivBloggerAvatar = holder.getView(R.id.iv_blogger_avatar);
         Glide.with(context).load(info.getBloggerAvatarUrl()).into(ivBloggerAvatar);
         ImageView ivBlogCover = holder.getView(R.id.iv_blogger_cover);
@@ -49,15 +52,21 @@ public class RecommendedBloggerAdapter extends BaseRecyclerAdapter<RecommendedBl
         holder.setText(R.id.tv_blogger_name, info.getBloggerName());
         holder.setText(R.id.tv_blogger_desc, info.getBloggerDesc());
         GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(context.getResources().getColor(bgColor[position % 5]));
+        if (info.isConcerned()) {
+            drawable.setColor(context.getResources().getColor(bgColor[position % 5]));
+        } else {
+            drawable.setColor(context.getResources().getColor(R.color.color_common_light_gray));
+        }
         drawable.setCornerRadius(DisplayUtil.dp2px(5));
         holder.getView(R.id.tv_concern).setBackground(drawable);
-        holder.setOnClickListener(R.id.tv_concern, new View.OnClickListener() {
+        final View concernTrigger = holder.getView(R.id.tv_concern);
+        ViewClickUtil.onViewClick(concernTrigger, 1500, new ViewClickUtil.OnClickCallBack() {
             @Override
-            public void onClick(View v) {
-                tryToConcernBlogger(info.getBloggerId(), !info.isConcerned());
+            public void onClick(View view) {
+                tryToConcernBlogger(position, concernTrigger);
             }
         });
+
         SelectableRoundedImageView ivPic1 = holder.getView(R.id.iv_pic1);
         SelectableRoundedImageView ivPic2 = holder.getView(R.id.iv_pic2);
         SelectableRoundedImageView ivPic3 = holder.getView(R.id.iv_pic3);
@@ -85,37 +94,59 @@ public class RecommendedBloggerAdapter extends BaseRecyclerAdapter<RecommendedBl
         }
     }
 
-    private Map<String, NetRequestSubscriber<BaseResult<String>>> concernSubscriberMap = new HashMap<>();
 
     // 关注或取消关注
-    private void tryToConcernBlogger(String bloggerId, boolean concern) {
-        NetRequestSubscriber<BaseResult<String>> subscriber = concernSubscriberMap.get(bloggerId);
-        if (subscriber == null) {
-            subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<String>>() {
-                @Override
-                public void onSuccess(@NonNull BaseResult<String> result) {
-                    if (Config.REQUEST_SUCCESS_CODE.endsWith(result.getCode())) {
-
-                    } else {
-
-                    }
-                }
-
-                @Override
-                public void onResultNull() {
-                    super.onResultNull();
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    super.onError(throwable);
-                }
-            }, context);
-            concernSubscriberMap.put(bloggerId, subscriber);
+    private void tryToConcernBlogger(int position, final View triggerView) {
+        final RecommendedBloggerInfo info = getItem(position);
+        String concernFlag = info.isConcerned() ? "0" : "1";
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setCornerRadius(DisplayUtil.dp2px(5));
+        if (!info.isConcerned()) {
+            drawable.setColor(context.getResources().getColor(bgColor[position % 5]));
         } else {
-            subscriber.cancelRequest();
+            drawable.setColor(context.getResources().getColor(R.color.color_common_light_gray));
         }
-        Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).concernBlogger(bloggerId, concern ? "1" : "0");
+        triggerView.setBackground(drawable);
+        final ValueAnimator animator = ValueAnimator.ofFloat(1, 1.2f, 1).setDuration(1500);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                triggerView.setScaleX(value);
+                triggerView.setScaleY(value);
+            }
+        });
+        animator.start();
+        NetRequestSubscriber<BaseResult<String>> subscriber
+                = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<String>>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult<String> result) {
+                if (Config.REQUEST_SUCCESS_CODE.endsWith(result.getCode())) {
+                    info.setConcerned("1".equals(result.getData()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                super.onError(throwable);
+            }
+
+            @Override
+            public void onFinish() {
+                long delayTime = (long) (animator.getDuration() * (1 - animator.getAnimatedFraction()));
+                if (animator.isRunning()) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged();
+                        }
+                    }, delayTime);
+                } else {
+                    notifyDataSetChanged();
+                }
+            }
+        }, context, true, "");
+        Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).concernBlogger(info.getBloggerId(), concernFlag);
         BaseController.sendRequest(subscriber, observable);
     }
 }

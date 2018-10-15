@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +44,7 @@ import io.reactivex.Observable;
  * Created by cuiyan on 2018/9/10.
  */
 public class BlogAdapter extends BaseRecyclerAdapter<Object> {
+    private Handler handler = new Handler(Looper.getMainLooper());
     private static final int VIEW_TYPE_BLOG = 1;
     private static final int VIEW_TYPE_RECOMMENDED_BLOGGER = 2;
     private MainActivity.OnBlogTagClickListener onBlogTagClickListener;
@@ -162,21 +165,23 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
     private void praiseBlog(final BlogInfo info, ImageView ivTrigger) {
         String praiseFlag;
+        final long startTime = System.currentTimeMillis();
+        final long duration = 1500;
         if (!info.isPraised()) {
             praiseFlag = "1";
             ivTrigger.setImageResource(R.mipmap.ic_praised);
-            new ParticleSystem((Activity) context, 10, R.mipmap.ic_praised, 1500)
+            new ParticleSystem((Activity) context, 10, R.mipmap.ic_praised, duration)
                     .setSpeedByComponentsRange(-0.1f, 0.1f, -0.1f, 0.02f)
                     .setAcceleration(0.000003f, 90)
                     .setInitialRotationRange(0, 360)
                     .setRotationSpeed(120)
                     .setFadeOut(500)
-                    .addModifier(new ScaleModifier(0f, 1.5f, 0, 1500))
+                    .addModifier(new ScaleModifier(0f, 1.5f, 0, duration))
                     .oneShot(ivTrigger, 10);
         } else {
             praiseFlag = "0";
             ivTrigger.setImageResource(R.mipmap.ic_unpraised);
-            new ParticleSystem((Activity) context, 100, R.mipmap.ic_unpraised, 1500)
+            new ParticleSystem((Activity) context, 100, R.mipmap.ic_unpraised, duration)
                     .setScaleRange(0.7f, 1.3f)
                     .setSpeedModuleAndAngleRange(0.07f, 0.16f, 45, 135)
                     .setRotationSpeedRange(90, 180)
@@ -199,7 +204,18 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
             @Override
             public void onFinish() {
-                notifyDataSetChanged();
+                long currentTime = System.currentTimeMillis();
+                long delayTime = duration - currentTime + startTime;
+                if (delayTime > 0) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged();
+                        }
+                    }, delayTime);
+                } else {
+                    notifyDataSetChanged();
+                }
             }
         }, context, true, "");
         Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).praiseBlog(info.getBlogId(), praiseFlag);

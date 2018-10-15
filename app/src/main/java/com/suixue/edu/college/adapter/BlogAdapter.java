@@ -166,7 +166,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     private void praiseBlog(final BlogInfo info, final ImageView ivTrigger) {
         String praiseFlag;
         final long startTime = System.currentTimeMillis();
-        final long duration = 1500;
+        final long duration = 1000;
         if (!info.isPraised()) {
             praiseFlag = "1";
             ivTrigger.setImageResource(R.mipmap.ic_praised);
@@ -186,7 +186,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                     .setSpeedModuleAndAngleRange(0.07f, 0.16f, 45, 135)
                     .setRotationSpeedRange(90, 180)
                     .setAcceleration(0.00013f, 90)
-                    .setFadeOut(200, new AccelerateInterpolator())
+                    .setFadeOut(500, new AccelerateInterpolator())
                     .oneShot(ivTrigger, 5);
         }
         NetRequestSubscriber<BaseResult<String>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<String>>() {

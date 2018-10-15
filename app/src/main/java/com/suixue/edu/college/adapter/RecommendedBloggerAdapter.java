@@ -107,7 +107,7 @@ public class RecommendedBloggerAdapter extends BaseRecyclerAdapter<RecommendedBl
             drawable.setColor(context.getResources().getColor(R.color.color_common_light_gray));
         }
         triggerView.setBackground(drawable);
-        final ValueAnimator animator = ValueAnimator.ofFloat(1, 1.2f, 1).setDuration(1500);
+        final ValueAnimator animator = ValueAnimator.ofFloat(1, 1.2f, 1).setDuration(1000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

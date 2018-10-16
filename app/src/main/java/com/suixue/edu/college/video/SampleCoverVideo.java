@@ -180,6 +180,9 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
         return mCoverImage;
     }
 
+    protected boolean isShowNetConfirm() {
+        return (super.isShowNetConfirm() && !mOriginUrl.startsWith("/storage/emulated"));
+    }
     @Override
     public void showWifiDialog() {
         if (!NetworkUtils.isAvailable(mContext)) {

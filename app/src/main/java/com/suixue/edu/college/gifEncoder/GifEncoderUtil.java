@@ -87,11 +87,12 @@ public class GifEncoderUtil {
                 // 压缩
                 int width = bitmap.getWidth();
                 int height = bitmap.getHeight();
-                if (width > 720) {
-                    width = 720;
-                    height = (int) (height * 720f / width);
+                if (width > 480) {
+                    width = 480;
+                    height = (int) (height * 480f / bitmap.getWidth());
                 }
                 Bitmap dst = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
                 if (bitmap != dst) {
                     bitmap.recycle();
                 }

@@ -196,7 +196,7 @@ public class VideoEditActivity extends BaseActivity implements View.OnClickListe
         final NetProgressDialog progressDialog = NetProgressDialog.getInstance(this, getString(R.string.tip_gif_making));
         progressDialog.setCancelable(false);
         String outputFilePath = Config.getOutputImgDirPath() + File.separator + "suiXue_" + new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date()) + ".gif";
-        new GifEncoderUtil().generateGifByVideoPath(targetVideoPath, outputFilePath, 5, seekTimePoint, maxEnabledTime * 1000, new GifEncoderUtil.OnGifEncodeListener() {
+        new GifEncoderUtil().generateGifByVideoPath(targetVideoPath, outputFilePath, 3, seekTimePoint, maxEnabledTime * 1000, new GifEncoderUtil.OnGifEncodeListener() {
             @Override
             public void onStart() {
                 progressDialog.show();

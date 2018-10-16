@@ -47,8 +47,9 @@ dependencies {
     api 'com.googlecode.mp4parser:isoparser:1.1.21'
 //    api 'com.daasuu:CameraRecorder-android:0.1.0'
     api project (':camerarecorder')
-    api 'com.shuyu:gsyVideoPlayer-java:6.0.0-beta'
-    api 'com.shuyu:gsyVideoPlayer-arm64:6.0.0-beta'
+    api 'com.shuyu:gsyVideoPlayer-java:6.0.1'
+    api 'com.shuyu:gsyVideoPlayer-armv7a:6.0.1'
+    api 'com.shuyu:gsyVideoPlayer-arm64:6.0.1'
     // 刷新
     api 'me.dkzwm.widget.srl:core:1.6.5-beta-3'
     api 'me.dkzwm.widget.srl:ext-classic:1.6.5-beta-3'

@@ -1,5 +1,7 @@
 package com.suixue.edu.college.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -27,6 +29,8 @@ import com.dev.kit.basemodule.util.GlideUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
 import com.dev.kit.basemodule.view.AutoLinkStyleTextView;
+import com.fadai.particlesmasher.ParticleSmasher;
+import com.fadai.particlesmasher.SmashAnimator;
 import com.plattysoft.leonids.ParticleSystem;
 import com.plattysoft.leonids.modifiers.ScaleModifier;
 import com.suixue.edu.college.R;
@@ -37,6 +41,7 @@ import com.suixue.edu.college.entity.RecommendedBloggerResult;
 import com.suixue.edu.college.util.ViewClickUtil;
 
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.Observable;
 
@@ -82,14 +87,29 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         }
     }
 
-    private void fillBlogData(RecyclerViewHolder holder, final BlogInfo info) {
+    private void fillBlogData(final RecyclerViewHolder holder, final BlogInfo info) {
         ImageView ivBloggerAvatar = holder.getView(R.id.iv_blogger_avatar);
         GlideUtil.loadImage(context, info.getBloggerAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivBloggerAvatar, 1);
         holder.setText(R.id.tv_blogger_name, info.getBloggerName());
         holder.setOnClickListener(R.id.iv_delete, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItem(info, true);
+                final ParticleSmasher smasher = new ParticleSmasher((Activity) context);
+                smasher.with(holder.getItemView())
+                        .addAnimatorListener(new SmashAnimator.OnAnimatorListener() {
+                            @Override
+                            public void onAnimatorEnd() {
+                                holder.getItemView().animate().setDuration(100).setStartDelay(0).scaleX(1).scaleY(1).translationX(0).translationY(0).alpha(0.001f).setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        removeItem(info, true);
+//                                        smasher.reShowView(holder.getItemView());
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setDuration(1500)
+                        .setStyle(getParticleSmasherStyle()).start();
             }
         });
 
@@ -228,5 +248,10 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         }, context, true, "");
         Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).praiseBlog(info.getBlogId(), praiseFlag);
         BaseController.sendRequest(subscriber, observable);
+    }
+
+    private synchronized int getParticleSmasherStyle() {
+        Random random = new Random();
+        return 2 + Math.abs(random.nextInt() % 5);
     }
 }

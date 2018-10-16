@@ -363,6 +363,7 @@ public class PublishBlogActivity extends BaseStateViewActivity implements View.O
                 adapter.appendItem(info, true);
                 scrollBlogItem(adapter.getItemCount() - 1);
                 setVisibility(R.id.ll_text_edit, View.GONE);
+                hideKeyBoard();
                 break;
             }
             case R.id.iv_add_text_trigger: {

@@ -14,9 +14,10 @@
     <com.roughike.bottombar.BottomBar
         android:id="@+id/nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        app:bb_behavior="shifting"
+        android:layout_height="@dimen/bottom_nav_height"
+        android:gravity="center_vertical"
+        app:bb_showShadow="false"
         app:bb_tabXmlResource="@xml/main_nav_tabs"
-        app:bb_titleTextAppearance="@style/style_text_small_white" />
+        app:bb_titleTextAppearance="@style/style_text_large_white" />
 
 </LinearLayout>

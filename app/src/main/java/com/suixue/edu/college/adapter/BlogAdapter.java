@@ -108,7 +108,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
                                 }).start();
                             }
                         })
-                        .setDuration(1500)
+                        .setDuration(1000)
                         .setStyle(getParticleSmasherStyle()).start();
             }
         });

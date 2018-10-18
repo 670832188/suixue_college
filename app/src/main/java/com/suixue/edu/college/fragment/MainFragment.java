@@ -1,13 +1,9 @@
 package com.suixue.edu.college.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,10 +52,7 @@ public class MainFragment extends BaseStateFragment {
     private int pageIndex = 1;
     private View rootView;
     private SmoothRefreshLayout refreshLayout;
-    private FloatingActionButton fbPublishTrigger;
     private BlogAdapter blogAdapter;
-    private final ValueAnimator hideTriggerAnimator = ValueAnimator.ofFloat(1, 0).setDuration(300);
-    private final ValueAnimator showTriggerAnimator = ValueAnimator.ofFloat(0, 1).setDuration(300);
     public static final String[] thumbList =
             {
                     "http://img19.3lian.com/d/file/201803/09/b701b8995fccf7d7664636765a519008.jpg",
@@ -123,14 +116,12 @@ public class MainFragment extends BaseStateFragment {
     }
 
     private void init() {
-        fbPublishTrigger = rootView.findViewById(R.id.fb_publish_trigger);
-        fbPublishTrigger.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.fb_publish_trigger).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tryToPublishBlog();
             }
         });
-        initTriggerAnimator();
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -140,19 +131,10 @@ public class MainFragment extends BaseStateFragment {
         rvBlog.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && !showTriggerAnimator.isRunning()) {
-                    if (hideTriggerAnimator.isRunning()) {
-                        hideTriggerAnimator.cancel();
-                    }
-                    showTriggerAnimator.start();
-                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (!hideTriggerAnimator.isRunning() && fbPublishTrigger.getVisibility() == View.VISIBLE && !(refreshLayout.isRefreshing() || refreshLayout.isLoadingMore())) {
-                    hideTriggerAnimator.start();
-                }
             }
         });
         refreshLayout = rootView.findViewById(R.id.refresh_layout);
@@ -301,40 +283,6 @@ public class MainFragment extends BaseStateFragment {
         result.setData(baseListResult);
         LogUtil.e(new Gson().toJson(result));
         return dataList;
-    }
-
-    private void initTriggerAnimator() {
-        hideTriggerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                fbPublishTrigger.setScaleX(value);
-                fbPublishTrigger.setScaleY(value);
-                fbPublishTrigger.setAlpha(value);
-            }
-        });
-        hideTriggerAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                fbPublishTrigger.setVisibility(View.GONE);
-            }
-        });
-
-        showTriggerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                fbPublishTrigger.setScaleX(value);
-                fbPublishTrigger.setScaleY(value);
-                fbPublishTrigger.setAlpha(value);
-            }
-        });
-        showTriggerAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                fbPublishTrigger.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     private void tryToPublishBlog() {

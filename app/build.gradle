@@ -36,4 +36,5 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     implementation 'com.dingmouren.colorpicker:colorpicker:1.0.1'
     implementation 'com.ifadai:particlesmasher:1.0.1'
+    implementation'com.roughike:bottom-bar:2.3.1'
 }

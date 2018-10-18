@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs xmlns:app="http://schemas.android.com/apk/res-auto">
+    <tab
+        barColorWhenSelected="#465C96"
+        icon="@drawable/bg_nav_home"
+        id="@+id/tab_home"
+        title="@string/tab_home"
+        app:bb_showShadow="false" />
+    <tab
+        barColorWhenSelected="#5D4037"
+        icon="@drawable/bg_nav_search"
+        id="@+id/tab_search"
+        title="@string/tab_search"
+        app:bb_showShadow="false" />
+    <tab
+        barColorWhenSelected="#7B1FA2"
+        icon="@drawable/bg_nav_msg"
+        id="@+id/tab_msg"
+        title="@string/tab_msg"
+        app:bb_showShadow="false" />
+    <tab
+        barColorWhenSelected="#FF5252"
+        icon="@drawable/bg_nav_me"
+        id="@+id/tab_me"
+        title="@string/tab_me"
+        app:bb_showShadow="false" />
+</tabs>

@@ -3,11 +3,11 @@ package com.suixue.edu.college.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.fragment.MainFragment;
@@ -22,6 +22,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
     private ViewPager vpFrg;
     private FragmentAdapter fragmentAdapter;
     private OnBlogTagClickListener onBlogTagClickListener;
+    private BottomBar navBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +40,9 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
                 searchFragment.searchBlogList(blogTag);
             }
         };
-        final RadioButton rbHome = findViewById(R.id.rb_home);
-        final RadioButton rbSearch = findViewById(R.id.rb_search);
-        final RadioButton rbMsg = findViewById(R.id.rb_msg);
-        final RadioButton rbPersonal = findViewById(R.id.rb_me);
+        navBar = findViewById(R.id.nav_bar);
         vpFrg = findViewById(R.id.vp_frg);
         vpFrg.setOffscreenPageLimit(3);
-        final RadioGroup rgNav = findViewById(R.id.rg_nav);
         vpFrg.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -56,19 +53,19 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0: {
-                        rbHome.setChecked(true);
+                        navBar.selectTabAtPosition(0, true);
                         break;
                     }
                     case 1: {
-                        rbSearch.setChecked(true);
+                        navBar.selectTabAtPosition(1, true);
                         break;
                     }
                     case 2: {
-                        rbMsg.setChecked(true);
+                        navBar.selectTabAtPosition(2, true);
                         break;
                     }
                     default: {
-                        rbPersonal.setChecked(true);
+                        navBar.selectTabAtPosition(3, true);
                         break;
                     }
 
@@ -82,30 +79,30 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
         });
         fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), this);
         vpFrg.setAdapter(fragmentAdapter);
-        rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        navBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rb_home: {
+            public void onTabSelected(int tabId) {
+                switch (tabId) {
+                    case R.id.tab_home: {
                         vpFrg.setCurrentItem(0, false);
                         break;
                     }
-                    case R.id.rb_search: {
+                    case R.id.tab_search: {
                         vpFrg.setCurrentItem(1, false);
                         break;
                     }
-                    case R.id.rb_msg: {
+                    case R.id.tab_msg: {
                         vpFrg.setCurrentItem(2, false);
                         break;
                     }
-                    case R.id.rb_me: {
+                    case R.id.tab_me: {
                         vpFrg.setCurrentItem(3, false);
                         break;
                     }
                 }
             }
         });
-        rbHome.setChecked(true);
+        navBar.selectTabAtPosition(0, true);
     }
 
     @Override

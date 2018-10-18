@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,66 +11,12 @@
         android:layout_height="0dp"
         android:layout_weight="1.0" />
 
-    <RadioGroup
-        android:id="@+id/rg_nav"
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_nav_height"
-        android:background="@color/color_main_bg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="52dp"
+        app:bb_behavior="shifting"
+        app:bb_tabXmlResource="@xml/main_nav_tabs"
+        app:bb_titleTextAppearance="@style/style_text_small_white" />
 
-        <RadioButton
-            android:id="@+id/rb_home"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:button="@null"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/bg_nav_home"
-            android:gravity="center"
-            android:text="@string/tab_home"
-            android:textColor="@color/nav_tab_color"
-            android:textSize="@dimen/text_size_small" />
-
-
-        <RadioButton
-            android:id="@+id/rb_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:button="@null"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/bg_nav_search"
-            android:gravity="center"
-            android:text="@string/tab_search"
-            android:textColor="@color/nav_tab_color"
-            android:textSize="@dimen/text_size_small" />
-
-
-        <RadioButton
-            android:id="@+id/rb_msg"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:button="@null"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/bg_nav_msg"
-            android:gravity="center"
-            android:text="@string/tab_msg"
-            android:textColor="@color/nav_tab_color"
-            android:textSize="@dimen/text_size_small" />
-
-        <RadioButton
-            android:id="@+id/rb_me"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:button="@null"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/bg_nav_me"
-            android:gravity="center"
-            android:text="@string/tab_me"
-            android:textColor="@color/nav_tab_color"
-            android:textSize="@dimen/text_size_small" />
-    </RadioGroup>
 </LinearLayout>

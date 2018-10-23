@@ -37,4 +37,5 @@ dependencies {
     implementation 'com.dingmouren.colorpicker:colorpicker:1.0.1'
     implementation 'com.ifadai:particlesmasher:1.0.1'
     implementation'com.roughike:bottom-bar:2.3.1'
+    implementation 'com.ramotion.foldingcell:folding-cell:1.2.2'
 }

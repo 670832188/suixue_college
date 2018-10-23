@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="280dp">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.joooonho.SelectableRoundedImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="60dp"
+                    android:src="@mipmap/ic_launcher"
+                    app:sriv_oval="true" />
+
+                <TextView
+                    android:id="@+id/tv_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_avatar"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="李四" />
+
+                <TextView
+                    android:id="@+id/tv_brief"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_nickname"
+                    android:layout_centerHorizontal="true"
+                    android:text="枯藤老树昏鸦" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_brief"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:orientation="horizontal">
+
+                    <!--访客展示-->
+                    <TextView
+                        android:id="@+id/tv_concern"
+                        style="@style/style_text_normal_white"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_large"
+                        android:background="@drawable/bg_corner_45_dark_blue"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/margin_small"
+                        android:paddingTop="@dimen/margin_small"
+                        android:text="@string/action_concern"
+                        android:visibility="gone" />
+                    <!--访客展示-->
+                    <TextView
+                        android:id="@+id/tv_subscribe"
+                        style="@style/style_text_normal_white"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_corner_45_dark_blue"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/margin_small"
+                        android:paddingTop="@dimen/margin_small"
+                        android:visibility="gone" />
+
+                    <!--博主展示-编辑-->
+                    <TextView
+                        android:id="@+id/tv_edit"
+                        style="@style/style_text_small_white"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_corner_45_dark_blue"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/margin_small"
+                        android:paddingTop="@dimen/margin_small"
+                        android:text="@string/action_edit" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/margin_normal"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/ll_subscribe_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/style_text_small_ashen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/subscribe" />
+
+                        <TextView
+                            android:id="@+id/tv_subscribe_num"
+                            style="@style/style_text_small_white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_concern_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/style_text_small_ashen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/subscribe" />
+
+                        <TextView
+                            android:id="@+id/tv_concern_num"
+                            style="@style/style_text_small_white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.ramotion.foldingcell.FoldingCell
+            android:id="@+id/grade_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            ​</com.ramotion.foldingcell.FoldingCell>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_course_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

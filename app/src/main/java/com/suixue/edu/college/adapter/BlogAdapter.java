@@ -51,14 +51,15 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     private static final int VIEW_TYPE_RECOMMENDED_BLOGGER = 2;
     private static final int VIEW_TYPE_COURSE = 3;
     private MainActivity.OnBlogTagClickListener onBlogTagClickListener;
-
+    private boolean isCourseList;
     /**
      * 博客列表与课程列表共用该适配器
      * 博客列表中的课程无论是否订阅均可见；课程列表中的课程详情在未订阅情况下不可见
-     * @param isBlogList 是否为博客列表
+     * @param isCourseList 是否为课程列表
      */
-    public BlogAdapter(Context context, List<Object> dataList, boolean isBlogList) {
+    public BlogAdapter(Context context, List<Object> dataList, boolean isCourseList) {
         super(context, dataList);
+        this.isCourseList = true;
     }
 
     public void setOnBlogTagClickListener(MainActivity.OnBlogTagClickListener listener) {
@@ -286,9 +287,29 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         } else {
             tvTags.setText("");
         }
-
         RecyclerView rvContent = holder.getView(R.id.rv_course_content);
         rvContent.setLayoutManager(new LinearLayoutManager(context));
         rvContent.setAdapter(new BlogContentAdapter(context, info.getCourseContentList()));
+        if (isCourseList) {
+            if (info.isSubscribed()) {
+                rvContent.setVisibility(View.VISIBLE);
+                holder.setVisibility(R.id.ll_unsubscribe_tip, false);
+            } else {
+                rvContent.setVisibility(View.GONE);
+                holder.setVisibility(R.id.ll_unsubscribe_tip, true);
+            }
+        } else {
+            rvContent.setVisibility(View.VISIBLE);
+        }
+        holder.setOnClickListener(R.id.tv_subscribe, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscribeBlogger(info);
+            }
+        });
+    }
+
+    private void subscribeBlogger(CourseInfo info) {
+        // ToDo 订阅课程博主
     }
 }

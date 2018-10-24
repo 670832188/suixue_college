@@ -136,7 +136,7 @@ public class SearchFragment extends BaseFragment {
             }
         });
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
-        blogAdapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
+        blogAdapter = new BlogAdapter(getContext(), new ArrayList<>(), false);
         blogAdapter.setOnBlogTagClickListener(new MainActivity.OnBlogTagClickListener() {
             @Override
             public void onTagClick(String blogTag) {

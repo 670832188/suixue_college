@@ -38,7 +38,6 @@ import com.suixue.edu.college.entity.RecommendedBloggerResult;
 import com.suixue.edu.college.util.ViewClickUtil;
 
 import java.util.List;
-import java.util.Random;
 
 import io.reactivex.Observable;
 
@@ -53,12 +52,13 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     private static final int VIEW_TYPE_COURSE = 3;
     private MainActivity.OnBlogTagClickListener onBlogTagClickListener;
 
-    public BlogAdapter(Context context, List<Object> dataList) {
+    /**
+     * 博客列表与课程列表共用该适配器
+     * 博客列表中的课程无论是否订阅均可见；课程列表中的课程详情在未订阅情况下不可见
+     * @param isBlogList 是否为博客列表
+     */
+    public BlogAdapter(Context context, List<Object> dataList, boolean isBlogList) {
         super(context, dataList);
-    }
-
-    public BlogAdapter(Context context, List<Object> dataList, int itemViewLayoutId) {
-        super(context, dataList, itemViewLayoutId);
     }
 
     public void setOnBlogTagClickListener(MainActivity.OnBlogTagClickListener listener) {
@@ -290,10 +290,5 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         RecyclerView rvContent = holder.getView(R.id.rv_course_content);
         rvContent.setLayoutManager(new LinearLayoutManager(context));
         rvContent.setAdapter(new BlogContentAdapter(context, info.getCourseContentList()));
-    }
-
-    private synchronized int getParticleSmasherStyle() {
-        Random random = new Random();
-        return 2 + Math.abs(random.nextInt() % 5);
     }
 }

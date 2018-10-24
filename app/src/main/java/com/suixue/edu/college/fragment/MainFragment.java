@@ -127,7 +127,7 @@ public class MainFragment extends BaseStateFragment {
         RecyclerView rvBlog = rootView.findViewById(R.id.rv_blog);
         rvBlog.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvBlog.setLayoutManager(new LinearLayoutManager(getContext()));
-        blogAdapter = new BlogAdapter(getContext(), new ArrayList<>());
+        blogAdapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
         blogAdapter.setOnBlogTagClickListener(onBlogTagClickListener);
         rvBlog.setAdapter(blogAdapter);
         rvBlog.addOnScrollListener(new RecyclerView.OnScrollListener() {

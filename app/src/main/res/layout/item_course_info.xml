@@ -63,4 +63,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false" />
+
+    <LinearLayout
+        android:id="@+id/ll_unsubscribe_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EEEEEE"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="40dp"
+        android:paddingTop="@dimen/margin_super"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/ic_delete" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/tip_subscribe"
+            android:textColor="#AAAAAA"
+            android:textSize="@dimen/text_size_small" />
+
+        <TextView
+            style="@style/style_text_small_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:background="@drawable/bg_subscribe_now"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingEnd="@dimen/margin_large"
+            android:paddingStart="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_small"
+            android:text="@string/action_subscribe_now" />
+    </LinearLayout>
 </LinearLayout>

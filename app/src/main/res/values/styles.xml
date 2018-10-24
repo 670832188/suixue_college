@@ -74,6 +74,32 @@
         <item name="android:textSize">@dimen/text_size_super</item>
         <item name="android:textColor">@color/color_common_ashen</item>
     </style>
+
+    <style name="style_text_small_gray">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/color_common_light_gray</item>
+    </style>
+
+    <style name="style_text_normal_gray">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/color_common_light_gray</item>
+    </style>
+
+    <style name="style_text_large_gray">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/color_common_light_gray</item>
+    </style>
+
+    <style name="style_text_larger_gray">
+        <item name="android:textSize">@dimen/text_size_larger</item>
+        <item name="android:textColor">@color/color_common_light_gray</item>
+    </style>
+
+    <style name="style_text_super_gray">
+        <item name="android:textSize">@dimen/text_size_super</item>
+        <item name="android:textColor">@color/color_common_light_gray</item>
+    </style>
+
     <style name="CommonEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/color_common_light_gray</item>
         <item name="colorControlActivated">#54B87C</item>

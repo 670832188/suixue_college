@@ -31,12 +31,14 @@ import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.entity.BlogInfo;
+import com.suixue.edu.college.entity.CourseInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
 import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.util.RefreshUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -236,7 +238,7 @@ public class MainFragment extends BaseStateFragment {
                 }
                 recommendedBloggerResult.setRecommendedBloggerInfoList(recommendedBloggerInfoList);
                 dataList.add(recommendedBloggerResult);
-            } else {
+            } else if (i == 1) {
                 BlogInfo info = new BlogInfo();
                 info.setBloggerId(String.valueOf(i + 1));
                 info.setBloggerName("张三" + (i + 1));
@@ -272,6 +274,37 @@ public class MainFragment extends BaseStateFragment {
                 } else {
                     info.setSourceType(BlogInfo.SOURCE_TYPE_RECOMMENDED);
                 }
+                dataList.add(info);
+            } else {
+                CourseInfo info = new CourseInfo();
+                info.setBloggerId("12306");
+                info.setCourseId("110");
+                info.setCommentCount(10086);
+                info.setPraisedCount(10011);
+                info.setCourseTitle("大学物理");
+                String tags[] = {"吴式枢", "唐敖庆"};
+                info.setTags(tags);
+                info.setPublishTime("2018 10.24 9:03");
+                info.setTransferred(false);
+                int contentItemSize = Math.abs(random.nextInt()) % 4 + 1;
+                List<BlogContentInfo> contentInfoList = new ArrayList<>();
+                boolean isVideoAdded = false;
+                for (int j = 0; j < contentItemSize; j++) {
+                    BlogContentInfo contentInfo = new BlogContentInfo();
+                    if (random.nextInt() % 3 == 0 && !isVideoAdded) {
+                        contentInfo.setContentType(BlogContentInfo.CONTENT_TYPE_VIDEO);
+                        contentInfo.setContent(videoUrls[Math.abs(random.nextInt() % videoUrls.length)]);
+                        isVideoAdded = true;
+                    } else if (Math.abs(random.nextInt() % 2) == 0) {
+                        contentInfo.setContent(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
+                        contentInfo.setContentType(BlogContentInfo.CONTENT_TYPE_PICTURE);
+                    } else {
+                        contentInfo.setContent("这是一段文本");
+                        contentInfo.setContentType(BlogContentInfo.CONTENT_TYPE_TEXT);
+                    }
+                    contentInfoList.add(contentInfo);
+                }
+                info.setCourseContentList(contentInfoList);
                 dataList.add(info);
             }
         }

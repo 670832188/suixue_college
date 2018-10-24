@@ -1,7 +1,5 @@
 package com.suixue.edu.college.adapter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -29,14 +27,13 @@ import com.dev.kit.basemodule.util.GlideUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.dev.kit.basemodule.util.ToastUtil;
 import com.dev.kit.basemodule.view.AutoLinkStyleTextView;
-import com.fadai.particlesmasher.ParticleSmasher;
-import com.fadai.particlesmasher.SmashAnimator;
 import com.plattysoft.leonids.ParticleSystem;
 import com.plattysoft.leonids.modifiers.ScaleModifier;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.BlogInfo;
+import com.suixue.edu.college.entity.CourseInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
 import com.suixue.edu.college.util.ViewClickUtil;
 
@@ -50,8 +47,10 @@ import io.reactivex.Observable;
  */
 public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     private Handler handler = new Handler(Looper.getMainLooper());
+    private static final int VIEW_TYPE_INVALID = 0;
     private static final int VIEW_TYPE_BLOG = 1;
     private static final int VIEW_TYPE_RECOMMENDED_BLOGGER = 2;
+    private static final int VIEW_TYPE_COURSE = 3;
     private MainActivity.OnBlogTagClickListener onBlogTagClickListener;
 
     public BlogAdapter(Context context, List<Object> dataList) {
@@ -68,13 +67,32 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
 
     @NonNull
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return RecyclerViewHolder.getViewHolder(context, parent, viewType == VIEW_TYPE_BLOG ? R.layout.item_bolog_info : R.layout.item_recommended_blogger);
+        switch (viewType) {
+            case VIEW_TYPE_BLOG: {
+                return RecyclerViewHolder.getViewHolder(context, parent, R.layout.item_bolog_info);
+            }
+            case VIEW_TYPE_COURSE: {
+                return RecyclerViewHolder.getViewHolder(context, parent, R.layout.item_course_info);
+            }
+            case VIEW_TYPE_RECOMMENDED_BLOGGER: {
+                return RecyclerViewHolder.getViewHolder(context, parent, R.layout.item_recommended_blogger);
+            }
+        }
+        return RecyclerViewHolder.getViewHolder(context, parent, R.layout.item_invalid);
     }
 
     @Override
     public int getItemViewType(int position) {
         Object info = getItem(position);
-        return info instanceof BlogInfo ? VIEW_TYPE_BLOG : VIEW_TYPE_RECOMMENDED_BLOGGER;
+        if (info instanceof BlogInfo) {
+            return VIEW_TYPE_BLOG;
+        } else if (info instanceof CourseInfo) {
+            return VIEW_TYPE_COURSE;
+        } else if (info instanceof RecommendedBloggerResult) {
+            return VIEW_TYPE_RECOMMENDED_BLOGGER;
+        } else {
+            return VIEW_TYPE_INVALID;
+        }
     }
 
     @Override
@@ -84,9 +102,12 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
             fillBlogData(holder, (BlogInfo) info);
         } else if (info instanceof RecommendedBloggerResult) {
             fillRecommendedBloggerData(holder, (RecommendedBloggerResult) info);
+        } else if (info instanceof CourseInfo) {
+            fillCourseData(holder, (CourseInfo) info);
         }
     }
 
+    // 填充博客信息
     private void fillBlogData(final RecyclerViewHolder holder, final BlogInfo info) {
         ImageView ivBloggerAvatar = holder.getView(R.id.iv_blogger_avatar);
         GlideUtil.loadImage(context, info.getBloggerAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivBloggerAvatar, 1);
@@ -94,22 +115,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         holder.setOnClickListener(R.id.iv_delete, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ParticleSmasher smasher = new ParticleSmasher((Activity) context);
-                smasher.with(holder.getItemView())
-                        .addAnimatorListener(new SmashAnimator.OnAnimatorListener() {
-                            @Override
-                            public void onAnimatorEnd() {
-                                holder.getItemView().animate().setDuration(100).setStartDelay(0).scaleX(1).scaleY(1).translationX(0).translationY(0).alpha(0.001f).setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        removeItem(info, true);
-//                                        smasher.reShowView(holder.getItemView());
-                                    }
-                                }).start();
-                            }
-                        })
-                        .setDuration(1000)
-                        .setStyle(getParticleSmasherStyle()).start();
+                removeItem(info, true);
             }
         });
 
@@ -177,12 +183,6 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         holder.setText(R.id.tv_attention_level, "热度" + info.getAttentionLevel());
     }
 
-    private void fillRecommendedBloggerData(RecyclerViewHolder holder, RecommendedBloggerResult recommendedBloggerResult) {
-        RecyclerView rvRecommendBlogger = holder.getView(R.id.rv_recommended_blogger);
-        rvRecommendBlogger.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        rvRecommendBlogger.setAdapter(new RecommendedBloggerAdapter(context, recommendedBloggerResult.getRecommendedBloggerInfoList()));
-    }
-
     private void praiseBlog(final BlogInfo info, final ImageView ivTrigger) {
         String praiseFlag;
         final long startTime = System.currentTimeMillis();
@@ -248,6 +248,48 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         }, context, true, "");
         Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).praiseBlog(info.getBlogId(), praiseFlag);
         BaseController.sendRequest(subscriber, observable);
+    }
+
+    // 填充推荐博主信息
+    private void fillRecommendedBloggerData(RecyclerViewHolder holder, RecommendedBloggerResult recommendedBloggerResult) {
+        RecyclerView rvRecommendBlogger = holder.getView(R.id.rv_recommended_blogger);
+        rvRecommendBlogger.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        rvRecommendBlogger.setAdapter(new RecommendedBloggerAdapter(context, recommendedBloggerResult.getRecommendedBloggerInfoList()));
+    }
+
+    private void fillCourseData(final RecyclerViewHolder holder, final CourseInfo info) {
+        holder.setText(R.id.tv_course_title, info.getCourseTitle());
+        holder.setText(R.id.tv_praised_count, String.valueOf(info.getPraisedCount()));
+        holder.setText(R.id.tv_comment_count, String.valueOf(info.getCommentCount()));
+        holder.setText(R.id.tv_publish_time, info.getPublishTime());
+        AutoLinkStyleTextView tvTags = holder.getView(R.id.tv_tags);
+        StringBuilder sb = new StringBuilder();
+        final String[] tags = info.getTags();
+        if (tags != null && tags.length > 0) {
+            for (int i = 0; i < tags.length; i++) {
+                if (!tags[i].startsWith("#")) {
+                    tags[i] = "#" + tags[i];
+                }
+                if (i != tags.length) {
+                    sb.append(tags[i]).append("  ");
+                }
+            }
+            tvTags.setText(sb.toString());
+            tvTags.setClickSpanTextValues(new AutoLinkStyleTextView.ClickCallBack() {
+                @Override
+                public void onClick(int position) {
+                    if (onBlogTagClickListener != null) {
+                        onBlogTagClickListener.onTagClick(tags[position].substring(1));
+                    }
+                }
+            }, tags);
+        } else {
+            tvTags.setText("");
+        }
+
+        RecyclerView rvContent = holder.getView(R.id.rv_course_content);
+        rvContent.setLayoutManager(new LinearLayoutManager(context));
+        rvContent.setAdapter(new BlogContentAdapter(context, info.getCourseContentList()));
     }
 
     private synchronized int getParticleSmasherStyle() {

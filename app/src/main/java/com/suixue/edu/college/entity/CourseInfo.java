@@ -8,15 +8,16 @@ import java.util.List;
 public class CourseInfo {
     private String bloggerId;
     private String courseId;
-    private String courseName;
+    private String courseTitle;
     private String[] tags;
     // 是否为转发他人课程
     private boolean isTransferred;
     // 是否已订阅(访问者使用，若访问者已订阅被访问者，则为true)
     private boolean isSubscribed;
-    private long commentsCount;
+    private long commentCount;
     // 被喜欢(点赞)数量
     private long praisedCount;
+    private String publishTime;
     private List<BlogContentInfo> courseContentList;
 
     public String getBloggerId() {
@@ -27,8 +28,8 @@ public class CourseInfo {
         return courseId;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public String getCourseTitle() {
+        return courseTitle;
     }
 
     public String[] getTags() {
@@ -43,12 +44,16 @@ public class CourseInfo {
         return isSubscribed;
     }
 
-    public void setCommentsCount(long commentsCount) {
-        this.commentsCount = commentsCount;
+    public long getCommentCount() {
+        return commentCount;
     }
 
-    public void setPraisedCount(long praisedCount) {
-        this.praisedCount = praisedCount;
+    public long getPraisedCount() {
+        return praisedCount;
+    }
+
+    public String getPublishTime() {
+        return publishTime;
     }
 
     public List<BlogContentInfo> getCourseContentList() {
@@ -66,28 +71,32 @@ public class CourseInfo {
         this.courseId = courseId;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
+    public void setCourseTitle(String courseTitle) {
+        this.courseTitle = courseTitle;
     }
 
     public void setTags(String[] tags) {
         this.tags = tags;
     }
 
-    public void setTransferred(boolean transferred) {
-        isTransferred = transferred;
+    public void setTransferred(boolean isTransferred) {
+        this.isTransferred = isTransferred;
     }
 
     public void setSubscribed(boolean subscribed) {
         isSubscribed = subscribed;
     }
 
-    public long getCommentsCount() {
-        return commentsCount;
+    public void setCommentCount(long commentCount) {
+        this.commentCount = commentCount;
     }
 
-    public long getPraisedCount() {
-        return praisedCount;
+    public void setPraisedCount(long praisedCount) {
+        this.praisedCount = praisedCount;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
     }
 
     public void setCourseContentList(List<BlogContentInfo> courseContentList) {

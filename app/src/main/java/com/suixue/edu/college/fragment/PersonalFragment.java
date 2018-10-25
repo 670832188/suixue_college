@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 
 import com.dev.kit.basemodule.fragment.BaseFragment;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
+import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.view.GradualTitleView;
 
 /**
@@ -28,6 +30,7 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     private View rootView;
     private ViewPager vpFrg;
     private String[] tabTitleArray;
+    private String bloggerId;
 
     @Nullable
     @Override
@@ -39,14 +42,20 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initArguments();
         initView();
     }
 
-    private void initView() {
+    private void initArguments() {
         Bundle arg = getArguments();
-        if (arg != null) {
-            isBloggerSelfBrowse = arg.getBoolean(IS_BLOGGER_SELF_BROWSE);
+        if (arg == null || StringUtil.isEmpty(arg.getString(Constants.BLOGGER_ID))) {
+            throw new RuntimeException("missing bloggerId argument");
         }
+        bloggerId = arg.getString(Constants.BLOGGER_ID);
+        isBloggerSelfBrowse = arg.getBoolean(IS_BLOGGER_SELF_BROWSE);
+    }
+
+    private void initView() {
         if (!isBloggerSelfBrowse) {
             rootView.findViewById(R.id.tool_bar).setVisibility(View.VISIBLE);
             final GradualTitleView titleView = rootView.findViewById(R.id.title_view);
@@ -103,24 +112,32 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     @Override
     public Fragment createFragment(int position) {
         Fragment fragment;
+        Bundle arg = new Bundle();
         switch (position) {
             case 0: {
-                fragment = new PersonalCourseFragment();
+                arg.putString(Constants.BLOGGER_ID, bloggerId);
+                fragment = new BloggerCourseFragment();
                 break;
             }
             case 1: {
-                fragment = new PersonalCourseFragment();
+                arg.putString(Constants.BLOGGER_ID, bloggerId);
+                arg.putString(Constants.BLOG_TYPE, Constants.BLOG_TYPE_SELF_OR_TRANSFERRED);
+                fragment = new BloggerBlogFragment();
                 break;
             }
             case 2: {
-                fragment = new PersonalCourseFragment();
+                arg.putString(Constants.BLOGGER_ID, bloggerId);
+                arg.putString(Constants.BLOG_TYPE, Constants.BLOG_TYPE_PRAISED);
+                fragment = new BloggerBlogFragment();
                 break;
             }
             default: {
-                fragment = new PersonalCourseFragment();
+                arg.putString(Constants.BLOGGER_ID, bloggerId);
+                fragment = new BloggerCourseFragment();
                 break;
             }
         }
+        fragment.setArguments(arg);
         return fragment;
     }
 

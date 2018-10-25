@@ -3,6 +3,7 @@ package com.suixue.edu.college.config;
 import com.dev.kit.basemodule.netRequest.Configs.ApiConstants;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.suixue.edu.college.entity.BaseListResult;
+import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.ChatMessageInfo;
 import com.suixue.edu.college.entity.ChatSessionInfo;
 import com.suixue.edu.college.entity.CourseInfo;
@@ -39,6 +40,7 @@ public interface ApiService {
 
     /**
      * 获取全部兴趣列表
+     *
      * @param params 传递空map即可
      */
     @FormUrlEncoded
@@ -47,6 +49,7 @@ public interface ApiService {
 
     /**
      * 获取用户已选兴趣列表
+     *
      * @param params 传递空map即可
      */
     @FormUrlEncoded
@@ -88,8 +91,18 @@ public interface ApiService {
     @POST(ApiConstants.GET_CHAT_MSG_LIST_API)
     Observable<BaseResult<BaseListResult<ChatMessageInfo>>> getMsgList(@Field("sessionId") String sessionId, @Field("pageIndex") int pageIndex);
 
-    // 获取博客列表
+    // 获取课程列表
     @FormUrlEncoded
-    @POST(ApiConstants.GET_COURSE_LIST_API)
-    Observable<BaseResult<BaseListResult<CourseInfo>>> getCourseList(@Field("pageIndex") int pageIndex);
+    @POST(ApiConstants.GET_BLOGGER_COURSE_LIST_API)
+    Observable<BaseResult<BaseListResult<CourseInfo>>> getBloggerCourseList(@Field("pageIndex") int pageIndex, @Field("bloggerId") String bloggerId);
+
+    /**
+     * 获取博主个人博客列表
+     *
+     * @param pageIndex 分页
+     * @param blogType  博客类型：1 ：博主原创或转发；2：喜欢(点赞)的博客
+     */
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_BLOGGER_BLOG_LIST_API)
+    Observable<BaseResult<BaseListResult<BlogInfo>>> getBloggerBlogList(@Field("pageIndex") int pageIndex, @Field("blogType") String blogType, @Field("bloggerId") String bloggerId);
 }

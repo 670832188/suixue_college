@@ -10,6 +10,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.fragment.MainFragment;
 import com.suixue.edu.college.fragment.MessageFragment;
 import com.suixue.edu.college.fragment.PersonalFragment;
@@ -125,6 +126,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
             default: {
                 Bundle arg = new Bundle();
                 arg.putBoolean(PersonalFragment.IS_BLOGGER_SELF_BROWSE, true);
+                arg.putString(Constants.BLOGGER_ID, "121212");
                 fragment = new PersonalFragment();
                 fragment.setArguments(arg);
                 break;

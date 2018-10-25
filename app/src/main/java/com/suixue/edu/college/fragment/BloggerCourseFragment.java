@@ -19,11 +19,13 @@ import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.LogUtil;
+import com.dev.kit.basemodule.util.StringUtil;
 import com.google.gson.Gson;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.config.ApiService;
+import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.BlogContentInfo;
 import com.suixue.edu.college.entity.CourseInfo;
@@ -41,16 +43,17 @@ import static com.suixue.edu.college.fragment.MainFragment.videoUrls;
 /**
  * Created by cuiyan on 2018/10/25.
  */
-public class PersonalCourseFragment extends BaseStateFragment {
+public class BloggerCourseFragment extends BaseStateFragment {
     private View rootView;
     private SmoothRefreshLayout refreshLayout;
     private BlogAdapter adapter;
     private int pageIndex;
+    private String bloggerId;
 
     @NonNull
     @Override
     public View createContentView(LayoutInflater inflater, FrameLayout flRootContainer) {
-        rootView = inflater.inflate(R.layout.frg_personal_course, flRootContainer, false);
+        rootView = inflater.inflate(R.layout.frg_blogger_course, flRootContainer, false);
         return rootView;
     }
 
@@ -58,8 +61,18 @@ public class PersonalCourseFragment extends BaseStateFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentState(STATE_PROGRESS);
+        initArguments();
         initView();
         getCourseList();
+    }
+
+    private void initArguments() {
+        Bundle arg = getArguments();
+        if (arg == null || StringUtil.isEmpty(arg.getString(Constants.BLOGGER_ID))) {
+            throw new RuntimeException("missing bloggerId argument");
+        }
+        bloggerId = arg.getString(Constants.BLOGGER_ID);
+
     }
 
     private void initView() {
@@ -129,7 +142,7 @@ public class PersonalCourseFragment extends BaseStateFragment {
                 showToast(R.string.error_net_request_failed);
             }
         }, getContext());
-        Observable<BaseResult<BaseListResult<CourseInfo>>> observable = BaseServiceUtil.createService(ApiService.class).getCourseList(pageIndex);
+        Observable<BaseResult<BaseListResult<CourseInfo>>> observable = BaseServiceUtil.createService(ApiService.class).getBloggerCourseList(pageIndex, bloggerId);
         BaseController.sendRequest(this, subscriber, observable);
     }
 

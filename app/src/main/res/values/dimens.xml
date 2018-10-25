@@ -8,4 +8,5 @@
     <!--主页底部导航高度-->
     <dimen name="bottom_nav_height">54dp</dimen>
     <dimen name="video_edit_frame_preview_margin">110dp</dimen>
+    <dimen name="personal_top_cover_height">280dp</dimen>
 </resources>

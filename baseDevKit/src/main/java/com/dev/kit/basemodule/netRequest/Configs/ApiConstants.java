@@ -32,4 +32,6 @@ public class ApiConstants {
     public static final String GET_CHAT_SESSION_LIST_API = "fa";
     // 获取聊天信息列表
     public static final String GET_CHAT_MSG_LIST_API = "asfd";
+    // 获取博客列表
+    public static final String GET_COURSE_LIST_API = "ads";
 }

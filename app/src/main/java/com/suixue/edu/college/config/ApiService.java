@@ -5,6 +5,7 @@ import com.dev.kit.basemodule.result.BaseResult;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.ChatMessageInfo;
 import com.suixue.edu.college.entity.ChatSessionInfo;
+import com.suixue.edu.college.entity.CourseInfo;
 import com.suixue.edu.college.entity.InterestInfo;
 import com.suixue.edu.college.entity.InterestResult;
 import com.suixue.edu.college.entity.UserInfo;
@@ -60,7 +61,7 @@ public interface ApiService {
     // 获取博客列表
     @FormUrlEncoded
     @POST(ApiConstants.GET_BLOG_LIST_API)
-    Observable<BaseResult<BaseListResult<Object>>> getBlogList(@Field("pageIndex") String pageIndex);
+    Observable<BaseResult<BaseListResult<Object>>> getBlogList(@Field("pageIndex") int pageIndex);
 
     // 搜索博客列表
     @FormUrlEncoded
@@ -86,4 +87,9 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiConstants.GET_CHAT_MSG_LIST_API)
     Observable<BaseResult<BaseListResult<ChatMessageInfo>>> getMsgList(@Field("sessionId") String sessionId, @Field("pageIndex") int pageIndex);
+
+    // 获取博客列表
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_COURSE_LIST_API)
+    Observable<BaseResult<BaseListResult<CourseInfo>>> getCourseList(@Field("pageIndex") int pageIndex);
 }

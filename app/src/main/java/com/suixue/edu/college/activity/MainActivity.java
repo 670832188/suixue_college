@@ -123,7 +123,10 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
                 break;
             }
             default: {
+                Bundle arg = new Bundle();
+                arg.putBoolean(PersonalFragment.IS_BLOGGER_SELF_BROWSE, true);
                 fragment = new PersonalFragment();
+                fragment.setArguments(arg);
                 break;
             }
         }

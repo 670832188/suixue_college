@@ -38,7 +38,6 @@ import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.util.RefreshUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -210,7 +209,7 @@ public class MainFragment extends BaseStateFragment {
                 }
             }
         }, getContext());
-        Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).getBlogList(String.valueOf(pageIndex));
+        Observable<BaseResult<BaseListResult<Object>>> observable = BaseServiceUtil.createService(ApiService.class).getBlogList(pageIndex);
         BaseController.sendRequest(this, subscriber, observable);
     }
 

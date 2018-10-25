@@ -1,6 +1,5 @@
 package com.suixue.edu.college.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -70,7 +69,7 @@ public class PersonalCourseFragment extends BaseStateFragment {
                 getCourseList();
             }
         });
-        adapter = new BlogAdapter(getContext(), new ArrayList<Object>(), true);
+        adapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
         RecyclerView rvCourse = rootView.findViewById(R.id.rv_course);
         rvCourse.setLayoutManager(new LinearLayoutManager(getContext()));
         rvCourse.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
@@ -110,11 +109,13 @@ public class PersonalCourseFragment extends BaseStateFragment {
 
             @Override
             public void onResultNull() {
+                refreshLayout.refreshComplete();
                 showToast(R.string.error_net_request_failed);
             }
 
             @Override
             public void onError(Throwable throwable) {
+                refreshLayout.refreshComplete();
                 if (BuildConfig.DEBUG) {
                     generateTestData();
                     setContentState(STATE_DATA_CONTENT);
@@ -173,6 +174,6 @@ public class PersonalCourseFragment extends BaseStateFragment {
         baseListResult.setCurrentPageIndex(1);
         Gson gson = new Gson();
         LogUtil.e("mytag", "courseResult: " + gson.toJson(baseResult));
-        adapter.appendData((List<Object>) (List<?>) list);
+        adapter.appendDataAndRefreshLocal((List<Object>) (List<?>) list);
     }
 }

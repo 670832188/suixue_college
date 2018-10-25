@@ -124,8 +124,6 @@ public class SearchFragment extends BaseFragment {
             public void onRefreshBegin(boolean isRefresh) {
                 if (isRefresh) {
                     pageIndex = 1;
-                } else {
-                    pageIndex++;
                 }
                 searchBlogList(keyWord);
             }
@@ -249,6 +247,9 @@ public class SearchFragment extends BaseFragment {
                     }
                 } else {
                     showToast(R.string.data_empty);
+                }
+                if (result.getData().isHasMoreData()) {
+                    pageIndex++;
                 }
                 refreshLayout.setEnableNoMoreData(!result.getData().isHasMoreData());
             }

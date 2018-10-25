@@ -147,8 +147,6 @@ public class MainFragment extends BaseStateFragment {
             public void onRefreshBegin(boolean isRefresh) {
                 if (isRefresh) {
                     pageIndex = 1;
-                } else {
-                    pageIndex++;
                 }
                 getBlogList();
             }
@@ -188,6 +186,9 @@ public class MainFragment extends BaseStateFragment {
                     }
                 } else {
                     showToast(R.string.data_empty);
+                }
+                if (result.getData().isHasMoreData()) {
+                    pageIndex++;
                 }
                 refreshLayout.setEnableNoMoreData(!result.getData().isHasMoreData());
             }

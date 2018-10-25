@@ -96,14 +96,19 @@ public class PersonalCourseFragment extends BaseStateFragment {
             @Override
             public void onSuccess(@NonNull BaseResult<BaseListResult<CourseInfo>> result) {
                 refreshLayout.refreshComplete();
-                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode()) && result.getData() != null && result.getData().getDataList() != null && result.getData().getDataList().size() > 0) {
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    return;
+                }
+                if (result.getData() == null) {
+                    showToast(R.string.data_empty);
+                    return;
+                }
+                if (result.getData().getDataList() != null && result.getData().getDataList().size() > 0) {
                     adapter.appendData((List<Object>) (List<?>) result.getData().getDataList());
-                    if (!result.getData().isHasMoreData()) {
-                        refreshLayout.setDisableLoadMore(true);
-                        refreshLayout.setEnableAutoLoadMore(false);
-                    } else {
+                    if (result.getData().isHasMoreData()) {
                         pageIndex++;
                     }
+                    refreshLayout.setEnableNoMoreData(!result.getData().isHasMoreData());
                 }
             }
 

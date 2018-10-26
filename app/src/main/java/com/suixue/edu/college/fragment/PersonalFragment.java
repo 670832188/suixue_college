@@ -49,6 +49,7 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initArguments(false);
     }
 
     @Override
@@ -60,22 +61,36 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     }
 
     private void init() {
-        if (initArguments()) {
+        if (initArguments(true)) {
             initView();
             isInitialized = true;
         }
     }
 
-    private boolean initArguments() {
-        Activity activity  = getActivity();
+    private boolean initArguments(boolean startLogin) {
+        Activity activity = getActivity();
         isBloggerSelfBrowse = activity instanceof MainActivity;
         if (isBloggerSelfBrowse) {
             UserInfo userInfo = PreferenceUtil.getUserInfo();
             if (userInfo == null || StringUtil.isEmpty(userInfo.getUserId())) {
-                Intent intent = new Intent(getContext(), RegisterActivity.class);
-                intent.putExtra(RegisterActivity.IS_NEED_REGISTER_RESULT, true);
-                intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
-                startActivityForResult(intent, Constants.REQUEST_CODE_REGISTER_FROM_ME);
+                if (startLogin) {
+                    Intent intent = new Intent(getContext(), RegisterActivity.class);
+                    intent.putExtra(RegisterActivity.IS_NEED_REGISTER_RESULT, true);
+                    intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
+                    startActivityForResult(intent, Constants.REQUEST_CODE_REGISTER_FROM_ME);
+                }
+                rootView.findViewById(R.id.app_bar_layout).setVisibility(View.GONE);
+                rootView.findViewById(R.id.ll_content_container).setVisibility(View.GONE);
+                rootView.findViewById(R.id.rl_login_tip).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.bt_login).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), RegisterActivity.class);
+                        intent.putExtra(RegisterActivity.IS_NEED_REGISTER_RESULT, true);
+                        intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
+                        startActivityForResult(intent, Constants.REQUEST_CODE_REGISTER_FROM_ME);
+                    }
+                });
                 return false;
             }
             bloggerId = userInfo.getUserId();
@@ -90,6 +105,8 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     }
 
     private void initView() {
+        rootView.findViewById(R.id.app_bar_layout).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.ll_content_container).setVisibility(View.VISIBLE);
         if (!isBloggerSelfBrowse) {
             rootView.findViewById(R.id.tool_bar).setVisibility(View.VISIBLE);
             final GradualTitleView titleView = rootView.findViewById(R.id.title_view);
@@ -184,6 +201,9 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CODE_REGISTER_FROM_ME && resultCode == Activity.RESULT_OK) {
+            rootView.findViewById(R.id.app_bar_layout).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.ll_content_container).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.rl_login_tip).setVisibility(View.GONE);
             init();
         }
     }

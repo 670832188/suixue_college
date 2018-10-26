@@ -11,13 +11,11 @@
         android:layout_height="0dp"
         android:layout_weight="1.0" />
 
-    <com.roughike.bottombar.BottomBar
+    <me.majiajie.pagerbottomtabstrip.PageNavigationView
         android:id="@+id/nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_nav_height"
-        android:gravity="center_vertical"
-        app:bb_showShadow="false"
-        app:bb_tabXmlResource="@xml/main_nav_tabs"
-        app:bb_titleTextAppearance="@style/style_text_large_white" />
+        android:layout_height="56dp"
+        android:background="@color/color_common_white"
+        android:elevation="8dp" />
 
 </LinearLayout>

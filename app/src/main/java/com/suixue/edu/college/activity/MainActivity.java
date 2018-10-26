@@ -6,8 +6,6 @@ import android.support.v4.view.ViewPager;
 
 import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.config.Constants;
@@ -16,6 +14,9 @@ import com.suixue.edu.college.fragment.MessageFragment;
 import com.suixue.edu.college.fragment.PersonalFragment;
 import com.suixue.edu.college.fragment.SearchFragment;
 
+import me.majiajie.pagerbottomtabstrip.NavigationController;
+import me.majiajie.pagerbottomtabstrip.PageNavigationView;
+
 /**
  * Created by cuiyan on 2018/9/12.
  */
@@ -23,7 +24,8 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
     private ViewPager vpFrg;
     private FragmentAdapter fragmentAdapter;
     private OnBlogTagClickListener onBlogTagClickListener;
-    private BottomBar navBar;
+    private NavigationController navigationController;
+    private final int[] COLORS = {0xFF455A64, 0xFF25540e, 0xFF00796B, 0xFF795548, 0xFF5B4947};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,75 +43,21 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
                 searchFragment.searchBlogList(blogTag);
             }
         };
-        navBar = findViewById(R.id.nav_bar);
         vpFrg = findViewById(R.id.vp_frg);
         vpFrg.setOffscreenPageLimit(3);
-        vpFrg.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-//                if (navBar.getCurrentTabPosition() != position) {
-//                    navBar.selectTabAtPosition(position, true);
-//                }
-                switch (position) {
-                    case 0: {
-                        navBar.selectTabAtPosition(0, true);
-                        break;
-                    }
-                    case 1: {
-                        navBar.selectTabAtPosition(1, true);
-                        break;
-                    }
-                    case 2: {
-                        navBar.selectTabAtPosition(2, true);
-                        break;
-                    }
-                    default: {
-                        navBar.selectTabAtPosition(3, true);
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), this);
         vpFrg.setAdapter(fragmentAdapter);
-        navBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(int tabId) {
-                int targetPosition = 0;
-                switch (tabId) {
-                    case R.id.tab_home: {
-                        targetPosition = 0;
-                        break;
-                    }
-                    case R.id.tab_search: {
-                        targetPosition = 1;
-                        break;
-                    }
-                    case R.id.tab_msg: {
-                        targetPosition = 2;
-                        break;
-                    }
-                    case R.id.tab_me: {
-                        targetPosition = 3;
-                        break;
-                    }
-                }
-                if (vpFrg.getCurrentItem() != targetPosition) {
-                    vpFrg.setCurrentItem(targetPosition, false);
-                }
-            }
-        });
-        navBar.selectTabAtPosition(0, true);
+        PageNavigationView navigationView = findViewById(R.id.nav_bar);
+        navigationController = navigationView.material()
+                .addItem(R.mipmap.ic_nav_home_selected, getString(R.string.tab_home), COLORS[0])
+                .addItem(R.mipmap.ic_nav_search_selected, getString(R.string.tab_search), COLORS[1])
+                .addItem(R.mipmap.ic_nav_msg_selected, getString(R.string.tab_msg), COLORS[2])
+                .addItem(R.mipmap.ic_nav_me_selected, getString(R.string.tab_me), COLORS[3])
+                .enableAnimateLayoutChanges()
+                .setDefaultColor(getResources().getColor(R.color.color_common_gray))
+                .build();
+        navigationController.setMessageNumber(2, 5);
+        navigationController.setupWithViewPager(vpFrg);
     }
 
     @Override
@@ -177,6 +125,6 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
     }
 
     public void backToHome() {
-        navBar.selectTabAtPosition(0);
+        vpFrg.setCurrentItem(0, false);
     }
 }

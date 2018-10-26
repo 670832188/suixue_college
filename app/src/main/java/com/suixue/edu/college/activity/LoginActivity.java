@@ -18,6 +18,7 @@ import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
 import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.util.LogUtil;
+import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.entity.UserInfo;
@@ -156,6 +157,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onError(Throwable throwable) {
+                if (BuildConfig.DEBUG) {
+                    PreferenceUtil.clearVisitorData();
+                    UserInfo userInfo = new UserInfo();
+                    userInfo.setUserName("张三");
+                    userInfo.setUserId("123458");
+                    userInfo.setMobile(etMobile.getText().toString());
+                    userInfo.setAuthToken("alkdsfjoewfalkjf");
+                    PreferenceUtil.saveUserInfo(userInfo);
+                    if (isNeedRegisterResult) {
+                        setResult(RESULT_OK);
+                    } else {
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    }
+                    finish();
+                    return;
+                }
                 showToast(R.string.error_net_request_failed);
                 LogUtil.e(throwable);
             }

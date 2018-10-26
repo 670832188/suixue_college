@@ -78,12 +78,14 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
                 startActivityForResult(intent, Constants.REQUEST_CODE_REGISTER_FROM_ME);
                 return false;
             }
+            bloggerId = userInfo.getUserId();
+        } else {
+            Bundle arg = getArguments();
+            if (arg == null || StringUtil.isEmpty(arg.getString(Constants.KEY_BLOGGER_ID))) {
+                throw new RuntimeException("missing bloggerId argument");
+            }
+            bloggerId = arg.getString(Constants.KEY_BLOGGER_ID);
         }
-        Bundle arg = getArguments();
-        if (arg == null || StringUtil.isEmpty(arg.getString(Constants.KEY_BLOGGER_ID))) {
-            throw new RuntimeException("missing bloggerId argument");
-        }
-        bloggerId = arg.getString(Constants.KEY_BLOGGER_ID);
         return true;
     }
 
@@ -176,5 +178,13 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     @Override
     public int getFragmentCount() {
         return isBloggerSelfBrowse ? 4 : 3;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_CODE_REGISTER_FROM_ME && resultCode == Activity.RESULT_OK) {
+            init();
+        }
     }
 }

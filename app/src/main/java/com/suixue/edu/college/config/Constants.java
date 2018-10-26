@@ -15,8 +15,8 @@ public class Constants {
 
     public static final String KEY_USER_INFO = "userInfo";
     public static final String KEY_REGISTER_MODE = "registerMode";
-    public static final String BLOGGER_ID = "bloggerId";
-    public static final String BLOG_TYPE = "blogType";
+    public static final String KEY_BLOGGER_ID = "bloggerId";
+    public static final String KEY_BLOG_TYPE = "blogType";
     // 博主个人原创或转发
     public static final String BLOG_TYPE_SELF_OR_TRANSFERRED = "1";
     // 博主喜欢(点赞)

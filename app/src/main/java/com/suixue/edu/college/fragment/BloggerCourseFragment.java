@@ -68,10 +68,10 @@ public class BloggerCourseFragment extends BaseStateFragment {
 
     private void initArguments() {
         Bundle arg = getArguments();
-        if (arg == null || StringUtil.isEmpty(arg.getString(Constants.BLOGGER_ID))) {
+        if (arg == null || StringUtil.isEmpty(arg.getString(Constants.KEY_BLOGGER_ID))) {
             throw new RuntimeException("missing bloggerId argument");
         }
-        bloggerId = arg.getString(Constants.BLOGGER_ID);
+        bloggerId = arg.getString(Constants.KEY_BLOGGER_ID);
 
     }
 

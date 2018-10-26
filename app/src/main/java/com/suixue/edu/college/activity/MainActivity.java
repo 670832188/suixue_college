@@ -52,6 +52,9 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
 
             @Override
             public void onPageSelected(int position) {
+//                if (navBar.getCurrentTabPosition() != position) {
+//                    navBar.selectTabAtPosition(position, true);
+//                }
                 switch (position) {
                     case 0: {
                         navBar.selectTabAtPosition(0, true);
@@ -69,7 +72,6 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
                         navBar.selectTabAtPosition(3, true);
                         break;
                     }
-
                 }
             }
 
@@ -83,23 +85,27 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
         navBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(int tabId) {
+                int targetPosition = 0;
                 switch (tabId) {
                     case R.id.tab_home: {
-                        vpFrg.setCurrentItem(0, false);
+                        targetPosition = 0;
                         break;
                     }
                     case R.id.tab_search: {
-                        vpFrg.setCurrentItem(1, false);
+                        targetPosition = 1;
                         break;
                     }
                     case R.id.tab_msg: {
-                        vpFrg.setCurrentItem(2, false);
+                        targetPosition = 2;
                         break;
                     }
                     case R.id.tab_me: {
-                        vpFrg.setCurrentItem(3, false);
+                        targetPosition = 3;
                         break;
                     }
+                }
+                if (vpFrg.getCurrentItem() != targetPosition) {
+                    vpFrg.setCurrentItem(targetPosition, false);
                 }
             }
         });
@@ -126,7 +132,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
             default: {
                 Bundle arg = new Bundle();
                 arg.putBoolean(PersonalFragment.IS_BLOGGER_SELF_BROWSE, true);
-                arg.putString(Constants.BLOGGER_ID, "121212");
+                arg.putString(Constants.KEY_BLOGGER_ID, "121212");
                 fragment = new PersonalFragment();
                 fragment.setArguments(arg);
                 break;
@@ -168,5 +174,9 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
 
     public interface OnBlogTagClickListener {
         void onTagClick(String blogTag);
+    }
+
+    public void backToHome() {
+        navBar.selectTabAtPosition(0);
     }
 }

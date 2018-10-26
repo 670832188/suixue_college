@@ -1,6 +1,7 @@
 package com.suixue.edu.college.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,9 +15,14 @@ import android.view.ViewGroup;
 
 import com.dev.kit.basemodule.fragment.BaseFragment;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
+import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.activity.MainActivity;
+import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.config.Constants;
+import com.suixue.edu.college.entity.UserInfo;
+import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.view.GradualTitleView;
 
 /**
@@ -31,6 +37,7 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     private ViewPager vpFrg;
     private String[] tabTitleArray;
     private String bloggerId;
+    private boolean isInitialized;
 
     @Nullable
     @Override
@@ -42,17 +49,47 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initArguments();
-        initView();
     }
 
-    private void initArguments() {
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !isInitialized) {
+            init();
+        }
+    }
+
+    private void init() {
+        if (initArguments()) {
+            initView();
+            isInitialized = true;
+        }
+    }
+
+    private boolean initArguments() {
         Bundle arg = getArguments();
-        if (arg == null || StringUtil.isEmpty(arg.getString(Constants.BLOGGER_ID))) {
+        if (arg == null) {
+            throw new RuntimeException("missing bundle argument");
+        }
+        isBloggerSelfBrowse = arg.getBoolean(IS_BLOGGER_SELF_BROWSE);
+        if (isBloggerSelfBrowse) {
+            UserInfo userInfo = PreferenceUtil.getUserInfo();
+            if (userInfo == null || StringUtil.isEmpty(userInfo.getUserId())) {
+                Intent intent = new Intent(getContext(), RegisterActivity.class);
+                intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
+                startActivity(intent);
+                Activity activity = getActivity();
+                if (activity != null && activity instanceof MainActivity) {
+                    ((MainActivity) activity).backToHome();
+                }
+                return false;
+            }
+        }
+        if (StringUtil.isEmpty(arg.getString(Constants.KEY_BLOGGER_ID))) {
             throw new RuntimeException("missing bloggerId argument");
         }
-        bloggerId = arg.getString(Constants.BLOGGER_ID);
-        isBloggerSelfBrowse = arg.getBoolean(IS_BLOGGER_SELF_BROWSE);
+        bloggerId = arg.getString(Constants.KEY_BLOGGER_ID);
+        return true;
     }
 
     private void initView() {
@@ -71,7 +108,7 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
             titleView.setOnLeftBtnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity  = getActivity();
+                    Activity activity = getActivity();
                     if (activity != null) {
                         activity.finish();
                     }
@@ -115,24 +152,24 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         Bundle arg = new Bundle();
         switch (position) {
             case 0: {
-                arg.putString(Constants.BLOGGER_ID, bloggerId);
+                arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);
                 fragment = new BloggerCourseFragment();
                 break;
             }
             case 1: {
-                arg.putString(Constants.BLOGGER_ID, bloggerId);
-                arg.putString(Constants.BLOG_TYPE, Constants.BLOG_TYPE_SELF_OR_TRANSFERRED);
+                arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);
+                arg.putString(Constants.KEY_BLOG_TYPE, Constants.BLOG_TYPE_SELF_OR_TRANSFERRED);
                 fragment = new BloggerBlogFragment();
                 break;
             }
             case 2: {
-                arg.putString(Constants.BLOGGER_ID, bloggerId);
-                arg.putString(Constants.BLOG_TYPE, Constants.BLOG_TYPE_PRAISED);
+                arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);
+                arg.putString(Constants.KEY_BLOG_TYPE, Constants.BLOG_TYPE_PRAISED);
                 fragment = new BloggerBlogFragment();
                 break;
             }
             default: {
-                arg.putString(Constants.BLOGGER_ID, bloggerId);
+                arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);
                 fragment = new BloggerCourseFragment();
                 break;
             }

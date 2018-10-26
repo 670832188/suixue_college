@@ -67,25 +67,20 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     }
 
     private boolean initArguments() {
-        Bundle arg = getArguments();
-        if (arg == null) {
-            throw new RuntimeException("missing bundle argument");
-        }
-        isBloggerSelfBrowse = arg.getBoolean(IS_BLOGGER_SELF_BROWSE);
+        Activity activity  = getActivity();
+        isBloggerSelfBrowse = activity instanceof MainActivity;
         if (isBloggerSelfBrowse) {
             UserInfo userInfo = PreferenceUtil.getUserInfo();
             if (userInfo == null || StringUtil.isEmpty(userInfo.getUserId())) {
                 Intent intent = new Intent(getContext(), RegisterActivity.class);
+                intent.putExtra(RegisterActivity.IS_NEED_REGISTER_RESULT, true);
                 intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
-                startActivity(intent);
-                Activity activity = getActivity();
-                if (activity != null && activity instanceof MainActivity) {
-                    ((MainActivity) activity).backToHome();
-                }
+                startActivityForResult(intent, Constants.REQUEST_CODE_REGISTER_FROM_ME);
                 return false;
             }
         }
-        if (StringUtil.isEmpty(arg.getString(Constants.KEY_BLOGGER_ID))) {
+        Bundle arg = getArguments();
+        if (arg == null || StringUtil.isEmpty(arg.getString(Constants.KEY_BLOGGER_ID))) {
             throw new RuntimeException("missing bloggerId argument");
         }
         bloggerId = arg.getString(Constants.KEY_BLOGGER_ID);

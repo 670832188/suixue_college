@@ -123,8 +123,4 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
     public interface OnBlogTagClickListener {
         void onTagClick(String blogTag);
     }
-
-    public void backToHome() {
-        vpFrg.setCurrentItem(0, false);
-    }
 }

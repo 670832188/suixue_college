@@ -39,6 +39,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private TextView tvGetSecurityCode;
     private ImageView ivDivider1;
     private ImageView ivDivider2;
+    private boolean isNeedRegisterResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void init() {
+        isNeedRegisterResult = getIntent().getBooleanExtra(RegisterActivity.IS_NEED_REGISTER_RESULT, false);
         setHideKeyBoardTouchOutside();
         setOnClickListener(R.id.iv_left, this);
         setOnClickListener(R.id.tv_get_security_code, this);
@@ -135,7 +137,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     if (result.getData() != null) {
                         PreferenceUtil.clearVisitorData();
                         PreferenceUtil.saveUserInfo(result.getData());
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        if (isNeedRegisterResult) {
+                            setResult(RESULT_OK);
+                        } else {
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        }
                         finish();
                     }
                 } else {

@@ -37,6 +37,10 @@ import io.reactivex.Observable;
  * Created by cuiyan on 2018/9/3.
  */
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
+    // 从我的页面及消息页面跳转到注册页面需要结果反馈，注册或登录成功后无需跳到首页
+    public static final String IS_NEED_REGISTER_RESULT = "isNeedRegisterResult";
+    private static final int REQUEST_CODE_LOGIN = 1;
+    private boolean isNeedRegisterResult;
     private static final int defaultCountDownValue = 60 * 1000;
     private CountDownTimer countDownTimer;
     private EditText etYearOfBirth;
@@ -60,7 +64,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setHideKeyBoardTouchOutside();
         setOnClickListener(R.id.iv_left, this);
         setOnClickListener(R.id.tv_right, this);
-
+        isNeedRegisterResult = getIntent().getBooleanExtra(IS_NEED_REGISTER_RESULT, false);
         registerMode = getIntent().getStringExtra(Constants.KEY_REGISTER_MODE);
         if (Constants.VALUE_REGISTER_MODE_VISITOR.equals(registerMode)) {  // 游客模式
             setVisibility(R.id.ll_visitor_register, View.VISIBLE);
@@ -113,8 +117,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
             case R.id.tv_login: {
-                startActivity(new Intent(this, LoginActivity.class));
-                finish();
+                Intent intent = new Intent(this, LoginActivity.class);
+                if (isNeedRegisterResult) {
+                    intent.putExtra(IS_NEED_REGISTER_RESULT, true);
+                    startActivityForResult(intent, REQUEST_CODE_LOGIN);
+                } else {
+                    startActivity(intent);
+                    finish();
+                }
                 break;
             }
         }
@@ -226,7 +236,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 if (result.getData() != null) {
                     PreferenceUtil.clearVisitorData();
                     PreferenceUtil.saveUserInfo(result.getData());
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    if (isNeedRegisterResult) {
+                        setResult(RESULT_OK);
+                    } else {
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    }
                     finish();
                 } else {
                     showToast(R.string.error_net_request_failed);
@@ -271,6 +285,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         super.onDestroy();
         if (countDownTimer != null) {
             countDownTimer.cancel();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_LOGIN && resultCode == RESULT_OK) { // 登录成功
+            setResult(RESULT_OK);
+            finish();
         }
     }
 }

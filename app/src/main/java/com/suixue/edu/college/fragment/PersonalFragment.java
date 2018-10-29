@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.dev.kit.basemodule.fragment.BaseFragment;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
-import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;

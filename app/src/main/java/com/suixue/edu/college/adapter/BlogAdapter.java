@@ -2,6 +2,7 @@ package com.suixue.edu.college.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -30,8 +31,10 @@ import com.dev.kit.basemodule.view.AutoLinkStyleTextView;
 import com.plattysoft.leonids.ParticleSystem;
 import com.plattysoft.leonids.modifiers.ScaleModifier;
 import com.suixue.edu.college.R;
+import com.suixue.edu.college.activity.BloggeActivity;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.config.ApiService;
+import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.BlogInfo;
 import com.suixue.edu.college.entity.CourseInfo;
 import com.suixue.edu.college.entity.RecommendedBloggerResult;
@@ -113,6 +116,14 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
     // 填充博客信息
     private void fillBlogData(final RecyclerViewHolder holder, final BlogInfo info) {
         ImageView ivBloggerAvatar = holder.getView(R.id.iv_blogger_avatar);
+        ivBloggerAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, BloggeActivity.class);
+                intent.putExtra(Constants.KEY_BLOGGER_ID, info.getBloggerId());
+                context.startActivity(intent);
+            }
+        });
         GlideUtil.loadImage(context, info.getBloggerAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivBloggerAvatar, 1);
         holder.setText(R.id.tv_blogger_name, info.getBloggerName());
         holder.setOnClickListener(R.id.iv_delete, new View.OnClickListener() {

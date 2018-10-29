@@ -8,7 +8,7 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/personal_top_cover_height"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -24,7 +24,8 @@
                 <ImageView
                     android:id="@+id/iv_cover"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
 
                 <com.joooonho.SelectableRoundedImageView
                     android:id="@+id/iv_avatar"
@@ -36,26 +37,24 @@
                     app:sriv_oval="true" />
 
                 <TextView
-                    android:id="@+id/tv_nickname"
+                    android:id="@+id/tv_blogger_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/iv_avatar"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:text="李四" />
+                    android:layout_marginTop="@dimen/margin_small" />
 
                 <TextView
-                    android:id="@+id/tv_brief"
+                    android:id="@+id/tv_personal_brief"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_nickname"
-                    android:layout_centerHorizontal="true"
-                    android:text="枯藤老树昏鸦" />
+                    android:layout_below="@+id/tv_blogger_name"
+                    android:layout_centerHorizontal="true" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_brief"
+                    android:layout_below="@+id/tv_personal_brief"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_normal"
                     android:orientation="horizontal">
@@ -141,7 +140,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="@string/subscribe" />
+                            android:text="@string/concern" />
 
                         <TextView
                             android:id="@+id/tv_concern_num"

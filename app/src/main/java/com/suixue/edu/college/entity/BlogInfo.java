@@ -13,7 +13,7 @@ public class BlogInfo {
     private String bloggerId;
     private String blogId;
     private String bloggerAvatarUrl;
-    // 是否被用户关注
+    // 是否被用户点赞/喜欢
     private boolean isPraised;
     // 帖子内容数据列表
     private List<BlogContentInfo> blogContentList;

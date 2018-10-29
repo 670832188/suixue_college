@@ -1,0 +1,88 @@
+package com.suixue.edu.college.entity;
+
+import java.util.List;
+
+/**
+ * 我的页面/博主个人页面数据
+ * Created by cuiyan on 2018/10/29.
+ */
+public class BloggerInfo {
+    private String name;
+    private String coverImgUrl;
+    private String personalBrief;
+    private String avatarUrl;
+    // 订阅数
+    private int subscribedNum;
+    // 关注数
+    private int concernedNum;
+    // 订阅博主所需费用
+    private int subscribeFee;
+    private List<CourseBaseInfo> courseBaseInfoList;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCoverImgUrl() {
+        return coverImgUrl;
+    }
+
+    public String getPersonalBrief() {
+        return personalBrief;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public int getSubscribedNum() {
+        return subscribedNum;
+    }
+
+    public int getConcernedNum() {
+        return concernedNum;
+    }
+
+    public int getSubscribeFee() {
+        return subscribeFee;
+    }
+
+    public List<CourseBaseInfo> getCourseBaseInfoList() {
+        return courseBaseInfoList;
+    }
+
+    /////////////////////////
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCoverImgUrl(String coverImgUrl) {
+        this.coverImgUrl = coverImgUrl;
+    }
+
+    public void setPersonalBrief(String personalBrief) {
+        this.personalBrief = personalBrief;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setSubscribedNum(int subscribedNum) {
+        this.subscribedNum = subscribedNum;
+    }
+
+    public void setConcernedNum(int concernedNum) {
+        this.concernedNum = concernedNum;
+    }
+
+    public void setSubscribeFee(int subscribeFee) {
+        this.subscribeFee = subscribeFee;
+    }
+
+    public void setCourseBaseInfoList(List<CourseBaseInfo> courseBaseInfoList) {
+        this.courseBaseInfoList = courseBaseInfoList;
+    }
+}

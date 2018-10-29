@@ -12,17 +12,25 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.dev.kit.basemodule.fragment.BaseFragment;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
+import com.dev.kit.basemodule.util.GlideUtil;
 import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.config.Constants;
+import com.suixue.edu.college.entity.BloggerInfo;
+import com.suixue.edu.college.entity.CourseBaseInfo;
 import com.suixue.edu.college.entity.UserInfo;
 import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.view.GradualTitleView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by cuiyan on 2018/9/12.
@@ -33,10 +41,14 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     // 标识访问来源：访问者/博主本人
     private boolean isBloggerSelfBrowse;
     private View rootView;
+    private TextView tvSubscribe;
+    private TextView tvConcern;
+    private TextView tvEdit;
     private ViewPager vpFrg;
     private String[] tabTitleArray;
     private String bloggerId;
     private boolean isInitialized;
+    private BloggerInfo bloggerInfo;
 
     @Nullable
     @Override
@@ -63,6 +75,8 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         if (initArguments(true)) {
             initView();
             isInitialized = true;
+            bloggerInfo = generateTestData();
+            renderBloggerInfo();
         }
     }
 
@@ -106,6 +120,9 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     private void initView() {
         rootView.findViewById(R.id.app_bar_layout).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.ll_content_container).setVisibility(View.VISIBLE);
+        tvSubscribe = rootView.findViewById(R.id.tv_subscribe);
+        tvConcern = rootView.findViewById(R.id.tv_concern);
+        tvEdit = rootView.findViewById(R.id.tv_edit);
         if (!isBloggerSelfBrowse) {
             rootView.findViewById(R.id.tool_bar).setVisibility(View.VISIBLE);
             final GradualTitleView titleView = rootView.findViewById(R.id.title_view);
@@ -127,6 +144,13 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
                     }
                 }
             });
+            tvEdit.setVisibility(View.GONE);
+            tvSubscribe.setVisibility(View.VISIBLE);
+            tvConcern.setVisibility(View.VISIBLE);
+        } else {
+            tvEdit.setVisibility(View.VISIBLE);
+            tvSubscribe.setVisibility(View.GONE);
+            tvConcern.setVisibility(View.GONE);
         }
         TabLayout tabLayout = rootView.findViewById(R.id.sliding_tabs);
         tabTitleArray = getResources().getStringArray(R.array.personal_tab_title);
@@ -157,6 +181,58 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
 
             }
         });
+    }
+
+    private void getBloggerInfo() {
+
+    }
+
+    private BloggerInfo generateTestData() {
+        BloggerInfo bloggerInfo = new BloggerInfo();
+        bloggerInfo.setAvatarUrl("http://img19.3lian.com/d/file/201803/05/fa6cf18ea93c86703344a2b95c437048.png");
+        bloggerInfo.setConcernedNum(3600);
+        bloggerInfo.setSubscribedNum(396);
+        bloggerInfo.setCoverImgUrl("http://img19.3lian.com/d/file/201803/10/292711fbc1fb75bb7d0d87717ddfed7c.jpg");
+        bloggerInfo.setPersonalBrief("清泉石上流");
+        bloggerInfo.setSubscribeFee(99);
+        bloggerInfo.setName("太虚真人");
+        List<CourseBaseInfo> courseBaseInfoList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            CourseBaseInfo courseBaseInfo = new CourseBaseInfo();
+            courseBaseInfo.setYear("2018年");
+            courseBaseInfo.setGrade("大学三年级");
+            courseBaseInfo.setMajor("光学工程");
+            List<CourseBaseInfo.CourseInfo> courseInfoList = new ArrayList<>();
+            for (int j = 0; j < 9; j++) {
+                CourseBaseInfo.CourseInfo info = new CourseBaseInfo.CourseInfo();
+                info.setId(String.valueOf(j + 1));
+                info.setName("量子光学" + (j + 1));
+                courseInfoList.add(info);
+            }
+            courseBaseInfo.setCourseInfoList(courseInfoList);
+            courseBaseInfoList.add(courseBaseInfo);
+        }
+        bloggerInfo.setCourseBaseInfoList(courseBaseInfoList);
+        return bloggerInfo;
+    }
+
+    private void renderBloggerInfo() {
+        ImageView ivAvatar = rootView.findViewById(R.id.iv_avatar);
+        GlideUtil.loadImage(getContext(), bloggerInfo.getAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivAvatar, 1);
+        ImageView ivCover = rootView.findViewById(R.id.iv_cover);
+        GlideUtil.loadImage(getContext(), bloggerInfo.getCoverImgUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivCover, 1);
+        TextView tvSubscribeNum = rootView.findViewById(R.id.tv_subscribe_num);
+        tvSubscribeNum.setText(String.valueOf(bloggerInfo.getSubscribedNum()));
+        TextView tvConcernNum = rootView.findViewById(R.id.tv_concern_num);
+        tvConcernNum.setText(String.valueOf(bloggerInfo.getConcernedNum()));
+        if (!isBloggerSelfBrowse) {
+            TextView tvSubscribe = rootView.findViewById(R.id.tv_subscribe);
+            tvSubscribe.setText(String.format(getString(R.string.action_subscribe), String.valueOf(bloggerInfo.getSubscribeFee())));
+        }
+        TextView tvBloggerName = rootView.findViewById(R.id.tv_blogger_name);
+        tvBloggerName.setText(bloggerInfo.getName());
+        TextView tvPersonalBrief = rootView.findViewById(R.id.tv_personal_brief);
+        tvPersonalBrief.setText(bloggerInfo.getPersonalBrief());
     }
 
     @Override

@@ -16,9 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dev.kit.basemodule.fragment.BaseFragment;
+import com.dev.kit.basemodule.netRequest.Configs.Config;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
+import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
 import com.dev.kit.basemodule.util.GlideUtil;
 import com.dev.kit.basemodule.util.StringUtil;
+import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
@@ -49,6 +54,7 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     private String bloggerId;
     private boolean isInitialized;
     private BloggerInfo bloggerInfo;
+    private BloggerCourseFragment bloggerCourseFragment;
 
     @Nullable
     @Override
@@ -184,7 +190,33 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     }
 
     private void getBloggerInfo() {
+        NetRequestSubscriber<BaseResult<BloggerInfo>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BloggerInfo>>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult<BloggerInfo> result) {
+                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    bloggerInfo = result.getData();
+                    renderBloggerInfo();
+                }
+            }
 
+            @Override
+            public void onResultNull() {
+                if (bloggerInfo == null) {
+                    showToast(R.string.error_net_request_failed);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                if (BuildConfig.DEBUG) {
+                    bloggerInfo = generateTestData();
+                    renderBloggerInfo();
+                }
+                if (bloggerInfo == null) {
+                    showToast(R.string.error_net_request_failed);
+                }
+            }
+        }, getContext());
     }
 
     private BloggerInfo generateTestData() {
@@ -201,6 +233,7 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
             CourseBaseInfo courseBaseInfo = new CourseBaseInfo();
             courseBaseInfo.setYear("2018年");
             courseBaseInfo.setGrade("大学三年级");
+            courseBaseInfo.setGradeId(String.valueOf(i + 1));
             courseBaseInfo.setMajor("光学工程");
             List<CourseBaseInfo.CourseInfo> courseInfoList = new ArrayList<>();
             for (int j = 0; j < 9; j++) {
@@ -217,6 +250,9 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     }
 
     private void renderBloggerInfo() {
+        if (bloggerInfo == null) {
+            return;
+        }
         ImageView ivAvatar = rootView.findViewById(R.id.iv_avatar);
         GlideUtil.loadImage(getContext(), bloggerInfo.getAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivAvatar, 1);
         ImageView ivCover = rootView.findViewById(R.id.iv_cover);
@@ -233,6 +269,11 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         tvBloggerName.setText(bloggerInfo.getName());
         TextView tvPersonalBrief = rootView.findViewById(R.id.tv_personal_brief);
         tvPersonalBrief.setText(bloggerInfo.getPersonalBrief());
+//        bloggerCourseFragment.getCourseList(bloggerInfo.ge);
+    }
+
+    private void getCourseList() {
+
     }
 
     @Override
@@ -242,8 +283,9 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         switch (position) {
             case 0: {
                 arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);
-                fragment = new BloggerCourseFragment();
-                break;
+                bloggerCourseFragment = new BloggerCourseFragment();
+                bloggerCourseFragment.setArguments(arg);
+                return bloggerCourseFragment;
             }
             case 1: {
                 arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);

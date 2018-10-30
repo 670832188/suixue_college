@@ -49,6 +49,8 @@ public class BloggerCourseFragment extends BaseStateFragment {
     private BlogAdapter adapter;
     private int pageIndex;
     private String bloggerId;
+    private String gradeId;
+    private String courseId;
 
     @NonNull
     @Override
@@ -63,7 +65,6 @@ public class BloggerCourseFragment extends BaseStateFragment {
         setContentState(STATE_PROGRESS);
         initArguments();
         initView();
-        getCourseList();
     }
 
     private void initArguments() {
@@ -79,7 +80,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         setOnEmptyViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCourseList();
+                getCourseList(gradeId, courseId);
             }
         });
         adapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
@@ -93,7 +94,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         refreshLayout.setOnRefreshListener(new SmoothRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefreshBegin(boolean isRefresh) {
-                getCourseList();
+                getCourseList(gradeId, courseId);
             }
 
             @Override
@@ -103,8 +104,16 @@ public class BloggerCourseFragment extends BaseStateFragment {
         });
     }
 
+    /**
+     * 获取课程列表
+     *
+     * @param gradeId  学年id
+     * @param courseId 课程id，为空时获取全部课程
+     */
     @SuppressWarnings("unchecked")
-    private void getCourseList() {
+    public void getCourseList(String gradeId, String courseId) {
+        this.gradeId = gradeId;
+        this.courseId = courseId;
         NetRequestSubscriber<BaseResult<BaseListResult<CourseInfo>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BaseListResult<CourseInfo>>>() {
             @Override
             public void onSuccess(@NonNull BaseResult<BaseListResult<CourseInfo>> result) {

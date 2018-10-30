@@ -28,6 +28,7 @@ import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.BlogContentInfo;
+import com.suixue.edu.college.entity.CourseBaseInfo;
 import com.suixue.edu.college.entity.CourseInfo;
 
 import java.util.ArrayList;
@@ -104,6 +105,10 @@ public class BloggerCourseFragment extends BaseStateFragment {
         });
     }
 
+    private void getCourseInfo() {
+
+    }
+
     /**
      * 获取课程列表
      *
@@ -111,7 +116,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
      * @param courseId 课程id，为空时获取全部课程
      */
     @SuppressWarnings("unchecked")
-    public void getCourseList(String gradeId, String courseId) {
+    private void getCourseList(String gradeId, String courseId) {
         this.gradeId = gradeId;
         this.courseId = courseId;
         NetRequestSubscriber<BaseResult<BaseListResult<CourseInfo>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BaseListResult<CourseInfo>>>() {
@@ -153,6 +158,26 @@ public class BloggerCourseFragment extends BaseStateFragment {
         }, getContext());
         Observable<BaseResult<BaseListResult<CourseInfo>>> observable = BaseServiceUtil.createService(ApiService.class).getBloggerCourseList(pageIndex, bloggerId);
         BaseController.sendRequest(this, subscriber, observable);
+    }
+
+    private void generateCourseInfo() {
+        List<CourseBaseInfo> courseBaseInfoList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            CourseBaseInfo courseBaseInfo = new CourseBaseInfo();
+            courseBaseInfo.setYear("2018年");
+            courseBaseInfo.setGrade("大学三年级");
+            courseBaseInfo.setGradeId(String.valueOf(i + 1));
+            courseBaseInfo.setMajor("光学工程");
+            List<CourseBaseInfo.CourseInfo> courseInfoList = new ArrayList<>();
+            for (int j = 0; j < 9; j++) {
+                CourseBaseInfo.CourseInfo info = new CourseBaseInfo.CourseInfo();
+                info.setId(String.valueOf(j + 1));
+                info.setName("量子光学" + (j + 1));
+                courseInfoList.add(info);
+            }
+            courseBaseInfo.setCourseInfoList(courseInfoList);
+            courseBaseInfoList.add(courseBaseInfo);
+        }
     }
 
     @SuppressWarnings("unchecked")

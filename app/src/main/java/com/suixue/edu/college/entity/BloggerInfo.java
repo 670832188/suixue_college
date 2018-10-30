@@ -1,7 +1,5 @@
 package com.suixue.edu.college.entity;
 
-import java.util.List;
-
 /**
  * 我的页面/博主个人页面数据
  * Created by cuiyan on 2018/10/29.
@@ -17,7 +15,6 @@ public class BloggerInfo {
     private int concernedNum;
     // 订阅博主所需费用
     private int subscribeFee;
-    private List<CourseBaseInfo> courseBaseInfoList;
 
     public String getName() {
         return name;
@@ -45,10 +42,6 @@ public class BloggerInfo {
 
     public int getSubscribeFee() {
         return subscribeFee;
-    }
-
-    public List<CourseBaseInfo> getCourseBaseInfoList() {
-        return courseBaseInfoList;
     }
 
     /////////////////////////
@@ -80,9 +73,5 @@ public class BloggerInfo {
 
     public void setSubscribeFee(int subscribeFee) {
         this.subscribeFee = subscribeFee;
-    }
-
-    public void setCourseBaseInfoList(List<CourseBaseInfo> courseBaseInfoList) {
-        this.courseBaseInfoList = courseBaseInfoList;
     }
 }

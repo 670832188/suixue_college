@@ -29,13 +29,9 @@ import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.BloggerInfo;
-import com.suixue.edu.college.entity.CourseBaseInfo;
 import com.suixue.edu.college.entity.UserInfo;
 import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.view.GradualTitleView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by cuiyan on 2018/9/12.
@@ -228,24 +224,6 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         bloggerInfo.setPersonalBrief("清泉石上流");
         bloggerInfo.setSubscribeFee(99);
         bloggerInfo.setName("太虚真人");
-        List<CourseBaseInfo> courseBaseInfoList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            CourseBaseInfo courseBaseInfo = new CourseBaseInfo();
-            courseBaseInfo.setYear("2018年");
-            courseBaseInfo.setGrade("大学三年级");
-            courseBaseInfo.setGradeId(String.valueOf(i + 1));
-            courseBaseInfo.setMajor("光学工程");
-            List<CourseBaseInfo.CourseInfo> courseInfoList = new ArrayList<>();
-            for (int j = 0; j < 9; j++) {
-                CourseBaseInfo.CourseInfo info = new CourseBaseInfo.CourseInfo();
-                info.setId(String.valueOf(j + 1));
-                info.setName("量子光学" + (j + 1));
-                courseInfoList.add(info);
-            }
-            courseBaseInfo.setCourseInfoList(courseInfoList);
-            courseBaseInfoList.add(courseBaseInfo);
-        }
-        bloggerInfo.setCourseBaseInfoList(courseBaseInfoList);
         return bloggerInfo;
     }
 
@@ -269,11 +247,6 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         tvBloggerName.setText(bloggerInfo.getName());
         TextView tvPersonalBrief = rootView.findViewById(R.id.tv_personal_brief);
         tvPersonalBrief.setText(bloggerInfo.getPersonalBrief());
-//        bloggerCourseFragment.getCourseList(bloggerInfo.ge);
-    }
-
-    private void getCourseList() {
-
     }
 
     @Override

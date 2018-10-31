@@ -6,7 +6,7 @@ import java.util.List;
  * 每个学年的课程基本信息
  * Created by cuiyan on 2018/10/29.
  */
-public class CourseBaseInfo {
+public class BaseCourseInfo {
     // 年份
     private String year;
     // 年级

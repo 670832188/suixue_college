@@ -50,7 +50,6 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     private String bloggerId;
     private boolean isInitialized;
     private BloggerInfo bloggerInfo;
-    private BloggerCourseFragment bloggerCourseFragment;
 
     @Nullable
     @Override
@@ -256,9 +255,9 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         switch (position) {
             case 0: {
                 arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);
-                bloggerCourseFragment = new BloggerCourseFragment();
-                bloggerCourseFragment.setArguments(arg);
-                return bloggerCourseFragment;
+                fragment = new BloggerCourseFragment();
+                fragment.setArguments(arg);
+                break;
             }
             case 1: {
                 arg.putString(Constants.KEY_BLOGGER_ID, bloggerId);

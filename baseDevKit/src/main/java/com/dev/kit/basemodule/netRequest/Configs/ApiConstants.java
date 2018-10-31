@@ -33,6 +33,8 @@ public class ApiConstants {
     // 获取聊天信息列表
     public static final String GET_CHAT_MSG_LIST_API = "asfd";
     // 获取博主课程列表
+    public static final String GET_BLOGGER_COURSE_BASE_INFO_API = "ads";
+    // 获取博主课程列表
     public static final String GET_BLOGGER_COURSE_LIST_API = "ads";
     // 获取博主博客列表
     public static final String GET_BLOGGER_BLOG_LIST_API = "ads";

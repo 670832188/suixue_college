@@ -1,5 +1,6 @@
 package com.suixue.edu.college.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.dev.kit.basemodule.fragment.BaseStateFragment;
@@ -16,7 +18,9 @@ import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
 import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
+import com.dev.kit.basemodule.surpport.CommonAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
+import com.dev.kit.basemodule.surpport.ViewHolder;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.util.StringUtil;
@@ -26,10 +30,12 @@ import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.config.Constants;
+import com.suixue.edu.college.entity.BaseCourseInfo;
 import com.suixue.edu.college.entity.BaseListResult;
 import com.suixue.edu.college.entity.BlogContentInfo;
-import com.suixue.edu.college.entity.CourseBaseInfo;
 import com.suixue.edu.college.entity.CourseInfo;
+
+import org.angmarch.views.NiceSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +80,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
             throw new RuntimeException("missing bloggerId argument");
         }
         bloggerId = arg.getString(Constants.KEY_BLOGGER_ID);
-
+        getBaseCourseInfo();
     }
 
     private void initView() {
@@ -105,8 +111,64 @@ public class BloggerCourseFragment extends BaseStateFragment {
         });
     }
 
-    private void getCourseInfo() {
+    private void getBaseCourseInfo() {
+        NetRequestSubscriber<BaseResult<List<BaseCourseInfo>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<List<BaseCourseInfo>>>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult<List<BaseCourseInfo>> result) {
+                refreshLayout.refreshComplete();
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    setContentState(STATE_EMPTY);
+                    return;
+                }
+                List<BaseCourseInfo> baseCourseInfoList = result.getData();
+                if (baseCourseInfoList == null || baseCourseInfoList.size() == 0) {
+                    setContentState(STATE_EMPTY);
+                    return;
+                }
+                setContentState(STATE_DATA_CONTENT);
+                renderBaseCourseInfo(baseCourseInfoList);
+            }
 
+            @Override
+            public void onResultNull() {
+                refreshLayout.refreshComplete();
+                setContentState(STATE_EMPTY);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                refreshLayout.refreshComplete();
+                if (BuildConfig.DEBUG) {
+                    generateCourseInfo();
+                    setContentState(STATE_DATA_CONTENT);
+                    return;
+                }
+                setContentState(STATE_ERROR);
+            }
+        }, getContext());
+        Observable<BaseResult<BaseListResult<CourseInfo>>> observable = BaseServiceUtil.createService(ApiService.class).getBloggerCourseList(pageIndex, bloggerId);
+        BaseController.sendRequest(this, subscriber, observable);
+    }
+
+    private void renderBaseCourseInfo(List<BaseCourseInfo> baseCourseInfoList) {
+        NiceSpinner gradeSpinner = rootView.findViewById(R.id.grade_spinner);
+        List<String> gradeInfoList = new ArrayList<>();
+        for (BaseCourseInfo info : baseCourseInfoList) {
+            String gradeInfo = info.getYear() + "  " + info.getGrade() + "  " + info.getMajor();
+            gradeInfoList.add(gradeInfo);
+        }
+        gradeSpinner.attachDataSource(gradeInfoList);
+        gradeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                LogUtil.e("mytag", "select pos: " + position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     /**
@@ -161,16 +223,16 @@ public class BloggerCourseFragment extends BaseStateFragment {
     }
 
     private void generateCourseInfo() {
-        List<CourseBaseInfo> courseBaseInfoList = new ArrayList<>();
+        List<BaseCourseInfo> courseBaseInfoList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            CourseBaseInfo courseBaseInfo = new CourseBaseInfo();
-            courseBaseInfo.setYear("2018年");
+            BaseCourseInfo courseBaseInfo = new BaseCourseInfo();
+            courseBaseInfo.setYear((2018 - i) + "年");
             courseBaseInfo.setGrade("大学三年级");
             courseBaseInfo.setGradeId(String.valueOf(i + 1));
             courseBaseInfo.setMajor("光学工程");
-            List<CourseBaseInfo.CourseInfo> courseInfoList = new ArrayList<>();
+            List<BaseCourseInfo.CourseInfo> courseInfoList = new ArrayList<>();
             for (int j = 0; j < 9; j++) {
-                CourseBaseInfo.CourseInfo info = new CourseBaseInfo.CourseInfo();
+                BaseCourseInfo.CourseInfo info = new BaseCourseInfo.CourseInfo();
                 info.setId(String.valueOf(j + 1));
                 info.setName("量子光学" + (j + 1));
                 courseInfoList.add(info);
@@ -178,6 +240,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
             courseBaseInfo.setCourseInfoList(courseInfoList);
             courseBaseInfoList.add(courseBaseInfo);
         }
+        renderBaseCourseInfo(courseBaseInfoList);
     }
 
     @SuppressWarnings("unchecked")

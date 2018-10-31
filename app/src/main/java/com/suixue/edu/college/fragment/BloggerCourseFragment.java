@@ -53,12 +53,13 @@ public class BloggerCourseFragment extends BaseStateFragment {
     private View rootView;
     private SmoothRefreshLayout refreshLayout;
     private BlogAdapter adapter;
-    private int pageIndex;
+    private int pageIndex = 1;
     private String bloggerId;
     private String gradeId;
     private String courseId;
     private RecyclerView rvCourseName;
     private CourseNameAdapter courseNameAdapter;
+    private RecyclerView rvCourse;
 
     @NonNull
     @Override
@@ -107,13 +108,14 @@ public class BloggerCourseFragment extends BaseStateFragment {
             public void onItemClick(View v, int position) {
                 BaseCourseInfo.CourseInfo info = courseNameAdapter.getItem(position);
                 if (!info.isChecked()) {
+                    pageIndex = 1;
                     courseNameAdapter.setCheckedItem(position);
                     getCourseList(info.getGradeId(), info.getId());
                 }
             }
         });
         adapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
-        RecyclerView rvCourse = rootView.findViewById(R.id.rv_course);
+        rvCourse = rootView.findViewById(R.id.rv_course);
         rvCourse.setLayoutManager(new LinearLayoutManager(getContext()));
         rvCourse.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_HORIZONTAL, getResources().getColor(R.color.color_main_bg), DisplayUtil.dp2px(5)));
         rvCourse.setAdapter(adapter);
@@ -133,6 +135,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         });
     }
 
+    // 获取课程基本信息
     private void getBaseCourseInfo() {
         NetRequestSubscriber<BaseResult<List<BaseCourseInfo>>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<List<BaseCourseInfo>>>() {
             @Override
@@ -172,6 +175,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         BaseController.sendRequest(this, subscriber, observable);
     }
 
+    // 展示课程基本信息
     private void renderBaseCourseInfo(final List<BaseCourseInfo> baseCourseInfoList) {
         NiceSpinner gradeSpinner = rootView.findViewById(R.id.grade_spinner);
         gradeSpinner.setVisibility(View.VISIBLE);
@@ -196,6 +200,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         renderCourseName(baseCourseInfoList.get(0));
     }
 
+    // 展示课程基本信息
     private void renderCourseName(BaseCourseInfo info) {
         List<BaseCourseInfo.CourseInfo> dataList = new ArrayList<>();
         BaseCourseInfo.CourseInfo all = new BaseCourseInfo.CourseInfo();
@@ -206,7 +211,6 @@ public class BloggerCourseFragment extends BaseStateFragment {
         dataList.add(all);
         dataList.addAll(info.getCourseInfoList());
         courseNameAdapter.updateDataList(dataList);
-        pageIndex = 0;
         getCourseList(dataList.get(0).getGradeId(), dataList.get(0).getId());
     }
 
@@ -233,6 +237,9 @@ public class BloggerCourseFragment extends BaseStateFragment {
                 }
                 if (result.getData().getDataList() != null && result.getData().getDataList().size() > 0) {
                     adapter.appendData((List<Object>) (List<?>) result.getData().getDataList());
+                    if (pageIndex == 1) {
+                        rvCourse.scrollToPosition(0);
+                    }
                     if (result.getData().isHasMoreData()) {
                         pageIndex++;
                     }
@@ -256,7 +263,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
                 }
                 showToast(R.string.error_net_request_failed);
             }
-        }, getContext());
+        }, getContext(), pageIndex == 1, "");
         Observable<BaseResult<BaseListResult<CourseInfo>>> observable = BaseServiceUtil.createService(ApiService.class).getBloggerCourseList(pageIndex, bloggerId);
         BaseController.sendRequest(this, subscriber, observable);
     }
@@ -329,6 +336,11 @@ public class BloggerCourseFragment extends BaseStateFragment {
         baseListResult.setCurrentPageIndex(1);
         Gson gson = new Gson();
         LogUtil.e("mytag", "courseResult: " + gson.toJson(baseResult));
-        adapter.appendDataAndRefreshLocal((List<Object>) (List<?>) list);
+        if (pageIndex == 1) {
+            adapter.updateDataList((List<Object>) (List<?>) list);
+        } else {
+            adapter.appendDataAndRefreshLocal((List<Object>) (List<?>) list);
+        }
+        pageIndex++;
     }
 }

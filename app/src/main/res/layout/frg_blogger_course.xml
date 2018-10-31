@@ -9,13 +9,18 @@
         android:id="@+id/grade_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
         android:textSize="15sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:backgroundSelector="@color/color_common_blue"
+        app:textTint="@color/color_common_white" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_course_name"
         android:layout_width="match_parent"
         android:layout_height="26dp"
+        android:layout_marginBottom="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
         android:paddingEnd="@dimen/margin_large"
         android:paddingStart="@dimen/margin_large"
         android:visibility="gone" />

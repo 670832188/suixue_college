@@ -14,3 +14,9 @@ app/local.properties
 app/gradle/wrapper/gradle-wrapper.jar
 app/gradle/wrapper/gradle-wrapper.properties
 app/build.gradle.rej
+nice-spinner/LICENSE
+nice-spinner/README.md
+nice-spinner/gradle/wrapper/gradle-wrapper.jar
+nice-spinner/gradle/wrapper/gradle-wrapper.properties
+nice-spinner/gradlew
+nice-spinner/gradlew.bat

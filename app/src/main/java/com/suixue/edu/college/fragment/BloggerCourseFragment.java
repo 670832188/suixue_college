@@ -106,7 +106,10 @@ public class BloggerCourseFragment extends BaseStateFragment {
             @Override
             public void onItemClick(View v, int position) {
                 BaseCourseInfo.CourseInfo info = courseNameAdapter.getItem(position);
-                getCourseList(info.getGradeId(), info.getId());
+                if (!info.isChecked()) {
+                    courseNameAdapter.setCheckedItem(position);
+                    getCourseList(info.getGradeId(), info.getId());
+                }
             }
         });
         adapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
@@ -199,6 +202,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         all.setId("");
         all.setGradeId(info.getGradeId());
         all.setName(getString(R.string.all));
+        all.setChecked(true);
         dataList.add(all);
         dataList.addAll(info.getCourseInfoList());
         courseNameAdapter.updateDataList(dataList);

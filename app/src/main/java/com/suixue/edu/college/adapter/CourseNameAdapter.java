@@ -24,11 +24,12 @@ public class CourseNameAdapter extends BaseRecyclerAdapter<BaseCourseInfo.Course
 
     @Override
     public void fillData(RecyclerViewHolder holder, int position) {
+        BaseCourseInfo.CourseInfo info = getItem(position);
         TextView tvCourseName = holder.getView(R.id.tv_course_name);
-        tvCourseName.setText(getItem(position).getName());
+        tvCourseName.setText(info.getName());
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DisplayUtil.dp2px(45));
-        if (position == 0) {
+        if (info.isChecked()) {
             tvCourseName.setTextColor(context.getResources().getColor(R.color.color_common_white));
             drawable.setColor(context.getResources().getColor(R.color.color_main_bg));
         } else {
@@ -36,5 +37,16 @@ public class CourseNameAdapter extends BaseRecyclerAdapter<BaseCourseInfo.Course
             drawable.setColor(Color.parseColor("#f7f0f0"));
         }
         tvCourseName.setBackground(drawable);
+    }
+
+    public void setCheckedItem(int position) {
+        for (int i = 0; i < dataList.size(); i++) {
+            if (i == position) {
+                dataList.get(i).setChecked(true);
+            } else {
+                dataList.get(i).setChecked(false);
+            }
+        }
+        notifyDataSetChanged();
     }
 }

@@ -63,6 +63,8 @@ public class BaseCourseInfo {
         private String name;
         private String id;
         private String gradeId;
+        // 客户端本地使用，标识状态
+        private boolean isChecked;
 
         public String getName() {
             return name;
@@ -74,6 +76,10 @@ public class BaseCourseInfo {
 
         public String getGradeId() {
             return gradeId;
+        }
+
+        public boolean isChecked() {
+            return isChecked;
         }
 
         //////////////
@@ -88,6 +94,10 @@ public class BaseCourseInfo {
 
         public void setGradeId(String gradeId) {
             this.gradeId = gradeId;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
         }
     }
 

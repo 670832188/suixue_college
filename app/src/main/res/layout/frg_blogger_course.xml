@@ -6,10 +6,17 @@
     android:orientation="vertical">
 
     <org.angmarch.views.NiceSpinner
-        android:textSize="15sp"
         android:id="@+id/grade_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="15sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_course_name"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large" />
 
     <me.dkzwm.widget.srl.SmoothRefreshLayout
         android:id="@+id/refresh_layout"

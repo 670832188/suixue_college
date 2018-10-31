@@ -1,6 +1,5 @@
 package com.suixue.edu.college.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,9 +17,7 @@ import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
 import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
-import com.dev.kit.basemodule.surpport.CommonAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
-import com.dev.kit.basemodule.surpport.ViewHolder;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.LogUtil;
 import com.dev.kit.basemodule.util.StringUtil;
@@ -28,6 +25,7 @@ import com.google.gson.Gson;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.adapter.BlogAdapter;
+import com.suixue.edu.college.adapter.CourseNameAdapter;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.BaseCourseInfo;
@@ -58,6 +56,8 @@ public class BloggerCourseFragment extends BaseStateFragment {
     private String bloggerId;
     private String gradeId;
     private String courseId;
+    private RecyclerView rvCourseName;
+    private CourseNameAdapter courseNameAdapter;
 
     @NonNull
     @Override
@@ -90,6 +90,11 @@ public class BloggerCourseFragment extends BaseStateFragment {
                 getCourseList(gradeId, courseId);
             }
         });
+        rvCourseName = rootView.findViewById(R.id.rv_course_name);
+        rvCourseName.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvCourseName.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_VERTICAL, getResources().getColor(R.color.color_transparent), DisplayUtil.dp2px(10)));
+        courseNameAdapter = new CourseNameAdapter(getContext(), new ArrayList<BaseCourseInfo.CourseInfo>());
+        rvCourseName.setAdapter(courseNameAdapter);
         adapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
         RecyclerView rvCourse = rootView.findViewById(R.id.rv_course);
         rvCourse.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -150,7 +155,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         BaseController.sendRequest(this, subscriber, observable);
     }
 
-    private void renderBaseCourseInfo(List<BaseCourseInfo> baseCourseInfoList) {
+    private void renderBaseCourseInfo(final List<BaseCourseInfo> baseCourseInfoList) {
         NiceSpinner gradeSpinner = rootView.findViewById(R.id.grade_spinner);
         List<String> gradeInfoList = new ArrayList<>();
         for (BaseCourseInfo info : baseCourseInfoList) {
@@ -161,7 +166,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         gradeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                LogUtil.e("mytag", "select pos: " + position);
+                renderCourseName(baseCourseInfoList.get(position));
             }
 
             @Override
@@ -169,7 +174,19 @@ public class BloggerCourseFragment extends BaseStateFragment {
 
             }
         });
+        renderCourseName(baseCourseInfoList.get(0));
     }
+
+    private void renderCourseName(BaseCourseInfo info) {
+        List<BaseCourseInfo.CourseInfo> dataList = new ArrayList<>();
+        BaseCourseInfo.CourseInfo all = new BaseCourseInfo.CourseInfo();
+        all.setId("");
+        all.setName(getString(R.string.all));
+        dataList.add(all);
+        dataList.addAll(info.getCourseInfoList());
+        courseNameAdapter.updateDataList(dataList);
+    }
+
 
     /**
      * 获取课程列表

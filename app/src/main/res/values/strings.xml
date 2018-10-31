@@ -87,4 +87,5 @@
     <!--课程相关-->
     <string name="tip_subscribe">订阅后查看更多课程内容</string>
     <string name="action_subscribe_now">立即订阅</string>
+    <string name="all">全部</string>
 </resources>

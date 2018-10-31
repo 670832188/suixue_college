@@ -1,1 +1,1 @@
-include ':app', ':baseDevKit',':filepicker',':camerarecorder'
+include ':app', ':baseDevKit',':filepicker',':camerarecorder',':nice-spinner'

@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <org.angmarch.views.NiceSpinner
+        android:textSize="15sp"
         android:id="@+id/grade_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

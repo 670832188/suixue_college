@@ -17,6 +17,7 @@ import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
 import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
+import com.dev.kit.basemodule.surpport.BaseRecyclerAdapter;
 import com.dev.kit.basemodule.surpport.RecyclerDividerDecoration;
 import com.dev.kit.basemodule.util.DisplayUtil;
 import com.dev.kit.basemodule.util.LogUtil;
@@ -72,6 +73,7 @@ public class BloggerCourseFragment extends BaseStateFragment {
         setContentState(STATE_PROGRESS);
         initArguments();
         initView();
+        getBaseCourseInfo();
     }
 
     private void initArguments() {
@@ -80,14 +82,19 @@ public class BloggerCourseFragment extends BaseStateFragment {
             throw new RuntimeException("missing bloggerId argument");
         }
         bloggerId = arg.getString(Constants.KEY_BLOGGER_ID);
-        getBaseCourseInfo();
     }
 
     private void initView() {
         setOnEmptyViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCourseList(gradeId, courseId);
+                getBaseCourseInfo();
+            }
+        });
+        setOnErrorViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBaseCourseInfo();
             }
         });
         rvCourseName = rootView.findViewById(R.id.rv_course_name);
@@ -95,6 +102,13 @@ public class BloggerCourseFragment extends BaseStateFragment {
         rvCourseName.addItemDecoration(new RecyclerDividerDecoration(RecyclerDividerDecoration.DIVIDER_TYPE_VERTICAL, getResources().getColor(R.color.color_transparent), DisplayUtil.dp2px(10)));
         courseNameAdapter = new CourseNameAdapter(getContext(), new ArrayList<BaseCourseInfo.CourseInfo>());
         rvCourseName.setAdapter(courseNameAdapter);
+        courseNameAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                BaseCourseInfo.CourseInfo info = courseNameAdapter.getItem(position);
+                getCourseList(info.getGradeId(), info.getId());
+            }
+        });
         adapter = new BlogAdapter(getContext(), new ArrayList<>(), true);
         RecyclerView rvCourse = rootView.findViewById(R.id.rv_course);
         rvCourse.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -157,6 +171,8 @@ public class BloggerCourseFragment extends BaseStateFragment {
 
     private void renderBaseCourseInfo(final List<BaseCourseInfo> baseCourseInfoList) {
         NiceSpinner gradeSpinner = rootView.findViewById(R.id.grade_spinner);
+        gradeSpinner.setVisibility(View.VISIBLE);
+        rvCourseName.setVisibility(View.VISIBLE);
         List<String> gradeInfoList = new ArrayList<>();
         for (BaseCourseInfo info : baseCourseInfoList) {
             String gradeInfo = info.getYear() + "  " + info.getGrade() + "  " + info.getMajor();
@@ -181,12 +197,14 @@ public class BloggerCourseFragment extends BaseStateFragment {
         List<BaseCourseInfo.CourseInfo> dataList = new ArrayList<>();
         BaseCourseInfo.CourseInfo all = new BaseCourseInfo.CourseInfo();
         all.setId("");
+        all.setGradeId(info.getGradeId());
         all.setName(getString(R.string.all));
         dataList.add(all);
         dataList.addAll(info.getCourseInfoList());
         courseNameAdapter.updateDataList(dataList);
+        pageIndex = 0;
+        getCourseList(dataList.get(0).getGradeId(), dataList.get(0).getId());
     }
-
 
     /**
      * 获取课程列表
@@ -248,10 +266,11 @@ public class BloggerCourseFragment extends BaseStateFragment {
             courseBaseInfo.setGradeId(String.valueOf(i + 1));
             courseBaseInfo.setMajor("光学工程");
             List<BaseCourseInfo.CourseInfo> courseInfoList = new ArrayList<>();
-            for (int j = 0; j < 9; j++) {
+            for (int j = 0; j < 3; j++) {
                 BaseCourseInfo.CourseInfo info = new BaseCourseInfo.CourseInfo();
                 info.setId(String.valueOf(j + 1));
                 info.setName("量子光学" + (j + 1));
+                info.setGradeId(String.valueOf(j + 1));
                 courseInfoList.add(info);
             }
             courseBaseInfo.setCourseInfoList(courseInfoList);

@@ -62,6 +62,7 @@ public class BaseCourseInfo {
     public static class CourseInfo {
         private String name;
         private String id;
+        private String gradeId;
 
         public String getName() {
             return name;
@@ -69,6 +70,10 @@ public class BaseCourseInfo {
 
         public String getId() {
             return id;
+        }
+
+        public String getGradeId() {
+            return gradeId;
         }
 
         //////////////
@@ -79,6 +84,10 @@ public class BaseCourseInfo {
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        public void setGradeId(String gradeId) {
+            this.gradeId = gradeId;
         }
     }
 

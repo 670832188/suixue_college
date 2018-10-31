@@ -8,7 +8,6 @@ import com.dev.kit.basemodule.activity.BaseActivity;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.suixue.edu.college.R;
-import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.fragment.MainFragment;
 import com.suixue.edu.college.fragment.MessageFragment;
 import com.suixue.edu.college.fragment.PersonalFragment;
@@ -78,11 +77,7 @@ public class MainActivity extends BaseActivity implements FragmentAdapter.Fragme
                 break;
             }
             default: {
-                Bundle arg = new Bundle();
-                arg.putBoolean(PersonalFragment.IS_BLOGGER_SELF_BROWSE, true);
-                arg.putString(Constants.KEY_BLOGGER_ID, "121212");
                 fragment = new PersonalFragment();
-                fragment.setArguments(arg);
                 break;
             }
         }

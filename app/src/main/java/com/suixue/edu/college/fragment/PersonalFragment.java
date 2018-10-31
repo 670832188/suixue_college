@@ -11,14 +11,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dev.kit.basemodule.fragment.BaseFragment;
+import com.dev.kit.basemodule.fragment.BaseStateFragment;
 import com.dev.kit.basemodule.netRequest.Configs.Config;
+import com.dev.kit.basemodule.netRequest.model.BaseController;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestCallback;
 import com.dev.kit.basemodule.netRequest.subscribers.NetRequestSubscriber;
+import com.dev.kit.basemodule.netRequest.util.BaseServiceUtil;
 import com.dev.kit.basemodule.result.BaseResult;
 import com.dev.kit.basemodule.surpport.FragmentAdapter;
 import com.dev.kit.basemodule.util.GlideUtil;
@@ -27,16 +29,19 @@ import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
+import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.BloggerInfo;
 import com.suixue.edu.college.entity.UserInfo;
 import com.suixue.edu.college.util.PreferenceUtil;
 import com.suixue.edu.college.view.GradualTitleView;
 
+import io.reactivex.Observable;
+
 /**
  * Created by cuiyan on 2018/9/12.
  */
-public class PersonalFragment extends BaseFragment implements FragmentAdapter.FragmentFactory {
+public class PersonalFragment extends BaseStateFragment implements FragmentAdapter.FragmentFactory {
 
     public static final String IS_BLOGGER_SELF_BROWSE = "isBloggerSelfBrowse";
     // 标识访问来源：访问者/博主本人
@@ -51,11 +56,11 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
     private boolean isInitialized;
     private BloggerInfo bloggerInfo;
 
-    @Nullable
+
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.frg_personal, container, false);
-        return rootView;
+    public View createContentView(LayoutInflater inflater, FrameLayout flRootContainer) {
+        return rootView = inflater.inflate(R.layout.frg_personal, flRootContainer, false);
     }
 
     @Override
@@ -77,7 +82,8 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
             initView();
             isInitialized = true;
             bloggerInfo = generateTestData();
-            renderBloggerInfo();
+            setContentState(STATE_PROGRESS);
+            getBloggerInfo();
         }
     }
 
@@ -188,10 +194,16 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
         NetRequestSubscriber<BaseResult<BloggerInfo>> subscriber = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<BloggerInfo>>() {
             @Override
             public void onSuccess(@NonNull BaseResult<BloggerInfo> result) {
-                if (Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
-                    bloggerInfo = result.getData();
-                    renderBloggerInfo();
+                if (!Config.REQUEST_SUCCESS_CODE.equals(result.getCode())) {
+                    setContentState(STATE_ERROR);
+                    return;
                 }
+                bloggerInfo = result.getData();
+                if (bloggerInfo == null) {
+                    setContentState(STATE_EMPTY);
+                    return;
+                }
+                renderBloggerInfo();
             }
 
             @Override
@@ -206,12 +218,15 @@ public class PersonalFragment extends BaseFragment implements FragmentAdapter.Fr
                 if (BuildConfig.DEBUG) {
                     bloggerInfo = generateTestData();
                     renderBloggerInfo();
+                    setContentState(STATE_DATA_CONTENT);
                 }
                 if (bloggerInfo == null) {
                     showToast(R.string.error_net_request_failed);
                 }
             }
         }, getContext());
+        Observable<BaseResult<BloggerInfo>> observable = BaseServiceUtil.createService(ApiService.class).getBloggerInfo(bloggerId);
+        BaseController.sendRequest(subscriber, observable);
     }
 
     private BloggerInfo generateTestData() {

@@ -95,8 +95,8 @@ public interface ApiService {
 
     // 获取博主信息
     @FormUrlEncoded
-    @POST(ApiConstants.GET_BLOGGER_COURSE_LIST_API)
-    Observable<BaseResult<BaseListResult<BloggerInfo>>> getBloggerInfo(@Field("pageIndex") int pageIndex, @Field("bloggerId") String bloggerId);
+    @POST(ApiConstants.GET_BLOGGER_INFO_API)
+    Observable<BaseResult<BloggerInfo>> getBloggerInfo(@Field("bloggerId") String bloggerId);
 
     // 获取博主课程基础信息(学年、课程名称等)
     @FormUrlEncoded

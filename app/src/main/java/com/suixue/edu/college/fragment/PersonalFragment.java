@@ -34,6 +34,7 @@ import com.suixue.edu.college.config.Constants;
 import com.suixue.edu.college.entity.BloggerInfo;
 import com.suixue.edu.college.entity.UserInfo;
 import com.suixue.edu.college.util.PreferenceUtil;
+import com.suixue.edu.college.util.ViewClickUtil;
 import com.suixue.edu.college.view.GradualTitleView;
 
 import io.reactivex.Observable;
@@ -48,11 +49,10 @@ public class PersonalFragment extends BaseStateFragment implements FragmentAdapt
     private View rootView;
     private TextView tvSubscribe;
     private TextView tvConcern;
-    private TextView tvEdit;
+    private TextView tvEditPersonalInfo;
     private ViewPager vpFrg;
     private String[] tabTitleArray;
     private String bloggerId;
-    private boolean isInitialized;
     private BloggerInfo bloggerInfo;
 
 
@@ -65,39 +65,34 @@ public class PersonalFragment extends BaseStateFragment implements FragmentAdapt
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initArguments(false);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && !isInitialized) {
+        if (isVisibleToUser && StringUtil.isEmpty(bloggerId)) {
             init();
         }
     }
 
     private void init() {
-        if (initArguments(true)) {
+        if (initArguments()) {
             initView();
-            isInitialized = true;
-            bloggerInfo = generateTestData();
             setContentState(STATE_PROGRESS);
             getBloggerInfo();
         }
     }
 
-    private boolean initArguments(boolean startLogin) {
+    private boolean initArguments() {
         Activity activity = getActivity();
         isBloggerSelfBrowse = activity instanceof MainActivity;
         if (isBloggerSelfBrowse) {
             UserInfo userInfo = PreferenceUtil.getUserInfo();
             if (userInfo == null || StringUtil.isEmpty(userInfo.getUserId())) {
-                if (startLogin) {
-                    Intent intent = new Intent(getContext(), RegisterActivity.class);
-                    intent.putExtra(RegisterActivity.IS_NEED_REGISTER_RESULT, true);
-                    intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
-                    startActivityForResult(intent, Constants.REQUEST_CODE_REGISTER_FROM_ME);
-                }
+                Intent intent = new Intent(getContext(), RegisterActivity.class);
+                intent.putExtra(RegisterActivity.IS_NEED_REGISTER_RESULT, true);
+                intent.putExtra(Constants.KEY_REGISTER_MODE, Constants.VALUE_REGISTER_MODE_USER);
+                startActivityForResult(intent, Constants.REQUEST_CODE_REGISTER_FROM_ME);
                 rootView.findViewById(R.id.app_bar_layout).setVisibility(View.GONE);
                 rootView.findViewById(R.id.ll_content_container).setVisibility(View.GONE);
                 rootView.findViewById(R.id.rl_login_tip).setVisibility(View.VISIBLE);
@@ -128,7 +123,25 @@ public class PersonalFragment extends BaseStateFragment implements FragmentAdapt
         rootView.findViewById(R.id.ll_content_container).setVisibility(View.VISIBLE);
         tvSubscribe = rootView.findViewById(R.id.tv_subscribe);
         tvConcern = rootView.findViewById(R.id.tv_concern);
-        tvEdit = rootView.findViewById(R.id.tv_edit);
+        tvEditPersonalInfo = rootView.findViewById(R.id.tv_edit_personal_info);
+        ViewClickUtil.onViewClick(tvConcern, 1500, new ViewClickUtil.OnClickCallBack() {
+            @Override
+            public void onClick(View view) {
+                concernBlogger();
+            }
+        });
+        ViewClickUtil.onViewClick(tvSubscribe, 1500, new ViewClickUtil.OnClickCallBack() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        ViewClickUtil.onViewClick(tvEditPersonalInfo, 1500, new ViewClickUtil.OnClickCallBack() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         if (!isBloggerSelfBrowse) {
             rootView.findViewById(R.id.tool_bar).setVisibility(View.VISIBLE);
             final GradualTitleView titleView = rootView.findViewById(R.id.title_view);
@@ -150,11 +163,11 @@ public class PersonalFragment extends BaseStateFragment implements FragmentAdapt
                     }
                 }
             });
-            tvEdit.setVisibility(View.GONE);
+            tvEditPersonalInfo.setVisibility(View.GONE);
             tvSubscribe.setVisibility(View.VISIBLE);
             tvConcern.setVisibility(View.VISIBLE);
         } else {
-            tvEdit.setVisibility(View.VISIBLE);
+            tvEditPersonalInfo.setVisibility(View.VISIBLE);
             tvSubscribe.setVisibility(View.GONE);
             tvConcern.setVisibility(View.GONE);
         }
@@ -187,6 +200,28 @@ public class PersonalFragment extends BaseStateFragment implements FragmentAdapt
 
             }
         });
+    }
+
+    private void concernBlogger() {
+        NetRequestSubscriber<BaseResult<String>> subscriber
+                = new NetRequestSubscriber<>(new NetRequestCallback<BaseResult<String>>() {
+            @Override
+            public void onSuccess(@NonNull BaseResult<String> result) {
+                if (Config.REQUEST_SUCCESS_CODE.endsWith(result.getCode())) {
+                    bloggerInfo.setConcerned("1".equals(result.getData()));
+                    tvConcern.setText(bloggerInfo.isConcerned() ? R.string.action_cancel_concern : R.string.action_concern);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                super.onError(throwable);
+            }
+
+
+        }, getContext());
+        Observable<BaseResult<String>> observable = BaseServiceUtil.createService(ApiService.class).concernBlogger(bloggerId, bloggerInfo.isConcerned() ? "0" : "1");
+        BaseController.sendRequest(subscriber, observable);
     }
 
     private void getBloggerInfo() {
@@ -244,6 +279,7 @@ public class PersonalFragment extends BaseStateFragment implements FragmentAdapt
         if (bloggerInfo == null) {
             return;
         }
+        tvConcern.setText(bloggerInfo.isConcerned() ? R.string.action_cancel_concern : R.string.action_concern);
         ImageView ivAvatar = rootView.findViewById(R.id.iv_avatar);
         GlideUtil.loadImage(getContext(), bloggerInfo.getAvatarUrl(), R.mipmap.ic_launcher, R.mipmap.ic_launcher, ivAvatar, 1);
         ImageView ivCover = rootView.findViewById(R.id.iv_cover);

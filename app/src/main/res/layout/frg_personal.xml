@@ -88,7 +88,7 @@
 
                     <!--博主展示-编辑-->
                     <TextView
-                        android:id="@+id/tv_edit"
+                        android:id="@+id/tv_edit_personal_info"
                         style="@style/style_text_small_white"
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="@string/concern" />
+                            android:text="@string/action_concern" />
 
                         <TextView
                             android:id="@+id/tv_concern_num"

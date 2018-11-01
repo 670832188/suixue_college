@@ -73,7 +73,10 @@ public interface ApiService {
     @POST(ApiConstants.GET_BLOG_LIST_BY_SEARCH_API)
     Observable<BaseResult<BaseListResult<Object>>> searchBlogList(@Field("keyWord") String keyWord, @Field("pageIndex") int pageIndex);
 
-    // 关注或取消关注博主
+    /**
+     * 关注或取消关注博主
+     * @param concernFlag 0：取消关注；1：关注
+     */
     @FormUrlEncoded
     @POST(ApiConstants.CONCERN_BLOGGER_API)
     Observable<BaseResult<String>> concernBlogger(@Field("bloggerId") String bloggerId, @Field("concernFlag") String concernFlag);

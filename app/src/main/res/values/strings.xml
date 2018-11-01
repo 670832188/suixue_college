@@ -44,6 +44,7 @@
     <string name="tab_me">我的</string>
     <string name="recommended">为您推荐</string>
     <string name="action_concern">关注</string>
+    <string name="action_cancel_concern">取消关注</string>
     <string name="hint_search_college">搜索大学校内</string>
     <string name="blog_source_search">搜索</string>
     <string name="blog_source_recommended">推荐</string>
@@ -74,7 +75,6 @@
     <!--我的页面-->
     <string name="action_subscribe">订阅(¥%s)</string>
     <string name="subscribe">订阅</string>
-    <string name="concern">关注</string>
     <string name="action_edit">编辑</string>
     <!--消息-->
     <string-array name="personal_tab_title">

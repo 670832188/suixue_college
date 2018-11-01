@@ -13,7 +13,7 @@ public class RecommendedBloggerInfo {
     private String bloggerCoverUrl;
     // 博主博客描述
     private String bloggerDesc;
-    // 是否被用户关注：客户端本地使用
+    // 是否被用户关注
     private boolean isConcerned;
     // 最近发布的图片url，取三张
     private List<String> latestPictures;

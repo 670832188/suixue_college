@@ -15,6 +15,8 @@ public class BloggerInfo {
     private int concernedNum;
     // 订阅博主所需费用
     private int subscribeFee;
+    // 是否被关注
+    private boolean isConcerned;
 
     public String getName() {
         return name;
@@ -42,6 +44,10 @@ public class BloggerInfo {
 
     public int getSubscribeFee() {
         return subscribeFee;
+    }
+
+    public boolean isConcerned() {
+        return isConcerned;
     }
 
     /////////////////////////
@@ -73,5 +79,9 @@ public class BloggerInfo {
 
     public void setSubscribeFee(int subscribeFee) {
         this.subscribeFee = subscribeFee;
+    }
+
+    public void setConcerned(boolean concerned) {
+        isConcerned = concerned;
     }
 }

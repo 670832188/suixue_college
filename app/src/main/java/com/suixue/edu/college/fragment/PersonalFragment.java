@@ -43,7 +43,6 @@ import io.reactivex.Observable;
  */
 public class PersonalFragment extends BaseStateFragment implements FragmentAdapter.FragmentFactory {
 
-    public static final String IS_BLOGGER_SELF_BROWSE = "isBloggerSelfBrowse";
     // 标识访问来源：访问者/博主本人
     private boolean isBloggerSelfBrowse;
     private View rootView;

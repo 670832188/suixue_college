@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_personal_brief"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:orientation="horizontal">
 
                     <!--访客展示-->
@@ -103,7 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/margin_normal"
+                    android:layout_marginBottom="@dimen/margin_small"
                     android:orientation="horizontal">
 
                     <LinearLayout

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_larger"
+        android:text="@string/base_info"
+        android:textColor="@color/color_common_text"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_name" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gender" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/birthday" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/city" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@color/color_transparent" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/personal_motto" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_larger"
+        android:text="@string/college_info"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/college_name" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent"
+            android:text="@string/base_info" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/college_start_year" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent"
+            android:text="@string/base_info" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/major" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent"
+            android:text="@string/grade" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/style_personal_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/grade" />
+
+        <EditText
+            style="@style/style_personal_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_transparent"
+            android:text="@string/base_info" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_common_light_gray" />
+</LinearLayout>

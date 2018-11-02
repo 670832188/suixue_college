@@ -105,4 +105,27 @@
         <item name="colorControlActivated">#54B87C</item>
     </style>
 
+    <style name="style_personal_info_title">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/color_common_text</item>
+        <item name="android:paddingStart">@dimen/margin_large</item>
+        <item name="android:paddingEnd">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_small</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+    </style>
+
+    <style name="style_personal_info_item">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:editable">false</item>
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/color_common_text</item>
+        <item name="android:paddingStart">@dimen/margin_large</item>
+        <item name="android:paddingEnd">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_small</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+    </style>
+
 </resources>

@@ -88,4 +88,15 @@
     <string name="tip_subscribe">订阅后查看更多课程内容</string>
     <string name="action_subscribe_now">立即订阅</string>
     <string name="all">全部</string>
+
+    <string name="base_info">基本信息</string>
+    <string name="college_info">校内信息</string>
+    <string name="gender">性别</string>
+    <string name="birthday">生日</string>
+    <string name="city">所在城市</string>
+    <string name="personal_motto">个性签名</string>
+    <string name="college_name">学校</string>
+    <string name="college_start_year">入学年份</string>
+    <string name="major">专业</string>
+    <string name="grade">年级</string>
 </resources>

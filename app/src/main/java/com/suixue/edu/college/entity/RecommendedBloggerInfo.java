@@ -11,8 +11,8 @@ public class RecommendedBloggerInfo {
     private String bloggerName;
     // 博主博客封面图片url
     private String bloggerCoverUrl;
-    // 博主博客描述
-    private String bloggerDesc;
+    // 博主个人格言/个性签名
+    private String bloggerPersonalMotto;
     // 是否被用户关注
     private boolean isConcerned;
     // 最近发布的图片url，取三张
@@ -39,8 +39,8 @@ public class RecommendedBloggerInfo {
     }
 
 
-    public String getBloggerDesc() {
-        return bloggerDesc;
+    public String getBloggerPersonalMotto() {
+        return bloggerPersonalMotto;
     }
 
     public List<String> getLatestPictures() {
@@ -69,8 +69,8 @@ public class RecommendedBloggerInfo {
         this.bloggerCoverUrl = bloggerCoverUrl;
     }
 
-    public void setBloggerDesc(String bloggerDesc) {
-        this.bloggerDesc = bloggerDesc;
+    public void setBloggerPersonalMotto(String bloggerPersonalMotto) {
+        this.bloggerPersonalMotto = bloggerPersonalMotto;
     }
 
     public void setLatestPictures(List<String> latestPictures) {

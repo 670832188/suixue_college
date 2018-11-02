@@ -226,7 +226,7 @@ public class MainFragment extends BaseStateFragment {
                     RecommendedBloggerInfo info = new RecommendedBloggerInfo();
                     info.setBloggerAvatarUrl(avatarUrl[Math.abs(random.nextInt() % avatarUrl.length)]);
                     info.setBloggerCoverUrl(thumbList[Math.abs(random.nextInt() % thumbList.length)]);
-                    info.setBloggerDesc("风拂二月柳~");
+                    info.setBloggerPersonalMotto("风拂二月柳~");
                     info.setBloggerId(String.valueOf(i * 10 + j));
                     info.setBloggerName("李四" + String.valueOf(i * 10 + j));
                     List<String> latestPictures = new ArrayList<>();

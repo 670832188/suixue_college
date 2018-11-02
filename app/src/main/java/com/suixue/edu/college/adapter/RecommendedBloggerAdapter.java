@@ -50,7 +50,7 @@ public class RecommendedBloggerAdapter extends BaseRecyclerAdapter<RecommendedBl
         Glide.with(context).load(info.getBloggerCoverUrl()).into(ivBlogCover);
 
         holder.setText(R.id.tv_blogger_name, info.getBloggerName());
-        holder.setText(R.id.tv_blogger_desc, info.getBloggerDesc());
+        holder.setText(R.id.tv_blogger_personal_motto, info.getBloggerPersonalMotto());
         GradientDrawable drawable = new GradientDrawable();
         if (info.isConcerned()) {
             drawable.setColor(context.getResources().getColor(bgColor[position % 5]));

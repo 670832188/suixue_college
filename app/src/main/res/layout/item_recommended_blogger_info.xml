@@ -52,7 +52,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/tv_blogger_desc"
+        android:id="@+id/tv_blogger_personal_motto"
         style="@style/style_text_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

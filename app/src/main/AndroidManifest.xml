@@ -52,7 +52,8 @@
         <activity android:name="com.dev.kit.basemodule.activity.RecordVideoActivity" />
         <activity android:name=".activity.VideoEditActivity" />
         <activity android:name=".activity.ChatMessageListActivity" />
-        <activity android:name=".activity.BloggeActivity"/>
+        <activity android:name=".activity.BloggerActivity"/>
+        <activity android:name=".activity.PersonalInfoEditActivity"/>
     </application>
 
 </manifest>

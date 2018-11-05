@@ -28,6 +28,7 @@ import com.dev.kit.basemodule.util.StringUtil;
 import com.suixue.edu.college.BuildConfig;
 import com.suixue.edu.college.R;
 import com.suixue.edu.college.activity.MainActivity;
+import com.suixue.edu.college.activity.PersonalInfoEditActivity;
 import com.suixue.edu.college.activity.RegisterActivity;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.config.Constants;
@@ -139,7 +140,7 @@ public class PersonalFragment extends BaseStateFragment implements FragmentAdapt
         ViewClickUtil.onViewClick(tvEditPersonalInfo, 1500, new ViewClickUtil.OnClickCallBack() {
             @Override
             public void onClick(View view) {
-
+                startActivityForResult(new Intent(getContext(), PersonalInfoEditActivity.class), Constants.REQUEST_CODE_EDIT_PERSONAL_INFO);
             }
         });
         if (!isBloggerSelfBrowse) {

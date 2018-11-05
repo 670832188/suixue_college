@@ -31,7 +31,7 @@ import com.dev.kit.basemodule.view.AutoLinkStyleTextView;
 import com.plattysoft.leonids.ParticleSystem;
 import com.plattysoft.leonids.modifiers.ScaleModifier;
 import com.suixue.edu.college.R;
-import com.suixue.edu.college.activity.BloggeActivity;
+import com.suixue.edu.college.activity.BloggerActivity;
 import com.suixue.edu.college.activity.MainActivity;
 import com.suixue.edu.college.config.ApiService;
 import com.suixue.edu.college.config.Constants;
@@ -119,7 +119,7 @@ public class BlogAdapter extends BaseRecyclerAdapter<Object> {
         ivBloggerAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, BloggeActivity.class);
+                Intent intent = new Intent(context, BloggerActivity.class);
                 intent.putExtra(Constants.KEY_BLOGGER_ID, info.getBloggerId());
                 context.startActivity(intent);
             }

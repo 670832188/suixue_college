@@ -10,6 +10,8 @@ public class Constants {
     public static final int REQUEST_CODE_SELECT_INTEREST = 10087;
     public static final int REQUEST_CODE_REGISTER_FROM_MSG = 10088;
     public static final int REQUEST_CODE_REGISTER_FROM_ME = 10089;
+    public static final int REQUEST_CODE_EDIT_PERSONAL_INFO = 10090;
+
 
     // 访客出生年份
     public static final String KEY_VISITOR_YEAR_OF_BIRTH = "visitorYearOfBirth";

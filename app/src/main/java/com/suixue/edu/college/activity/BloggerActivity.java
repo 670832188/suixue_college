@@ -12,7 +12,7 @@ import com.suixue.edu.college.fragment.PersonalFragment;
 /**
  * Created by cuiyan on 2018/10/29.
  */
-public class BloggeActivity extends BaseActivity {
+public class BloggerActivity extends BaseActivity {
     PersonalFragment personalFragment;
 
     @Override

@@ -86,6 +86,9 @@ public class BaseActivity extends RxActivity {
     public void setVisibility(@IdRes int viewId, int visibility) {
         findViewById(viewId).setVisibility(visibility);
     }
+    public void setEnabled(@IdRes int viewId, boolean enabled) {
+        findViewById(viewId).setEnabled(enabled);
+    }
 
     @Override
     public void onBackPressed() {

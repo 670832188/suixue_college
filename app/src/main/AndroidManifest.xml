@@ -53,7 +53,8 @@
         <activity android:name=".activity.VideoEditActivity" />
         <activity android:name=".activity.ChatMessageListActivity" />
         <activity android:name=".activity.BloggerActivity"/>
-        <activity android:name=".activity.PersonalInfoEditActivity"/>
+        <activity android:name=".activity.PersonalInfoEditActivity"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

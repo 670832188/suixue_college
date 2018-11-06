@@ -101,4 +101,14 @@
     <string name="college_start_year">入学年份</string>
     <string name="major">专业</string>
     <string name="grade">年级</string>
+    <string-array name="gender_array">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+    <string-array name="grade_array">
+        <item>大学一年级</item>
+        <item>大学二年级</item>
+        <item>大学三年级</item>
+        <item>大学四年级</item>
+    </string-array>
 </resources>
